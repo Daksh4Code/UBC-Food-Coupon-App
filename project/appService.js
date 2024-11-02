@@ -1,5 +1,6 @@
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
+const fs = require('fs');
 
 const envVariables = loadEnvFile('./.env');
 
@@ -76,6 +77,19 @@ async function testOracleConnection() {
     });
 }
 
+async function initializeSQLTables(sql_path) {
+    const script = fs.readFileSync(sql_path).toString();
+
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(script)
+        } catch(err) {
+            console.log('Tables cannot be initialized...')
+        }
+    })
+}
+
+
 async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT * FROM DEMOTABLE');
@@ -148,5 +162,6 @@ module.exports = {
     initiateDemotable,
     insertDemotable,
     updateNameDemotable,
-    countDemotable
+    countDemotable,
+    initializeSQLTables
 };
