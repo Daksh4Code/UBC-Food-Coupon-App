@@ -39,7 +39,7 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
-router.post('/initialize-sql-table', async (req, res) => {
+router.post('/initialize-sql-tables', async (req, res) => {
     const initializeTables = await appService.initializeSQLTables('db/init.sql');
      if (initializeTables) {
             res.json({ success: true });

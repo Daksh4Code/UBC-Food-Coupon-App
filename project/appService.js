@@ -78,15 +78,18 @@ async function testOracleConnection() {
 }
 
 async function initializeSQLTables(sql_path) {
-    const script = fs.readFileSync(sql_path).toString();
-
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(script)
-        } catch(err) {
-            console.log('Tables cannot be initialized...')
-        }
-    })
+    const script = fs.readFileSync(sql_path, 'utf8')
+                .replace(/\\n/g, '')
+                .replace(/\\t/g, '')
+    const queries = script.split(";").filter(query => query != '')
+    console.log(queries);
+    for (sql in queries) {
+        await withOracleDB(async (connection) => {
+            await connection.execute(sql);
+            console.log(sql);
+            console.log('Table inserted...');
+        });
+    }
 }
 
 
