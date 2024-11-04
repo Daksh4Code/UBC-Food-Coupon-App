@@ -36,7 +36,7 @@ async function checkDbConnection() {
     });
 }
 
-// Fetches data from the demotable and displays it.
+// Fetches data from the initalized Tables and displays it.
 async function fetchAndDisplayUsers() {
     const tableElement = document.getElementById('demotable');
     const tableBody = tableElement.querySelector('tbody');
