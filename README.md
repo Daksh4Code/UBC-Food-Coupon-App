@@ -2,7 +2,3 @@
 # Make sure to fill out the README with the information specified in the project description!!!!
 
 
-# test intellij
-
-# test intellij 2
-
