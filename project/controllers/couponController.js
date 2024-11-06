@@ -7,7 +7,7 @@ const router = express.Router();
 
 //fetch the coupons
 router.get('/coupons', async (req, res) => {
-    const couponTable = await appService.fetchCoupon();
+    const couponTable = await appService.fetchCoupons();
     res.json({data: couponTable});
 });
 
@@ -26,8 +26,8 @@ router.delete('/coupons/:cid', async (req, res) => {
 
 // retrieve coupons with only one number of uses left
 router.get('/coupons', async(req,res) => {
-    const oneUseCoupons = await appService.retrieveOneUseCoupons();
-    res.json({data: oneUseCoupons})
+    const highDCCoupon = await appService.retrieveHighDCCoupons();
+    res.json({data: highDCCoupon})
 });
 
 module.exports = router;
