@@ -1,0 +1,15 @@
+{
+  "name": "MyProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "appController.js",
+  "scripts": {
+    "test": "appController.test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.0.0",
+    "supertest": "^6.0.0"
+  }
+}
