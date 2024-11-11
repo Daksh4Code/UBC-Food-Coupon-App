@@ -144,7 +144,7 @@ INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc01
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc011', 2025, 'Political Science', 'govnerd', '13579246', 'little.john');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc013', 2024, 'Environmental Science', 'gogreen', '18273645', 'sheriff.nott');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc014', 2023, 'Music', 'musiclover', '54321098', 'prince.john');
-INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc015', 2025, 'Art History', 'arthistory101', '86420975', 'alan.a.dale');
+INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc015', 2025, 'Art History', 'arthistory101', '86420974', 'alan.a.dale');
 -- Insert data into Feedback_Rating table
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES ('acc001', '12345678', TO_DATE('2024-11-08', 'YYYY-MM-DD'), 'S0002', 4);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc002', '87654321', TO_DATE('2024-11-07', 'YYYY-MM-DD'), 'T0001', 5);
