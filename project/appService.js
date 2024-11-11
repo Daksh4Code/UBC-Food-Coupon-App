@@ -65,10 +65,6 @@ async function withOracleDB(action) {
     }
 }
 
-
-// ----------------------------------------------------------
-// Core functions for database operations
-// Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
         return true;
@@ -77,94 +73,167 @@ async function testOracleConnection() {
     });
 }
 
-async function initializeSQLTables(sql_path) {
-    const script = fs.readFileSync(sql_path, 'utf8')
-                .replace(/\\n/g, '')
-                .replace(/\\t/g, '')
-    const queries = script.split(";").filter(query => query != '')
-    console.log(queries);
-    for (sql in queries) {
-        await withOracleDB(async (connection) => {
-            await connection.execute(sql);
-            console.log(sql);
-            console.log('Table inserted...');
-        });
-    }
-}
+// Core functions for coupon operations
 
-
-async function fetchDemotableFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
+// coupon - SELECT:
+// function: retrieves all the coupons in COUPON
+// fetch coupons adapted from fetchDemotableFromDb from tutorial
+async function fetchCoupons() {
+     return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM Coupon C');
         return result.rows;
     }).catch(() => {
         return [];
     });
 }
 
-async function initiateDemotable() {
+// coupon - UPDATE:
+// function: decrease number of uses by one given a specific coupon id
+async function updateNumberUses(cid) {
     return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
+        const result = await connection.execute('UPDATE Coupon SET number_of_uses =: number_of_uses - 1 WHERE coupon_id := cid',
+                                                [cid],
+                                                { autoCommit: true }
+                                                );
+        return result.rows;
     }).catch(() => {
-        return false;
+        return [];
     });
 }
 
-async function insertDemotable(id, name) {
+// coupon - DELETE:
+// function: delete the coupon with no number of uses left
+async function deleteCoupon() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
-            [id, name],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
+        const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0');
+    }.catch(() => {
+        return False;
     });
 }
 
-async function updateNameDemotable(oldName, newName) {
+//  coupon - GROUP BY with HAVING:
+// function: group the coupons by their branch_id and retrieve branches with min coupon dc > 15%
+async function retrieveGoodDealRestaurants() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
+        const result = await connection.execute('SELECT branch_id, MIN(dc_percent) FROM COUPON GROUP BY branch_id HAVING MIN(dc_percent) >= 0.15')
     }).catch(() => {
-        return false;
-    });
+        return [];
+    })
 }
 
-async function countDemotable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
 }
+
+// Core functions for feedback operations
+// Core functions for user operations
+// Core functions for order operations
 
 module.exports = {
-    testOracleConnection,
-    fetchDemotableFromDb,
-    initiateDemotable,
-    insertDemotable,
-    updateNameDemotable,
-    countDemotable,
-    initializeSQLTables
+    fetchCoupons,
+    updateNumberUses,
+    deleteCoupon,
+    retrieveGoodDealRestaurants
 };
+
+// FUNCTINOALIITY FROM DEMO:
+// Core functions for database operations
+// Modify these functions, especially the SQL queries, based on your project's requirements and design.
+//async function testOracleConnection() {
+//    return await withOracleDB(async (connection) => {
+//        return true;
+//    }).catch(() => {
+//        return false;
+//    });
+//}
+//
+//async function initializeSQLTables(sql_path) {
+//    const script = fs.readFileSync(sql_path, 'utf8')
+//                .replace(/\\n/g, '')
+//                .replace(/\\t/g, '')
+//    const queries = script.split(";").filter(query => query != '')
+//    console.log(queries);
+//    for (sql in queries) {
+//        await withOracleDB(async (connection) => {
+//            await connection.execute(sql);
+//            console.log(sql);
+//            console.log('Table inserted...');
+//        });
+//    }
+//}
+//
+//
+//async function fetchDemotableFromDb() {
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute('SELECT * FROM DEMOTABLE');
+//        return result.rows;
+//    }).catch(() => {
+//        return [];
+//    });
+//}
+//
+//async function initiateDemotable() {
+//    return await withOracleDB(async (connection) => {
+//        try {
+//            await connection.execute(`DROP TABLE DEMOTABLE`);
+//        } catch(err) {
+//            console.log('Table might not exist, proceeding to create...');
+//        }
+//
+//        const result = await connection.execute(`
+//            CREATE TABLE DEMOTABLE (
+//                id NUMBER PRIMARY KEY,
+//                name VARCHAR2(20)
+//            )
+//        `);
+//        return true;
+//    }).catch(() => {
+//        return false;
+//    });
+//}
+//
+//async function insertDemotable(id, name) {
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute(
+//            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
+//            [id, name],
+//            { autoCommit: true }
+//        );
+//
+//        return result.rowsAffected && result.rowsAffected > 0;
+//    }).catch(() => {
+//        return false;
+//    });
+//}
+//
+//async function updateNameDemotable(oldName, newName) {
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute(
+//            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
+//            [newName, oldName],
+//            { autoCommit: true }
+//        );
+//
+//        return result.rowsAffected && result.rowsAffected > 0;
+//    }).catch(() => {
+//        return false;
+//    });
+//}
+//
+//async function countDemotable() {
+//    return await withOracleDB(async (connection) => {
+//        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
+//        return result.rows[0][0];
+//    }).catch(() => {
+//        return -1;
+//    });
+//}
+//
+//
+//module.exports = {
+//    testOracleConnection,
+//    fetchDemotableFromDb,
+//    initiateDemotable,
+//    insertDemotable,
+//    updateNameDemotable,
+//    countDemotable,
+//    initializeSQLTables
+//};
