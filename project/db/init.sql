@@ -126,7 +126,7 @@ INSERT INTO UBC_Student (sid, cwl) VALUES('22334455', 'tinker.bell');
 INSERT INTO UBC_Student (sid, cwl) VALUES('10101010', 'robin.hood');
 INSERT INTO UBC_Student (sid, cwl) VALUES('90909090', 'maid.marian');
 INSERT INTO UBC_Student (sid, cwl) VALUES('13579246', 'little.john');
-INSERT INTO UBC_Student (sid, cwl) VALUES('24681357', 'friar.tuck');
+INSERT INTO UBC_Student (sid, cwl) VALUES('24681354', 'friar.tuck');
 INSERT INTO UBC_Student (sid, cwl) VALUES('18273645', 'sheriff.nott');
 INSERT INTO UBC_Student (sid, cwl) VALUES('54321098', 'prince.john');
 INSERT INTO UBC_Student (sid, cwl) VALUES('86420975', 'alan.a.dale');
