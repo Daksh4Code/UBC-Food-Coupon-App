@@ -1,5 +1,7 @@
-noconst express = require('express');
-const appService = require('../appService');
+const express = require('express');
+const appService = require('../utils/appService'); // Correct relative path from controllers to utils
+const userQueries = require('../db/user_queries.sql'); // Correct path to user queries
+const feedbackQueries = require('../db/feedback_queries.sql'); // Correct path to feedback queries
 
 const router = express.Router();
 
@@ -8,99 +10,98 @@ const router = express.Router();
 // Modify or extend these routes based on your project's needs.
 
 router.get('/check-db-connection', async (req, res) => {
-    const isConnect = await appService.testOracleConnection();
-    if (isConnect) {
-        res.send('connected');
-    } else {
-        res.send('unable to connect');
-    }
-});
-
-router.get('/check-db-connection', async (req, res) => {
-    const isConnect = await appService.testOracleConnection();
-    if (isConnect) {
-        res.send('connected');
-    } else {
-        res.send('unable to connect');
+    try {
+        const isConnect = await appService.testOracleConnection();
+        res.send(isConnect ? 'connected' : 'unable to connect');
+    } catch (error) {
+        console.error('DB connection error:', error);
+        res.status(500).send('DB connection error');
     }
 });
 
 router.get('/demotable', async (req, res) => {
-    const tableContent = await appService.fetchDemotableFromDb();
-    res.json({data: tableContent});
+    try {
+        const tableContent = await appService.fetchDemotableFromDb();
+        res.json({ data: tableContent });
+    } catch (error) {
+        console.error('Error fetching demo table:', error);
+        res.status(500).json({ success: false, error: 'Failed to fetch demo table' });
+    }
 });
 
 router.post("/initiate-demotable", async (req, res) => {
-    const initiateResult = await appService.initiateDemotable();
-    if (initiateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
+    try {
+        const initiateResult = await appService.initiateDemotable();
+        res.json({ success: !!initiateResult });
+    } catch (error) {
+        console.error('Error initiating demo table:', error);
+        res.status(500).json({ success: false, error: 'Failed to initiate demo table' });
     }
 });
 
 router.post('/initialize-sql-tables', async (req, res) => {
-    const initializeTables = await appService.initializeSQLTables('db/init.sql');
-     if (initializeTables) {
-            res.json({ success: true });
-        } else {
-            res.status(500).json({ success: false });
-     }
+    try {
+        const initializeTables = await appService.initializeSQLTables('db/init.sql');
+        res.json({ success: !!initializeTables });
+    } catch (error) {
+        console.error('Error initializing SQL tables:', error);
+        res.status(500).json({ success: false, error: 'Failed to initialize SQL tables' });
+    }
 });
 
 // --- User Management Routes ---
 
 router.post('/create-account', async (req, res) => {
     const { accountId, year, major, password, sid, cwl } = req.body;
-    const sql = require('./user_queries.sql');
     await appService.withOracleDB(async (connection) => {
         try {
             await connection.execute(
-                sql,
-                [accountId, year, major, password, sid, cwl],
+                userQueries.createAccount, // Use appropriate query from your SQL file
+                { account_id: accountId, year, major, password, sid, cwl },
                 { autoCommit: true }
             );
-            res.json({success: true});
+            res.json({ success: true });
         } catch (error) {
             console.error('Error creating account:', error);
-            res.status(500).json({success: false, error: 'Failed to create account'});
+            res.status(500).json({ success: false, error: 'Failed to create account' });
         }
     });
 });
 
 router.put('/edit-account/:accountId', async (req, res) => {
     const accountId = req.params.accountId;
-    const {newPassword} = req.body;
-    const sql = require('./user_queries.sql');
+    const { newPassword } = req.body;
     await appService.withOracleDB(async (connection) => {
         try {
             await connection.execute(
-                sql,
-                [newPassword, accountId],
-                {autoCommit: true}
+                userQueries.updateAccount, // Use appropriate query from your SQL file
+                { newPassword, accountId },
+                { autoCommit: true }
             );
-            res.json({success: true});
+            res.json({ success: true });
         } catch (error) {
             console.error('Error updating account:', error);
-            res.status(500).json({success: false, error: 'Failed to update account'});
+            res.status(500).json({ success: false, error: 'Failed to update account' });
         }
     });
 });
 
 router.post('/login', async (req, res) => {
-    const {cwl, password} = req.body;
-    const sql = require('./user_queries.sql');
+    const { cwl, password } = req.body;
     await appService.withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(sql, [cwl, password]);
+            const result = await connection.execute(
+                userQueries.login,
+                { cwl, password }
+            );
             if (result.rows.length > 0) {
-                res.json({success: true, user: result.rows[0]});
+                res.json({ success: true, user: result.rows[0] });
             } else {
-                res.status(401).json({success: false, error: 'Invalid credentials'});
+                res.status(401).json({ success: false, error: 'Invalid credentials' });
             }
         } catch (error) {
             console.error('Error during login:', error);
-            res.status(500).json({success: false, error: 'Failed to login'});
+            res.status(500).json({ success: false, error: 'Failed to login' });
         }
     });
 });
@@ -108,61 +109,57 @@ router.post('/login', async (req, res) => {
 // --- Feedback Management Routes ---
 
 router.post('/submit-feedback', async (req, res) => {
-    const {accountId, sid, order_date, branchId, rating} = req.body;
-    const sql = require('./feedback_queries.sql');
+    const { accountId, sid, order_date, branchId, rating } = req.body;
     await appService.withOracleDB(async (connection) => {
         try {
             await connection.execute(
-                sql,
-                [accountId, sid, order_date, branchId, rating],
-                {autoCommit: true}
+                feedbackQueries.submitFeedback, // Use appropriate query from your SQL file
+                { accountId, sid, order_date, branchId, rating },
+                { autoCommit: true }
             );
-            res.json({success: true});
+            res.json({ success: true });
         } catch (error) {
             console.error('Error submitting feedback:', error);
-            res.status(500).json({success: false, error: 'Failed to submit feedback'});
+            res.status(500).json({ success: false, error: 'Failed to submit feedback' });
         }
     });
 });
 
 router.put('/update-feedback', async (req, res) => {
-    const {accountId, sid, order_date, branchId, newRating} = req.body;
-    const sql = require('./feedback_queries.sql');
+    const { accountId, sid, order_date, branchId, newRating } = req.body;
     await appService.withOracleDB(async (connection) => {
         try {
             await connection.execute(
-                sql,
-                [newRating, accountId, sid, order_date, branchId],
-                {autoCommit: true}
+                feedbackQueries.updateFeedback, // Use appropriate query from your SQL file
+                { newRating, accountId, sid, order_date, branchId },
+                { autoCommit: true }
             );
-            res.json({success: true});
+            res.json({ success: true });
         } catch (error) {
             console.error('Error updating feedback:', error);
-            res.status(500).json({success: false, error: 'Failed to update feedback'});
+            res.status(500).json({ success: false, error: 'Failed to update feedback' });
         }
     });
 });
 
 router.get('/view-feedback/:accountId', async (req, res) => {
     const accountId = req.params.accountId;
-    const sql = require('./feedback_queries.sql');
     await appService.withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(sql, [accountId]);
-            res.json({success: true, feedback: result.rows});
+            const result = await connection.execute(feedbackQueries.viewFeedback, { accountId });
+            res.json({ success: true, feedback: result.rows });
         } catch (error) {
             console.error('Error viewing feedback:', error);
-            res.status(500).json({success: false, error: 'Failed to view feedback'});
+            res.status(500).json({ success: false, error: 'Failed to view feedback' });
         }
     });
 });
 
 router.get('/best-rated-branch', async (req, res) => {
-    const sql = require('./feedback_queries.sql');
     await appService.withOracleDB(async (connection) => {
         try {
-            const result = await connection.execute(sql);
-            res.json({success: true, branchId: result.rows[0].branch_id});
+            const result = await connection.execute(feedbackQueries.bestRatedBranch);
+            res.json({ success: true, branchId: result.rows[0].branch_id });
         } catch (error) {
             console.error('Error finding best-rated branch:', error);
             res.status(500).json({
@@ -174,6 +171,3 @@ router.get('/best-rated-branch', async (req, res) => {
 });
 
 module.exports = router;
-
-
-
