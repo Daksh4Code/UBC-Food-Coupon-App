@@ -7,7 +7,7 @@ UPDATE Account
 SET password = :newPassword
 WHERE account_id = :accountId;
 
--- Sign in with an existing account (Projection Query)
+-- Sign in with an existing account (Selection Query)
 SELECT account_id, year, major, sid, cwl
 FROM Account
 WHERE cwl = :cwl AND password = :password;
