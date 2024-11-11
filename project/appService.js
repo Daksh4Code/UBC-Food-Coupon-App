@@ -88,7 +88,7 @@ async function fetchCoupons() {
 }
 
 // coupon - UPDATE:
-// function: decrease number of uses by one of a specified coupon
+// function: decrease number of uses by one given a specific coupon id
 async function updateNumberUses(cid) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('UPDATE Coupon SET number_of_uses =: number_of_uses - 1 WHERE coupon_id := cid',
@@ -112,10 +112,10 @@ async function deleteCoupon() {
 }
 
 //  coupon - GROUP BY with HAVING:
-// function: group the coupons by their branch_id and retrieve branches with average coupon dc > 10%
-async function retrieveHighDCCoupons() {
+// function: group the coupons by their branch_id and retrieve branches with min coupon dc > 15%
+async function retrieveGoodDealRestaurants() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT C.coupon_id FROM COUPON C GROUP BY branch_id HAVING AVG(dc_percent) >= 0.10')
+        const result = await connection.execute('SELECT branch_id, MIN(dc_percent) FROM COUPON GROUP BY branch_id HAVING MIN(dc_percent) >= 0.15')
     }).catch(() => {
         return [];
     })
@@ -131,7 +131,7 @@ module.exports = {
     fetchCoupons,
     updateNumberUses,
     deleteCoupon,
-    retrieveHighDCCoupons
+    retrieveGoodDealRestaurants
 };
 
 // FUNCTINOALIITY FROM DEMO:
