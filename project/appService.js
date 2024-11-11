@@ -124,8 +124,96 @@ async function retrieveGoodDealRestaurants() {
 }
 
 // Core functions for feedback operations
+async function submitFeedback(accountId, sid, order_date, branchId, rating) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'INSERT INTO feedback (account_id, sid, order_date, branch_id, rating) VALUES (:accountId, :sid, :order_date, :branchId, :rating)',
+            [accountId, sid, order_date, branchId, rating],
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+async function updateFeedback(accountId, sid, order_date, branchId, newRating) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'UPDATE feedback SET rating = :newRating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
+            [newRating, accountId, sid, order_date, branchId],
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+async function viewFeedback(accountId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT * FROM feedback WHERE account_id = :accountId',
+            [accountId]
+        );
+        return result.rows;
+    });
+}
+
+async function getBestRatedBranch() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT branch_id FROM feedback GROUP BY branch_id HAVING AVG(rating) = (SELECT MAX(AVG(rating)) FROM feedback GROUP BY branch_id)'
+        );
+        return result.rows;
+    });
+}
+
 // Core functions for user operations
+async function createUser(accountId, year, major, password, sid, cwl) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'INSERT INTO users (account_id, year, major, password, sid, cwl) VALUES (:accountId, :year, :major, :password, :sid, :cwl)',
+            [accountId, year, major, password, sid, cwl],
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+async function editUser(accountId, newPassword) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'UPDATE users SET password = :newPassword WHERE account_id = :accountId',
+            [newPassword, accountId],
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    });
+}
+
+async function loginUser(cwl, password) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT * FROM users WHERE cwl = :cwl AND password = :password',
+            [cwl, password]
+        );
+        return result.rows;
+    });
+}
+
 // Core functions for order operations
+
+
+// module exports
+module.exports = {
+    createUser,
+    editUser,
+    loginUser
+};
+
+module.exports = {
+    submitFeedback,
+    updateFeedback,
+    viewFeedback,
+    getBestRatedBranch
+};
 
 module.exports = {
     fetchCoupons,
