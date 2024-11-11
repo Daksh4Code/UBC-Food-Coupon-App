@@ -142,7 +142,6 @@ INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc00
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc009', 2024, 'Psychology', 'mindreader', '10101010', 'robin.hood');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc010', 2023, 'Sociology', 'socialbee', '90909090', 'maid.marian');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc011', 2025, 'Political Science', 'govnerd', '13579246', 'little.john');
-INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc012', 2022, 'Philosophy', 'deepthoughts', '24681357', 'friar.tuck');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc013', 2024, 'Environmental Science', 'gogreen', '18273645', 'sheriff.nott');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc014', 2023, 'Music', 'musiclover', '54321098', 'prince.john');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc015', 2025, 'Art History', 'arthistory101', '86420975', 'alan.a.dale');
