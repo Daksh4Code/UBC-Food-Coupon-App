@@ -28,7 +28,7 @@ router.get('/feedbacks/view/:accountId', async (req, res) => {
 // Get Best-Rated Branch
 router.get('/feedbacks/best-rated-branch', async (req, res) => {
     const branch = await appService.getBestRatedBranch();
-    res.json({data: branch});
+    res.json({data: branch });
 });
 
 module.exports = router;
