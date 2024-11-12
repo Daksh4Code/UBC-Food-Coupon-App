@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Management</title>
+    <!-- Uncomment the line below if you have a CSS file to style your page -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+</head>
+<body>
+<!-- ===================================================================================== -->
+<!-- Display 'Feedback Table' -->
+<h2>Feedback Table</h2>
+<table id="feedbackTable" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Order Date</th>
+        <th>Branch ID</th>
+        <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2>Add New Feedback</h2>
+<form id="addFeedbackForm">
+    <label for="accountId">Account ID:</label>
+    <input type="text" id="accountId" name="accountId" required><br><br>
+    <label for="sid">SID:</label>
+    <input type="text" id="sid" name="sid" required><br><br>
+    <label for="orderDate">Order Date:</label>
+    <input type="date" id="orderDate" name="orderDate" required><br><br>
+    <label for="branchId">Branch ID:</label>
+    <input type="text" id="branchId" name="branchId" required><br><br>
+    <label for="rating">Rating:</label>
+    <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
+    <button type="submit">Add Feedback</button>
+</form>
+<div id="addFeedbackResult"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2>Update Feedback Rating</h2>
+<form id="updateFeedbackForm">
+    <label for="editAccountId">Account ID:</label>
+    <input type="text" id="editAccountId" name="editAccountId" required><br><br>
+    <label for="editSid">SID:</label>
+    <input type="text" id="editSid" name="editSid" required><br><br>
+    <label for="editOrderDate">Order Date:</label>
+    <input type="date" id="editOrderDate" name="editOrderDate" required><br><br>
+    <label for="editBranchId">Branch ID:</label>
+    <input type="text" id="editBranchId" name="editBranchId" required><br><br>
+    <label for="newRating">New Rating:</label>
+    <input type="number" id="newRating" name="newRating" min="1" max="5" required><br><br>
+    <button type="submit">Update Rating</button>
+</form>
+<div id="updateFeedbackResult"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2>Get Best Rated Branch</h2>
+<button id="getBestRatedBranchBtn">Get Best Rated Branch</button>
+<div id="bestRatedBranchResult"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<!-- ===================================================================================== -->
+<!-- External JavaScript file that contains functionality/logic for the operations above. -->
+<script src="feedback.js"></script>
+</body>
+</html>

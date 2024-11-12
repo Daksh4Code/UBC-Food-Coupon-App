@@ -16,7 +16,6 @@ const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if
 // Middleware setup
 app.use(express.static('public'));  // Serve static files from the 'public' directory
 app.use(express.json());             // Parse incoming JSON payloads
-
 // If you prefer some other file as default page other than 'index.html',
 //      you can adjust and use the bellow line of code to
 //      route to send 'DEFAULT_FILE_NAME.html' as default for root URL
