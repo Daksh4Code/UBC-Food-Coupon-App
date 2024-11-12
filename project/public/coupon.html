@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link to the external CSS stylesheet. Uncomment if you wish to customize or add styling. -->
+    <!-- <link rel="stylesheet" href="styles.css">   -->
+
+    <title>UBCoupon</title>
+</head>
+<body>
+<!-- ===================================================================================== -->
+<!-- Show 'CouponTable' -->
+<h2>Show Coupon Table</h2>
+<table id="couponTable" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Discount</th>
+        <th>Branch</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2>Best Coupon Deals for This Week</h2>
+<button id="viewBestCoupon"> count </button> <br><br>
+<table id="bestCoupons" border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Discount</th>
+        <th>Branch</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2> Decrement Coupon Number of Uses </h2>
+<form id="updateNumUse">
+    <button type="submit"> insert </button> <br>
+</form>
+<div id="couponNumUse"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2> Initialize the SQL Tables </h2>
+<form id="initializeSQLTables">
+    <button type="submit"> insert </button> <br>
+</form>
+<div id="insertResultMsg"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<!-- ===================================================================================== -->
+<!-- External JavaScript file that contains the functionality/logic for the operations above. -->
+<script src="coupon.js"></script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 //script to set up environment derived from CPSC304 Javascript/Oracle Tutorial
 const express = require('express');
 const appController = require('./controllers/appController');
-const couponController = require('./controllers/couponController')
-const userController = require('./controllers/userController')
-const feedbackController = require('./controllers/feedbackController')
+//const couponController = require('./controllers/couponController')
+//const userController = require('./controllers/userController')
+//const feedbackController = require('./controllers/feedbackController')
 
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
@@ -27,9 +27,9 @@ app.use(express.json());             // Parse incoming JSON payloads
 
 // mount the router
 app.use('/', appController);
-app.use('/coupons', couponController);
-app.use('/users', userController);
-app.use('/feedbacks', feedbackController);
+//app.use('/coupons', couponController);
+//app.use('/users', userController);
+//app.use('/feedbacks', feedbackController);
 
 // ----------------------------------------------------------
 // Starting the server

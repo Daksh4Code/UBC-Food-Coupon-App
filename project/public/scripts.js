@@ -144,33 +144,6 @@ async function countDemotable() {
         alert("Error in count demotable!");
     }
 }
-//
-//async function fetchCouponTable() {
-//    const response = await fetch("/coupons/fetch" , {
-//        method: "GET"
-//    });
-//    //Add more...
-//
-//}
-//
-//async function updateCouponNumUse() {
-//    const response = await fetch("/coupons/:cid/update-num-use", {
-//        method: "PUT"
-//    });
-//}
-//
-//async function deleteUsedCoupon() {
-//    const response = await fetch("/coupons/:cid/delete-used-coupon", {
-//        method = "PUT"
-//    });
-//}
-//
-//async function getGoodDealRestaurant() {
-//    const response = await fetch("/coupons/retrieve-good-deal-restaurant", {
-//        method = "GET"
-//    });
-//}
-
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -181,11 +154,6 @@ window.onload = function() {
     document.getElementById("initializeSQLTables").addEventListener("submit", initializeSQLTables);
     document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
     document.getElementById("countDemotable").addEventListener("click", countDemotable);
-//    document.getElementById("fetchCouponTable").addEventListener("click", fetchCouponTable);
-//    document.getElementById("updateNumUse").addEventListener("click", updateCouponNumUse);
-//    document.getElementById("deleteUsedCoupon").addEventListener("click", deleteUsedCoupon);
-//    document.getElementById("getGoodDealRestaurant").addEventListener("click", getGoodDealRestaurant);
-
 };
 
 // General function to refresh the displayed table data. 
