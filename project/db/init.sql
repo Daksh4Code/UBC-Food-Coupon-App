@@ -71,6 +71,55 @@ CREATE TABLE Feedback_Rating (
      FOREIGN KEY (branch_id) REFERENCES Branch (branch_id) ON DELETE CASCADE
 );
 
+-- Create Delivery Table
+CREATE TABLE Delivery(
+                         order_id INTEGER PRIMARY KEY,
+                         total_cost DECIMAL(10,2),
+                         order_date DATE,
+                         payment_method VARCHAR(111),
+                         promo_code VARCHAR(111),
+                         coupon_id CHAR(8) DEFAULT NULL,
+                         branch_id CHAR(5) NOT NULL,
+                         account_id VARCHAR(111) NOT NULL,
+                         sid CHAR(8) NOT NULL,
+                         delivery_cost DECIMAL(4,2),
+                         delivery_status VARCHAR(111),
+                         delivery_time FLOAT,
+                         FOREIGN KEY (coupon_id) REFERENCES Coupon
+                             ON DELETE SET NULL,
+                         FOREIGN KEY (branch_id) REFERENCES Branch
+                             ON DELETE CASCADE,
+                         FOREIGN KEY (account_id) REFERENCES Account
+                             ON DELETE CASCADE,
+                         FOREIGN KEY (sid) REFERENCES UBC_Student
+                             ON DELETE CASCADE
+);
+
+-- Create Pickup Table
+CREATE TABLE Pickup
+(
+    order_id INTEGER PRIMARY KEY,
+    total_cost DECIMAL(10,2),
+    order_date DATE,
+    payment_method VARCHAR(111),
+    promo_code VARCHAR(111),
+    coupon_id CHAR(8) DEFAULT NULL,
+    branch_id CHAR(5) NOT NULL,
+    account_id VARCHAR(111) NOT NULL,
+    sid CHAR(8) NOT NULL,
+    pickup_time FLOAT,
+    pickup_status VARCHAR(111),
+    FOREIGN KEY (coupon_id) REFERENCES Coupon
+        ON DELETE SET NULL,
+    FOREIGN KEY (branch_id) REFERENCES Branch
+        ON DELETE CASCADE,
+    FOREIGN KEY (account_id) REFERENCES Account
+        ON DELETE CASCADE,
+    FOREIGN KEY (sid) REFERENCES UBC_Student
+        ON DELETE CASCADE
+);
+
+
 -- Create Feedback_Link table
 CREATE TABLE Feedback_Link (
    fid INTEGER PRIMARY KEY,
@@ -165,3 +214,25 @@ INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VAL
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (1, 'acc001', '12345678', TO_DATE('2024-11-08', 'YYYY-MM-DD'), 'S0002');
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (2, 'acc002', '87654321', TO_DATE('2024-11-07', 'YYYY-MM-DD'), 'T0001');
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (3, 'acc003', '11223344', TO_DATE('2024-11-06', 'YYYY-MM-DD'), 'H0001');
+
+INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','FAKECOUPON','2G2303D3', 'S0002','acc001','21402983',2.99, 'Complete', 1.2
+                            );
+INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','85392374',2.99, 'Complete', 0.2
+                            );
+INSERT INTO Delivery VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', 'COUPON1','K0E5G001', 'H0001','acc003','24712948',2.99, 'Placed', 2
+                            );
+INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash', 'FAKECOUPON','2G2303D3', 'S0002','acc004','41238733',4.99, 'Delivering', 1
+                            );
+INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.99, 'Placed', 777
+                            );
+
+INSERT INTO Pickup VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','21402983',1, 'Complete'
+                          );
+INSERT INTO Pickup VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','85392374',0.9, 'Complete'
+                          );
+INSERT INTO Pickup VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','24712948',0.2, 'Placed'
+                          );
+INSERT INTO Pickup VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','41238733',1, 'Delivering'
+                          );
+INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.12, 'Placed'
+                          );
