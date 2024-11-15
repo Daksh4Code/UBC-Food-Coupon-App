@@ -73,6 +73,19 @@ async function testOracleConnection() {
     });
 }
 
+// Core functions for delivery operations
+
+async function generatePickup(order_id,total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,pickup_status,pickup_time) {
+}
+
+async function updateStatus(orderID, newStatus) {
+}
+
+async function getOrderDetails(orderID) {
+}
+
+
+// module exports
 module.exports = {
-    testOracleConnection
+
 };
