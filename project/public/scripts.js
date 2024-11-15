@@ -25,7 +25,7 @@ async function checkDbConnection() {
     // Hide the loading GIF once the response is received.
     loadingGifElem.style.display = 'none';
     // Display the statusElem's text in the placeholder.
-    statusElem.style.display = 'inline';
+    statusElem.style.display =  'inline';
 
     response.text()
     .then((text) => {
