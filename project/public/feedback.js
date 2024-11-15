@@ -17,7 +17,7 @@ async function fetchFeedbackTable() {
     const tableElement = document.getElementById('feedbackTable');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/feedbacks', {
+    const response = await fetch('/feedbacks/submit', {
         method: 'GET'
     });
 
