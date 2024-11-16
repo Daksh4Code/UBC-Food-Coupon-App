@@ -30,7 +30,7 @@ async function withOracleDB(action) {
 // fetch coupons adapted from fetchDemotableFromDb from tutorial
 async function fetchCoupons() {
      return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM Coupon C');
+        const result = await connection.execute('SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses FROM Coupon C, Branch B WHERE C.branch_id = B.branch_id');
         return result.rows;
     }).catch(() => {
         return [];

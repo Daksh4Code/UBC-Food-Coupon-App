@@ -7,8 +7,8 @@ const router = express.Router();
 
 //fetch the coupons
 router.get('/fetch', async (req, res) => {
-    const couponTable = await appService.fetchCoupons();
     console.log("here")
+    const couponTable = await appService.fetchCoupons();
     res.json({data: couponTable});
     console.log(couponTable)
 });

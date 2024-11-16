@@ -138,6 +138,11 @@ CREATE TABLE Feedback_Link (
    FOREIGN KEY (branch_id) REFERENCES Branch (branch_id) ON DELETE CASCADE
 );
 
+-- CREATE ASSERTION OrderHasFood
+-- CHECK (Not Exists(Select food_name from Food
+--                     Except
+--                     Select food_name from Consists));
+
 --Insert statements to populate the db
 INSERT INTO Restaurant VALUES('Starbucks', 'cafe');
 INSERT INTO Restaurant VALUES('Triple_Os', 'restaurant');
@@ -162,8 +167,8 @@ INSERT INTO Food VALUES('main_bowl', 'food', 850,'regular', 'P0001', 18.00);
 INSERT INTO Coupon VALUES('2G2303D3', 'S0002', 0.15, 4);
 INSERT INTO Coupon VALUES('B152R99G', 'T0001', 0.25, 2);
 INSERT INTO Coupon VALUES('K0E5G001', 'H0001', 0.02, 1);
-INSERT INTO Coupon VALUES('B0F13D01', 'H0001', 0.05, 0);
-INSERT INTO Coupon VALUES('P0F33N20', 'P0001', 0.10, 0);
+INSERT INTO Coupon VALUES('B0F13D01', 'H0001', 0.05, 10);
+INSERT INTO Coupon VALUES('P0F33N20', 'P0001', 0.10, 9);
 INSERT INTO Sells VALUES('americano', 'S0002');
 INSERT INTO Sells VALUES('cheese_burger', 'T0001');
 INSERT INTO Sells VALUES('caesar_salad', 'H0001');
@@ -242,3 +247,5 @@ INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (
 --                           );
 -- INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.12, 'Placed'
 --                           );
+
+
