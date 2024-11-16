@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 
 const appController = require('./controllers/appController');
-//const couponController = require('./controllers/couponController')
+const couponController = require('./controllers/couponController')
 //const userController = require('./controllers/userController')
 //const feedbackController = require('./controllers/feedbackController')
 
@@ -25,7 +25,7 @@ app.use(express.json());             // Parse incoming JSON payloads
 
 // mount the router
 app.use('/', appController);
-//app.use('/coupons', couponController);
+app.use('/coupons', couponController);
 //app.use('/users', userController);
 //app.use('/feedbacks', feedbackController);
 

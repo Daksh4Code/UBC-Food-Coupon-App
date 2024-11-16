@@ -8,7 +8,9 @@ const router = express.Router();
 //fetch the coupons
 router.get('/fetch', async (req, res) => {
     const couponTable = await appService.fetchCoupons();
+    console.log("here")
     res.json({data: couponTable});
+    console.log(couponTable)
 });
 
 //update the number of uses of the select coupon

@@ -2,6 +2,27 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const fs = require('fs');
 
+// Wrapper to manage OracleDB actions, simplifying connection handling.
+async function withOracleDB(action) {
+    let connection;
+    try {
+        connection = await oracledb.getConnection(); // Gets a connection from the default pool
+        return await action(connection);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+}
+
+
 // Core functions for coupon operations
 
 // coupon - SELECT:
