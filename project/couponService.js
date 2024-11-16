@@ -2,6 +2,27 @@ const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const fs = require('fs');
 
+// Wrapper to manage OracleDB actions, simplifying connection handling.
+async function withOracleDB(action) {
+    let connection;
+    try {
+        connection = await oracledb.getConnection(); // Gets a connection from the default pool
+        return await action(connection);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+}
+
+
 // Core functions for coupon operations
 
 // coupon - SELECT:
@@ -9,7 +30,7 @@ const fs = require('fs');
 // fetch coupons adapted from fetchDemotableFromDb from tutorial
 async function fetchCoupons() {
      return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM Coupon C');
+        const result = await connection.execute('SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses FROM Coupon C, Branch B WHERE C.branch_id = B.branch_id');
         return result.rows;
     }).catch(() => {
         return [];

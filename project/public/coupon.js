@@ -50,6 +50,7 @@ async function updateCouponNumUse() {
     const responseNumUse = await response.json();
     const responseData = responseNumUse.data;
     const messageElement = document.getElementById('couponNumUse');
+    console.log(responseData)
 
     if (responseData.success) {
         messageElement.textContent = "Coupon Number of Uses Updated Successfully!";
@@ -67,9 +68,13 @@ async function updateCouponNumUse() {
 //}
 //
 //async function getGoodDealRestaurant() {
-//    const response = await fetch("/coupons/retrieve-good-deal-restaurant", {
-//        method = "GET"
-//    });
+//    const tableElement = document.getElementById('couponTable');
+//    const tableBody = tableElement.querySelector('tbody');
+//    try {
+//        const response = await fetch("/coupons/retrieve-good-deal-restaurant", {
+//            method = "GET"
+//        });
+//    }
 //}
 
 // ---------------------------------------------------------------
@@ -79,7 +84,7 @@ window.onload = function() {
     fetchTableData();
     document.getElementById("updateNumUse").addEventListener("click", updateCouponNumUse);
 //    document.getElementById("deleteUsedCoupon").addEventListener("click", deleteUsedCoupon);
-//    document.getElementById("getGoodDealRestaurant").addEventListener("submit", getGoodDealRestaurant);
+    document.getElementById("getGoodDealRestaurant").addEventListener("click", getGoodDealRestaurant);
 
 };
 
