@@ -2,7 +2,7 @@ const express = require('express');
 const appService = require('../userService');
 const router = express.Router();
 
-// --- User Management API endpoints:
+// --- User Management routes ---
 
 // Create User
 router.post('/users/create', async (req, res) => {

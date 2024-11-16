@@ -133,6 +133,10 @@ async function getBestRatedBranch() {
 
 // module exports
 module.exports = {
+    submitFeedback,
+    updateFeedback,
+    viewFeedback,
+    getBestRatedBranch
 
 };
 
