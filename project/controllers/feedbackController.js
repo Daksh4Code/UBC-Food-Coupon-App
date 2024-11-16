@@ -2,7 +2,7 @@ const express = require('express');
 const appService = require('../feedbackService');
 const router = express.Router();
 
-// --- Feedback Management API endpoints:
+// --- Feedback Management routes ---
 
 // Submit Feedback
  router.post('/feedbacks/submit', async (req, res) => {

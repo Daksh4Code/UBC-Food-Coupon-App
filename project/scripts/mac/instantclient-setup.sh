@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the directory where the script is located
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 
 echo "Please enter the absolute path to the Oracle Instant Client directory:"
 read oraclePath
@@ -11,7 +11,7 @@ read oraclePath
 echo '#!/bin/bash'
 echo
 echo '# Change to the directory where the script is located'
-echo 'cd "$(dirname "$0")"'
+echo 'cd "$(dirname "$0")" || exit'
 echo
 echo "# Configure the oracle instant client env variable"
 echo "export DYLD_LIBRARY_PATH=$oraclePath:\$DYLD_LIBRARY_PATH"
