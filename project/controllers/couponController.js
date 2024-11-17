@@ -7,29 +7,40 @@ const router = express.Router();
 
 //fetch the coupons
 router.get('/fetch', async (req, res) => {
-    console.log("here")
     const couponTable = await appService.fetchCoupons();
     res.json({data: couponTable});
-    console.log(couponTable)
 });
 
 //update the number of uses of the select coupon
-router.post('/:cid/update-num-use', async (req, res) => {
+router.put('/:cid/update-num-use', async (req, res) => {
     const coupon_id = req.params.cid;
     const coupon = await appService.updateNumberUses(coupon_id);
     res.json({data: coupon});
 });
 
 // delete coupons with number of uses == 0
-router.delete('/:cid/delete-used-coupon', async (req, res) => {
-    const coupon_id = req.params.cid;
-    await appService.deleteCoupon(coupon_id);
+router.delete('/del-used-coupon', async (req, res) => {
+    const deleted_coupons = await appService.deleteCoupon();
 });
 
 // retrieve restaurants with good coupon deals
 router.get('/retrieve-good-deal-restaurant', async(req,res) => {
     const goodDealRestaurants = await appService.retrieveGoodDealRestaurants();
     res.json({data: goodDealRestaurants})
+});
+
+// Get the Coupon associated with selected Branch
+router.get('/:bid/get_coupon_branch', async(req,res) => {
+   const branch_id = req.params.bid;
+   const branch_coupon = await appService.getCouponBranch(branch_id);
+   res.json({data: branch_coupon})
+});
+
+// Get the branch associated with the restaurant
+router.get('/:rid/get_res_branch', async(req,res) => {
+   const res_id = req.params.rid;
+   const restaurant_branches = await appService.getRestaurantBranch(res_id);
+   res.json({data: restaurant_branches})
 });
 
 module.exports = router;
