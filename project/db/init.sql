@@ -5,6 +5,7 @@ DROP TABLE Food CASCADE CONSTRAINTS;
 DROP TABLE Coupon CASCADE CONSTRAINTS;
 DROP TABLE Sells CASCADE CONSTRAINTS;
 
+
 CREATE TABLE Restaurant (
     name VARCHAR(1000) PRIMARY KEY,
     type VARCHAR(1000)
@@ -247,5 +248,5 @@ INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (
 --                           );
 -- INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.12, 'Placed'
 --                           );
-
+COMMIT;
 

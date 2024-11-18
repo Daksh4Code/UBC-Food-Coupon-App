@@ -71,6 +71,15 @@ async function getBranchCoupons() {
         const coupons = responseData.data;
         const messageElement = document.getElementById('coupons_results');
         messageElement.textContent = coupons;
+        console.log(coupons)
+        const options = document.getElementById('branch_coupons');
+        Object.keys(coupons).forEach(key => {
+                    var text = key;
+                    var value = coupons[key];
+                    var option = new Option(text, value);
+                    console.log(option)
+                    options.append(option);
+                });
 
 
     } catch(error) {
@@ -92,6 +101,15 @@ async function getRestaurantBranches() {
         const branches = responseData.data;
         const messageElement = document.getElementById('branches_results');
         messageElement.textContent = branches;
+        const options = document.getElementById("restaurant_branches");
+        console.log(branches)
+        Object.keys(branches).forEach(key => {
+            var text = key;
+            var value = branches[key];
+            var option = new Option(text, value);
+            console.log(option)
+            options.append(option);
+        });
 
     } catch(error) {
         console.log("can't get the branches associated with the restaurant name")
@@ -117,6 +135,9 @@ async function deleteUsedCoupon() {
 
 
 async function getGoodDealRestaurant() {
+    //B.branch_id, B.street_address, R.name, MAX(dc_percent)
+    const tableElement = document.getElementById('bestCouponTable');
+    const tableBody = tableElement.querySelector('tbody');
     try {
         const response = await fetch("/coupons/retrieve-good-deal-restaurant", {
             method : "GET"
@@ -126,6 +147,17 @@ async function getGoodDealRestaurant() {
         const good_deals = responseData.data;
         const messageElement = document.getElementById('bestCoupons');
         messageElement.textContent = good_deals;
+
+        if (tableBody) {
+                    tableBody.innerHTML = '';
+        }
+        good_deals.forEach(user => {
+            const row = tableBody.insertRow();
+            user.forEach((field, index) => {
+                const cell = row.insertCell(index);
+                cell.textContent = field;
+            });
+        });
 
     } catch(error) {
         console.log("error in retrieving the best deals!")

@@ -67,10 +67,10 @@ async function deleteCoupon() {
 }
 
 //  coupon - GROUP BY with HAVING:
-// function: group the coupons by their branch_id and retrieve branches with min coupon dc >= 15%
+// function: group the coupons by their branch_id and retrieve branches with max coupon dc >= 15%
 async function retrieveGoodDealRestaurants() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT B.branch_id, B.street_address, R.name, MIN(dc_percent) FROM COUPON C, BRANCH B, RESTAURANT R WHERE R.name = B.restaurant_name AND B.branch_id = C.branch_id GROUP BY B.branch_id, B.street_address, R.name HAVING MIN(C.dc_percent) >= 0.15')
+        const result = await connection.execute('SELECT R.name, B.branch_id, B.street_address, MAX(dc_percent) FROM COUPON C, BRANCH B, RESTAURANT R WHERE R.name = B.restaurant_name AND B.branch_id = C.branch_id GROUP BY B.branch_id, B.street_address, R.name HAVING MAX(C.dc_percent) >= 0.15')
         return result.rows;
     }).catch(() => {
         return [];
@@ -81,9 +81,16 @@ async function retrieveGoodDealRestaurants() {
 async function getCouponBranch(bid) {
     console.log(bid)
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT C.coupon_id FROM COUPON C WHERE C.branch_id = :branch',
+        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM COUPON C WHERE C.branch_id = :branch',
            {branch: bid});
-        return result.rows;
+        // change the resulting list to dict format
+        const resultDict = {};
+                result.rows.forEach(row => {
+                    const [percent, id] = row;
+                    resultDict[id] = percent;
+                })
+
+        return resultDict;
     }).catch(() => {
         return [];
     })
@@ -93,10 +100,16 @@ async function getCouponBranch(bid) {
 async function getRestaurantBranch(res_name) {
     console.log(res_name)
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT B.street_address FROM Branch B WHERE B.restaurant_name = :name',
+        const result = await connection.execute('SELECT B.street_address, B.branch_id FROM Branch B WHERE B.restaurant_name = :name',
             {name: res_name});
-        console.log(result.rows)
-        return result.rows;
+        console.log(result);
+        // change the list of rows into dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [address, id] = row;
+            resultDict[id] = address;
+        })
+        return resultDict;
     }).catch(() => {
         return [];
     })
