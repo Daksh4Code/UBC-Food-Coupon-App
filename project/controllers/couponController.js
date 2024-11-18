@@ -23,6 +23,13 @@ router.delete('/del-used-coupon', async (req, res) => {
     const deleted_coupons = await appService.deleteCoupon();
 });
 
+//retrieve all restaurants
+router.get('/get_restaurants', async(req,res) => {
+    const restaurants = await appService.getRestaurants();
+    res.json({data: restaurants})
+});
+
+
 // retrieve restaurants with good coupon deals
 router.get('/retrieve-good-deal-restaurant', async(req,res) => {
     const goodDealRestaurants = await appService.retrieveGoodDealRestaurants();

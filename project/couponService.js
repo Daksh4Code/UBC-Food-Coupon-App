@@ -77,6 +77,19 @@ async function retrieveGoodDealRestaurants() {
     })
 }
 
+// coupon - SELECT:
+// function: retrieves all restaurants from Restaurant
+async function getRestaurants() {
+     return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT name FROM Restaurant');
+        console.log(result.rows)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
 //get the coupons associated with the select branch
 async function getCouponBranch(bid) {
     console.log(bid)
@@ -122,5 +135,6 @@ module.exports = {
     deleteCoupon,
     retrieveGoodDealRestaurants,
     getRestaurantBranch,
-    getCouponBranch
+    getCouponBranch,
+    getRestaurants
 };

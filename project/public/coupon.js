@@ -59,9 +59,8 @@ async function updateCouponNumUse() {
 
 }
 
-async function getBranchCoupons() {
+async function getBranchCoupons(bid) {
     event.preventDefault();
-    const bid = document.getElementById('branchID').value;
     console.log(bid)
     try {
             const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
@@ -88,10 +87,32 @@ async function getBranchCoupons() {
 
 
 }
-
-async function getRestaurantBranches() {
+async function getRestaurants() {
     event.preventDefault();
-    const res_name = document.getElementById('res_name').value;
+    try {
+            const response = await fetch('/coupons/get_restaurants', {
+            method : "GET"
+        });
+        const responseData = await response.json();
+        const restaurants = responseData.data;
+
+        const options = document.getElementById('restaurant_results');
+        restaurants.forEach(res_list => {
+            res = res_list[0]
+            var option = new Option(res, res);
+            options.append(option);
+        });
+
+    } catch(error) {
+        console.log("can't get the coupons associated with the branch id")
+    }
+
+}
+
+
+
+async function getRestaurantBranches(res_name) {
+    event.preventDefault();
     console.log(res_name)
     try {
             const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
@@ -169,13 +190,28 @@ async function getGoodDealRestaurant() {
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
     fetchTableData();
+    getRestaurants();
+    document.getElementById("restaurant_results").addEventListener("change", getUserOptions)
     document.getElementById("numUseUpdate").addEventListener("submit", updateCouponNumUse);
-    document.getElementById("couponBranch").addEventListener("submit", getBranchCoupons);
-    document.getElementById("restaurantBranches").addEventListener("submit", getRestaurantBranches);
+//    document.getElementById("couponBranch").addEventListener("submit", getBranchCoupons);
+//    document.getElementById("restaurantBranches").addEventListener("submit", getRestaurantBranches);
     document.getElementById("viewBestCoupon").addEventListener("click", getGoodDealRestaurant);
     document.getElementById("delete_coupons").addEventListener("click", deleteUsedCoupon);
-};
+    document.getElementById('restaurant_results').addEventListener('change', getUserOptions);
+    document.getElementById('restaurantBranches').addEventListener('change', getUserOptions);
+    document.getElementById('branch_coupons').addEventListener('change', getUserOptions);
 
+};
+async function getUserOptions() {
+    const chosen_restaurant = document.getElementById('restaurant_results').value;
+    console.log(chosen_restaurant);
+    await getRestaurantBranches(chosen_restaurant);
+    const chosen_branch = document.getElementById('restaurantBranches').value;
+    console.log(chosen_branch);
+    await getBranchCoupons(chosen_branch);
+    const chosen_coupon = document.getElementById('branch_coupons').value;
+    console.log(chosen_branch);
+}
 // General function to refresh the displayed table data. 
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
