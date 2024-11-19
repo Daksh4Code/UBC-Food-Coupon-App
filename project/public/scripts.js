@@ -155,6 +155,7 @@ async function countDemotable() {
 }
 
 
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.

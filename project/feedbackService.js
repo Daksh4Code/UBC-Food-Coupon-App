@@ -113,8 +113,8 @@ async function viewFeedback(accountId) {
                 [accountId]
             );
             return result.rows;
-        });
-    }).catch(() => {
+        })
+    .catch(() => {
           return [];
       });
 }
@@ -125,8 +125,8 @@ async function getBestRatedBranch() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT branch_id FROM feedback GROUP BY branch_id HAVING AVG(rating) = (SELECT MAX(AVG(rating)) FROM feedback GROUP BY branch_id)');
             return result.rows;
-        });
-    }).catch(() => {
+        })
+    .catch(() => {
           return [];
       });
 }
