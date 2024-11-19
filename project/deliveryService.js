@@ -50,6 +50,7 @@ async function withOracleDB(action) {
     let connection;
     try {
         connection = await oracledb.getConnection(); // Gets a connection from the default pool
+
         return await action(connection);
     } catch (err) {
         console.error(err);
@@ -73,10 +74,38 @@ async function testOracleConnection() {
     });
 }
 
+
+
 // Core functions for delivery operations
 
-async function generateDelivery(order_id,total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,delivery_cost,delivery_status,delivery_time) {
+async function generateDelivery(total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,delivery_cost,delivery_status,delivery_time) {
+    return await withOracleDB(async (connection) => {
+        const del_ids = await connection.execute('SELECT order_id FROM delivery').rows.map(row => row.ORDER_ID);
+        const pic_ids = await connection.execute('SELECT order_id FROM pickup').rows.map(row => row.ORDER_ID);
+
+        console.log(del_ids);
+        console.log(pic_ids);
+        console.log(testOracleConnection())
+
+        let id = Math.random();
+        while (del_ids.contains(id) || pic_ids.contains(id)) {
+            id = Math.random();
+        }
+        await connection.execute('INSERT INTO Delivery VALUES (id, total_cost, TO_DATE(\'17/12/2015\', \'DD/MM/YYYY\'), ' +
+            '\'Debit\',\'FAKECOUPON\',\'2G2303D3\', \'S0002\',\'acc001\',\'12345678\',2.99, \'Complete\', 1.2\n' +
+            '                            );');
+
+        // NOT DONE, CHANGE ABOVE EXECUTE AND ALSO UPDATE THINGS RELIANT ON ORDER ID, LIKE CONSISTS_DELIVERY
+        return result.rows;
+    })
+    .catch(() => {
+    return [];
+    });
 }
+const currentDate = new Date();
+const formattedDate = currentDate.toISOString().split('T')[0];  // Extracts the date part (YYYY-MM-DD),  // Example ISO 8601 date
+
+
 
 async function updateStatus(orderID, newStatus) {
 }
@@ -87,5 +116,7 @@ async function getOrderDetails(orderID) {
 
 // module exports
 module.exports = {
-
+    generateDelivery,
+    updateStatus,
+    getOrderDetails
 };

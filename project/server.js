@@ -6,11 +6,15 @@ const appController = require('./controllers/appController');
 const couponController = require('./controllers/couponController')
 //const userController = require('./controllers/userController')
 const feedbackController = require('./controllers/feedbackController')
+const deliveryController = require('./controllers/deliveryController')
+const pickupController = require('./controllers/pickupController')
 
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
 const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
+
+
 
 const app = express();
 const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
@@ -26,6 +30,8 @@ app.use(express.json());             // Parse incoming JSON payloads
 // mount the router
 app.use('/', appController);
 app.use('/coupons', couponController);
+app.use('/delivery', deliveryController);
+app.use('/pickup', pickupController);
 //app.use('/users', userController);
 //app.use('/feedbacks', feedbackController);
 //app.use('/coupons', couponController);
