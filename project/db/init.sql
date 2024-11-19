@@ -10,7 +10,8 @@ drop table FOOD cascade constraints;
 drop table BRANCH cascade constraints;
 drop table RESTAURANT cascade constraints;
 drop table FOOD_INFORMATION cascade constraints;
-
+drop table CONSISTS_DELIVERY cascade constraints;
+drop table CONSISTS_PICKUP cascade constraints;
 
 
 CREATE TABLE Restaurant (
@@ -146,6 +147,26 @@ CREATE TABLE Feedback_Link (
    FOREIGN KEY (branch_id) REFERENCES Branch (branch_id) ON DELETE CASCADE
 );
 
+CREATE TABLE Consists_Delivery (
+    order_id INTEGER,
+    food_name VARCHAR(1000) NOT NULL,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, food_name),
+    FOREIGN KEY (order_id) REFERENCES Delivery (order_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
+);
+
+CREATE TABLE Consists_Pickup (
+    order_id INTEGER,
+    food_name VARCHAR(1000) NOT NULL,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, food_name),
+    FOREIGN KEY (order_id) REFERENCES Pickup (order_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
+);
+
+-- ASSERTIONS SEEMINGLY NOT SUPPORTED
+-- ----------------------------------------------
 -- CREATE ASSERTION OrderHasFood
 -- CHECK (Not Exists(Select food_name from Food
 --                     Except
@@ -249,15 +270,35 @@ INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 
 INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
                             );
 
-INSERT INTO Pickup VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','12345678',1, 'Complete'
+INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','12345678',1, 'Complete'
                           );
-INSERT INTO Pickup VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
+INSERT INTO Pickup VALUES (7, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
                           );
-INSERT INTO Pickup VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','11223344',0.2, 'Placed'
+INSERT INTO Pickup VALUES (8, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','11223344',0.2, 'Placed'
                           );
-INSERT INTO Pickup VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',1, 'Delivering'
+INSERT INTO Pickup VALUES (9, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',1, 'Delivering'
                           );
-INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
+INSERT INTO Pickup VALUES (10, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
                           );
 
+-- Consists: Delivery
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (1, 'americano', 1);
 
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (2, 'cheese_burger', 2);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (3, 'caesar_salad', 3);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (4, 'roasted_chicken_sub', 4);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (5, 'main_bowl', 1);
+
+-- Consists: Pickup
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (6, 'americano', 2);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (7, 'cheese_burger', 3);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (8, 'caesar_salad', 4);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (9, 'roasted_chicken_sub', 1);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (10, 'main_bowl', 2);
