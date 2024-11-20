@@ -1,9 +1,18 @@
-DROP TABLE Restaurant CASCADE CONSTRAINTS;
-DROP TABLE Branch CASCADE CONSTRAINTS;
-DROP TABLE Food_Information CASCADE CONSTRAINTS;
-DROP TABLE Food CASCADE CONSTRAINTS;
-DROP TABLE Coupon CASCADE CONSTRAINTS;
-DROP TABLE Sells CASCADE CONSTRAINTS;
+drop table FEEDBACK_RATING cascade constraints;
+drop table DELIVERY cascade constraints;
+drop table PICKUP cascade constraints;
+drop table FEEDBACK_LINK cascade constraints;
+drop table ACCOUNT cascade constraints;
+drop table UBC_STUDENT cascade constraints;
+drop table COUPON cascade constraints;
+drop table SELLS cascade constraints;
+drop table FOOD cascade constraints;
+drop table BRANCH cascade constraints;
+drop table RESTAURANT cascade constraints;
+drop table FOOD_INFORMATION cascade constraints;
+drop table CONSISTS_DELIVERY cascade constraints;
+drop table CONSISTS_PICKUP cascade constraints;
+
 
 
 CREATE TABLE Restaurant (
@@ -139,6 +148,26 @@ CREATE TABLE Feedback_Link (
    FOREIGN KEY (branch_id) REFERENCES Branch (branch_id) ON DELETE CASCADE
 );
 
+CREATE TABLE Consists_Delivery (
+    order_id INTEGER,
+    food_name VARCHAR(1000) NOT NULL,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, food_name),
+    FOREIGN KEY (order_id) REFERENCES Delivery (order_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
+);
+
+CREATE TABLE Consists_Pickup (
+    order_id INTEGER,
+    food_name VARCHAR(1000) NOT NULL,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, food_name),
+    FOREIGN KEY (order_id) REFERENCES Pickup (order_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
+);
+
+-- ASSERTIONS SEEMINGLY NOT SUPPORTED
+-- ----------------------------------------------
 -- CREATE ASSERTION OrderHasFood
 -- CHECK (Not Exists(Select food_name from Food
 --                     Except
@@ -187,10 +216,11 @@ INSERT INTO UBC_Student (sid, cwl) VALUES('22334455', 'tinker.bell');
 INSERT INTO UBC_Student (sid, cwl) VALUES('10101010', 'robin.hood');
 INSERT INTO UBC_Student (sid, cwl) VALUES('90909090', 'maid.marian');
 INSERT INTO UBC_Student (sid, cwl) VALUES('13579246', 'little.john');
-INSERT INTO UBC_Student (sid, cwl) VALUES('24681354', 'friar.tuck');
-INSERT INTO UBC_Student (sid, cwl) VALUES('18273645', 'sheriff.nott');
+-- INSERT INTO UBC_Student (sid, cwl) VALUES('24681354', 'friar.tuck');
+INSERT INTO UBC_Student (sid, cwl) VALUES('18273645', 'sheriff.mathew');
 INSERT INTO UBC_Student (sid, cwl) VALUES('54321098', 'prince.john');
 INSERT INTO UBC_Student (sid, cwl) VALUES('86420975', 'alan.a.dale');
+
 -- Insert data into Account table
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc001', 2024, 'Computer Science', 'password123', '12345678', 'john.doe');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc002', 2023, 'Biology', 'securepass', '87654321', 'jane.smith');
@@ -203,9 +233,10 @@ INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc00
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc009', 2024, 'Psychology', 'mindreader', '10101010', 'robin.hood');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc010', 2023, 'Sociology', 'socialbee', '90909090', 'maid.marian');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc011', 2025, 'Political Science', 'govnerd', '13579246', 'little.john');
-INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc019', 2022, 'Earth Science', 'gogreenman', '18325645', 'sheriff.mathew');
+INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc019', 2022, 'Earth Science', 'gogreenman', '18273645', 'sheriff.mathew');
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc014', 2023, 'Music', 'musiclover', '54321098', 'prince.john');
-INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc017', 2021, 'History', 'history111', '81469944', 'alan.dale');
+INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES ('acc017', 2021, 'History', 'history111', '86420975', 'alan.dale');
+
 -- Insert data into Feedback_Rating table
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES ('acc001', '12345678', TO_DATE('2024-11-08', 'YYYY-MM-DD'), 'S0002', 4);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc002', '87654321', TO_DATE('2024-11-07', 'YYYY-MM-DD'), 'T0001', 5);
@@ -227,6 +258,7 @@ INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (2, 'acc002', '87654321', TO_DATE('2024-11-07', 'YYYY-MM-DD'), 'T0001');
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (3, 'acc003', '11223344', TO_DATE('2024-11-06', 'YYYY-MM-DD'), 'H0001');
 
+<<<<<<< HEAD
 -- INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','FAKECOUPON','2G2303D3', 'S0002','acc001','21402983',2.99, 'Complete', 1.2
 --                             );
 -- INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','85392374',2.99, 'Complete', 0.2
@@ -248,5 +280,49 @@ INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (
 --                           );
 -- INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.12, 'Placed'
 --                           );
-COMMIT;
 
+
+INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','FAKECOUPON','2G2303D3', 'S0002','acc001','12345678',2.99, 'Complete', 1.2
+                            );
+INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',2.99, 'Complete', 0.2
+                            );
+INSERT INTO Delivery VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', 'COUPON1','K0E5G001', 'H0001','acc003','11223344',2.99, 'Placed', 2
+                            );
+INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash', 'FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',4.99, 'Delivering', 1
+                            );
+INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
+                            );
+
+INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','12345678',1, 'Complete'
+                          );
+INSERT INTO Pickup VALUES (7, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
+                          );
+INSERT INTO Pickup VALUES (8, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','11223344',0.2, 'Placed'
+                          );
+INSERT INTO Pickup VALUES (9, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',1, 'Delivering'
+                          );
+INSERT INTO Pickup VALUES (10, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
+                          );
+
+-- Consists: Delivery
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (1, 'americano', 1);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (2, 'cheese_burger', 2);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (3, 'caesar_salad', 3);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (4, 'roasted_chicken_sub', 4);
+
+INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (5, 'main_bowl', 1);
+
+-- Consists: Pickup
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (6, 'americano', 2);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (7, 'cheese_burger', 3);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (8, 'caesar_salad', 4);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (9, 'roasted_chicken_sub', 1);
+
+INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (10, 'main_bowl', 2);
+COMMIT;
