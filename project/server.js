@@ -5,9 +5,11 @@ const path = require('path');
 const appController = require('./controllers/appController');
 const couponController = require('./controllers/couponController')
 //const userController = require('./controllers/userController')
+//const feedbackController = require('./controllers/feedbackController')
 const feedbackController = require('./controllers/feedbackController')
 const deliveryController = require('./controllers/deliveryController')
 const pickupController = require('./controllers/pickupController')
+
 
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
@@ -18,7 +20,7 @@ const envVariables = loadEnvFile('./.env');
 
 const app = express();
 const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
-app.use(express.static(path.join(__dirname, 'public'), {index: 'coupon.html'}));
+app.use(express.static(path.join(__dirname, 'public'), {index: 'main.html'}));
 
 // Middleware setup
 app.use(express.static('public'));  // Serve static files from the 'public' directory

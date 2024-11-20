@@ -31,29 +31,67 @@
 <br><hr><br> <!-- ========================================================================= -->
 
 <h2>Best Coupon Deals for This Week</h2>
-<button id="viewBestCoupon"> Click to see the best deals! </button> <br><br>
-<table id="bestCoupons" border="1">
+<!--//B.branch_id, B.street_address, R.name, MAX(dc_percent)-->
+
+<button id="viewBestCoupon"> Click to see the best deals by branch! </button> <br><br>
+<div id = bestCoupons></div>
+<table id="bestCouponTable" border="1">
     <thead>
     <tr>
         <th>Restaurant</th>
+        <th>Branch ID</th>
         <th>Address</th>
-        <th>Coupon ID</th>
-        <th>Discount</th>
-        <th>Number of Uses Left</th>
+        <th>Highest Coupon DC Over 15%:</th>
 
     </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2>Delete Coupons with Zero Number of Uses </h2>
+<button id="delete_coupons"> Click to delete coupons </button> <br><br>
+<div id=deleted_coupons></div>
 
 <br><hr><br> <!-- ========================================================================= -->
 
+
 <h2> Decrement Coupon Number of Uses </h2>
-<form id="updateNumUse">
+<form id="numUseUpdate">
+    couponID: <input type="text" id="couponID" placeholder="Enter Name" maxlength="8"> <br><br>
+
     <button type="submit"> insert </button> <br>
 </form>
-<div id="couponNumUse"></div>
+<div id="updated_coupon"></div>
+
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2> Get Coupon Associated with Branch </h2>
+<form id="couponBranch">
+    branchID: <input type="text" id="branchID" placeholder="Enter branchID" maxlength="10"> <br><br>
+    <button type="submit"> insert </button> <br>
+</form>
+<div id="coupons_results"></div>
+
+<select id="branch_coupons"></select>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2> Get All Restaurants </h2>
+<select id="restaurant_results"></select>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<h2> Get All Branches Associated with Restaurant Name </h2>
+<form id="restaurantBranches">
+    Restaurant_Name: <input type="text" id="res_name" placeholder="Enter ResName" maxlength="10"> <br><br>
+    <button type="submit"> insert </button> <br>
+</form>
+<div id="branches_results"></div>
+<select id="restaurant_branches"></select>
+
 
 <br><hr><br> <!-- ========================================================================= -->
 
