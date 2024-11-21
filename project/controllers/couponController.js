@@ -22,6 +22,17 @@ router.post('/fetch-selected', async (req, res) => {
         }
 });
 
+//project the selected table attributes
+router.post('/project', async (req, res) => {
+    const { query } = req.body;
+    try {
+            const couponTable = await appService.projectCoupons(query);
+            res.json({ data: couponTable });
+        } catch (error) {
+            res.status(500).send("error projecting attributes");
+        }
+});
+
 //update the number of uses of the select coupon
 router.put('/:cid/update-num-use', async (req, res) => {
     const coupon_id = req.params.cid;
