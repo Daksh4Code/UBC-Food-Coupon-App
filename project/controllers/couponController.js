@@ -11,6 +11,17 @@ router.get('/fetch', async (req, res) => {
     res.json({data: couponTable});
 });
 
+//fetch the selected coupons
+router.post('/fetch-selected', async (req, res) => {
+    const { query } = req.body;
+    try {
+            const couponTable = await appService.fetchSelectedCoupons(query);
+            res.json({ data: couponTable });
+        } catch (error) {
+            res.status(500).send("error fetching selected coupons");
+        }
+});
+
 //update the number of uses of the select coupon
 router.put('/:cid/update-num-use', async (req, res) => {
     const coupon_id = req.params.cid;

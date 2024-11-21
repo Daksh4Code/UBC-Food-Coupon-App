@@ -154,6 +154,62 @@ async function deleteUsedCoupon() {
     }
 }
 
+async function checkSelectCoupon() {
+    event.preventDefault()
+    const input = document.getElementById('selectionInput').value.trim();
+    console.log(input)
+    const validCouponAttributes = ["coupon_id", "dc_percent", "number_of_uses"];
+    const validBranchAttributes =  ["street_address", "restaurant_name"];
+    const validOperators = ["=", "AND", "OR"];
+
+    let sql_query = "SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses";
+    let from = " FROM COUPON C, Branch B ";
+    let join = "WHERE B.branch_id = C.branch_id AND ";
+
+    queries = input.match(/\S+/g);
+    for (let i = 0; i < queries.length; i++) {
+        const split_query = queries[i];
+        if (i % 4 == 0) {
+            if (validCouponAttributes.includes(split_query)) {
+                const coupon_sql = "C." + split_query;
+                queries[i] = coupon_sql;
+            } else if (validBranchAttributes.includes(split_query)) {
+                const branch_sql = "B." + split_query;
+                queries[i] = branch_sql;
+            }
+        } else if ((i + 1) % 2 == 0 && validOperators.includes(split_query)) {
+            continue;
+        }
+        else if (i % 2 == 0 && !validOperators.includes(split_query) && !validCouponAttributes.includes(split_query) && !validBranchAttributes.includes(split_query)) {
+            continue;
+        } else {
+            console.error(`Invalid operator or attribute: ${split_query}`);
+            return;
+        }
+    };
+    queries = queries.join(" ")
+    sql_query += from + join + queries;
+    console.log(sql_query);
+
+
+    try {
+        const response = await fetch("http://localhost:65535/coupons/fetch-selected", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: sql_query })
+        });
+
+        const responseData = await response.json();
+        const fetched_coupons = responseData.data;
+        const messageElement = document.getElementById('searched_coupon');
+        messageElement.textContent = JSON.stringify(fetched_coupons, null, 2);
+    } catch (error) {
+        console.error("Can't fetch coupons:", error);
+    }
+}
+
 
 async function getGoodDealRestaurant() {
     //B.branch_id, B.street_address, R.name, MAX(dc_percent)
@@ -188,11 +244,18 @@ async function getGoodDealRestaurant() {
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
+//<form id="selection">
+//    branchID: <input type="text" id="selectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+//    <button type="submit"> search </button> <br>
+//</form>
+//<div id="searched_coupon"></div>
+
 window.onload = function() {
     fetchTableData();
     getRestaurants();
     document.getElementById("restaurant_results").addEventListener("change", getUserOptions)
     document.getElementById("numUseUpdate").addEventListener("submit", updateCouponNumUse);
+    document.getElementById("selection").addEventListener("submit", checkSelectCoupon);
 //    document.getElementById("couponBranch").addEventListener("submit", getBranchCoupons);
 //    document.getElementById("restaurantBranches").addEventListener("submit", getRestaurantBranches);
     document.getElementById("viewBestCoupon").addEventListener("click", getGoodDealRestaurant);
