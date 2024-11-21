@@ -250,7 +250,7 @@ INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VAL
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc010', '90909090', TO_DATE('2024-10-30', 'YYYY-MM-DD'), 'P0001', 2);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc001', '12345678', TO_DATE('2024-10-29', 'YYYY-MM-DD'), 'S0002', 3);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc002', '87654321', TO_DATE('2024-10-28', 'YYYY-MM-DD'), 'T0001', 4);
-INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc003', '11223344', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 'H0001', 5);
+INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc003', '11223344', TO_DATE('2024-10-27', 'YYYY-MM-DD'), 'S0001', 5);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc004', '44332211', TO_DATE('2024-10-26', 'YYYY-MM-DD'), 'S0001', 3);
 INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES('acc005', '99887766', TO_DATE('2024-10-25', 'YYYY-MM-DD'), 'P0001', 4);
 -- Insert data into Feedback_Link table
