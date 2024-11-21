@@ -61,6 +61,16 @@ async function fetchSelectedCoupons(query){
     });
 }
 
+async function projectCoupons(query){
+    console.log("Executing query:", query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 
 // coupon - DELETE:
 // function: delete the coupon with no number of uses left
@@ -147,5 +157,6 @@ module.exports = {
     getRestaurantBranch,
     getCouponBranch,
     getRestaurants,
-    fetchSelectedCoupons
+    fetchSelectedCoupons,
+    projectCoupons
 };
