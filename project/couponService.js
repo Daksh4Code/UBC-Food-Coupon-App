@@ -55,9 +55,26 @@ async function fetchSelectedCoupons(query){
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
-        return result.rows;
+        console.log(result.rows.length)
+        if (!result.rows || result.rows.length === 0) {
+            console.log("here")
+            return {
+                success: false,
+                data: [],
+                message: "There are no results returned from this query"
+            };
+        } else {
+            return {
+                success: true,
+                data: result.rows
+            };
+        }
     }).catch(() => {
-        return [];
+        return {
+            success: false,
+            data: [],
+            message: "Error in the query, check your query again. Valid statements include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use 'string' for strings"
+        };
     });
 }
 
@@ -65,9 +82,16 @@ async function projectCoupons(query){
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
-        return result.rows;
+        return {
+            success: true,
+            data: result.rows
+        }
     }).catch(() => {
-        return [];
+        return {
+          success: false,
+          data: [],
+          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use spaces between names."
+      };
     });
 }
 

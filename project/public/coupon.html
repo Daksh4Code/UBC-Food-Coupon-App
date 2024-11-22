@@ -28,13 +28,31 @@
     </tbody>
 </table>
 
+<form id="selection">
+    Search for coupons: <input type="text" id="selectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+    <button type="submit"> search </button> <br>
+</form>
+<div id="searched_coupon"></div>
+
+<br><hr><br> <!-- ========================================================================= -->
+
+<form id="projection">
+    Projection: <input type="text" id="projectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+    <button type="submit"> search </button> <br>
+</form>
+<div id="projection_table"></div>
+<table id="projectTable" border="1">
+    <thead></thead>
+    <tbody></tbody>
+</table>
+
+
 <br><hr><br> <!-- ========================================================================= -->
 
 <h2>Best Coupon Deals for This Week</h2>
 <!--//B.branch_id, B.street_address, R.name, MAX(dc_percent)-->
 
 <button id="viewBestCoupon"> Click to see the best deals by branch! </button> <br><br>
-<div id = bestCoupons></div>
 <table id="bestCouponTable" border="1">
     <thead>
     <tr>
@@ -76,22 +94,6 @@
 <div id="coupons_results"></div>
 
 <select id="branch_coupons"></select>
-
-<br><hr><br> <!-- ========================================================================= -->
-
-<form id="selection">
-    Search: <input type="text" id="selectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
-    <button type="submit"> search </button> <br>
-</form>
-<div id="searched_coupon"></div>
-
-<br><hr><br> <!-- ========================================================================= -->
-
-<form id="projection">
-    Projection: <input type="text" id="projectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
-    <button type="submit"> search </button> <br>
-</form>
-<div id="projection_table"></div>
 
 <br><hr><br> <!-- ========================================================================= -->
 
