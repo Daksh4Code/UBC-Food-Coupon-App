@@ -169,7 +169,7 @@ async function checkSelectCoupon() {
     let from = " FROM COUPON C, Branch B ";
     let join = "WHERE B.branch_id = C.branch_id AND ";
 
-    queries = input.match(/\S+/g);
+    queries = input.match(/(?:'[^']*'|\S+)/g);
     for (let i = 0; i < queries.length; i++) {
         const split_query = queries[i];
         if (i % 4 == 0) {
@@ -205,9 +205,26 @@ async function checkSelectCoupon() {
         });
 
         const responseData = await response.json();
-        const fetched_coupons = responseData.data;
         const messageElement = document.getElementById('searched_coupon');
-        messageElement.textContent = JSON.stringify(fetched_coupons, null, 2);
+
+        if (!responseData.success) {
+            messageElement.textContent = responseData.message;
+        } else {
+            const fetched_coupons = responseData.data;
+            const tableElement = document.getElementById('couponTable');
+            const tableBody = tableElement.querySelector('tbody');
+            if (tableBody) {
+                tableBody.innerHTML = '';
+            }
+            fetched_coupons.forEach(user => {
+                const row = tableBody.insertRow();
+                user.forEach((field, index) => {
+                    const cell = row.insertCell(index);
+                    cell.textContent = field;
+                });
+            });
+
+        };
     } catch (error) {
         console.error("Can't fetch coupons:", error);
     }
@@ -216,8 +233,10 @@ async function checkSelectCoupon() {
 // project the columns from the table requested by the user
 async function checkProjectCoupon() {
     event.preventDefault()
+
     const input = document.getElementById('projectionInput').value.trim();
-    console.log(input)
+    const messageElement = document.getElementById('projection_table');
+
     const validCouponAttributes = ["coupon_id", "dc_percent", "number_of_uses"];
     const validBranchAttributes =  ["street_address", "restaurant_name"];
     const validOperators = ["=", "AND", "OR"];
@@ -235,7 +254,7 @@ async function checkProjectCoupon() {
             const branch_sql = "B." + split_query + ",";
             sql_query += branch_sql;
         } else {
-             console.error(`Invalid operator or attribute: ${split_query}`);
+             messageElement.textContent = `Invalid operator or attribute: ${split_query}`;
              return;
         };
     };
@@ -243,8 +262,6 @@ async function checkProjectCoupon() {
     sql_query = sql_query.replace(/,\s*$/, "");
 
     sql_query += rest;
-    console.log(sql_query);
-
 
     try {
         const response = await fetch("/coupons/project", {
@@ -254,11 +271,34 @@ async function checkProjectCoupon() {
             },
             body: JSON.stringify({ query: sql_query })
         });
+        responseData = await response.json();
+        if (!responseData.success) {
+            messageElement.textContent = "there was an error fetching the data"
+        } else {
+            // create the table
+            const project_table = responseData.data;
+            const tableElement = document.getElementById('projectTable');
+            const tableHead = tableElement.querySelector('thead');
+            const tableBody = tableElement.querySelector('tbody');
 
-        const responseData = await response.json();
-        const project_table = responseData.data;
-        const messageElement = document.getElementById('projection_table');
-        messageElement.textContent = JSON.stringify(project_table, null, 2);
+            const columnNames = document.createElement('tr');
+            queries.forEach(query => {
+                const th = document.createElement('th');
+                th.textContent = query;
+                columnNames.appendChild(th);
+            });
+            tableHead.appendChild(columnNames);
+
+            project_table.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
     } catch (error) {
         console.error("Can't project table:", error);
     }
@@ -276,9 +316,6 @@ async function getGoodDealRestaurant() {
 
         const responseData = await response.json();
         const good_deals = responseData.data;
-        const messageElement = document.getElementById('bestCoupons');
-        messageElement.textContent = good_deals;
-
         if (tableBody) {
                     tableBody.innerHTML = '';
         }

@@ -16,7 +16,7 @@ router.post('/fetch-selected', async (req, res) => {
     const { query } = req.body;
     try {
             const couponTable = await appService.fetchSelectedCoupons(query);
-            res.json({ data: couponTable });
+            return res.status(200).json(couponTable);
         } catch (error) {
             res.status(500).send("error fetching selected coupons");
         }
@@ -27,7 +27,8 @@ router.post('/project', async (req, res) => {
     const { query } = req.body;
     try {
             const couponTable = await appService.projectCoupons(query);
-            res.json({ data: couponTable });
+            return res.status(200).json(couponTable);
+
         } catch (error) {
             res.status(500).send("error projecting attributes");
         }
