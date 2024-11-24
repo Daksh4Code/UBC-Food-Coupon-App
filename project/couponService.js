@@ -51,6 +51,8 @@ async function updateNumberUses(cid) {
     });
 }
 
+// coupon - Selection:
+// function: get the parsed + validated query and query selection to DB
 async function fetchSelectedCoupons(query){
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
@@ -73,11 +75,13 @@ async function fetchSelectedCoupons(query){
         return {
             success: false,
             data: [],
-            message: "Error in the query, check your query again. Valid statements include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use 'string' for strings"
+            message: "Error in search element. Valid operators are AND, OR, and =. Valid attributes include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use ('') for strings"
         };
     });
 }
 
+// coupon - Projection:
+// function: get the parsed + validated query and query projection to DB
 async function projectCoupons(query){
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
@@ -90,7 +94,7 @@ async function projectCoupons(query){
         return {
           success: false,
           data: [],
-          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use spaces between names."
+          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent . Use spaces between names."
       };
     });
 }
@@ -121,7 +125,7 @@ async function retrieveGoodDealRestaurants() {
     })
 }
 
-// coupon - SELECT:
+// FUNCTIONALITY FOR ORDER:
 // function: retrieves all restaurants from Restaurant
 async function getRestaurants() {
      return await withOracleDB(async (connection) => {

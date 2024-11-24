@@ -11,6 +11,7 @@
  *   HTML structure.
  *
  */
+
 // Fetches data from the initalized Tables and displays it.
 async function fetchCouponTable() {
     const tableElement = document.getElementById('couponTable');
@@ -39,6 +40,7 @@ async function fetchCouponTable() {
         console.error("unable to fetch table")
     }
 }
+
 // get the number of uses of the coupon
 async function updateCouponNumUse() {
     event.preventDefault();
@@ -58,89 +60,7 @@ async function updateCouponNumUse() {
 
 
 }
-//get the coupons associated with the branch
-async function getBranchCoupons(bid) {
-    event.preventDefault();
-    console.log(bid)
-    try {
-            const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
-            method : "GET"
-        });
-        const responseData = await response.json();
-        const coupons = responseData.data;
 
-        const options = document.getElementById('branch_coupons');
-        Object.keys(coupons).forEach(key => {
-            var text = key;
-            var value = coupons[key];
-            var option = new Option(text, value);
-            console.log(option)
-            options.append(option);
-        });
-
-
-    } catch(error) {
-        console.log("can't get the coupons associated with the branch id")
-    }
-
-
-}
-
-//get all restaurants
-async function getRestaurants() {
-    event.preventDefault();
-    try {
-            const response = await fetch('/coupons/get_restaurants', {
-            method : "GET"
-        });
-        const responseData = await response.json();
-        const restaurants = responseData.data;
-
-        const options = document.getElementById('restaurant_results');
-        restaurants.forEach(res_list => {
-            res = res_list[0]
-            var option = new Option(res, res);
-            options.append(option);
-        });
-
-    } catch(error) {
-        console.log("can't get the coupons associated with the branch id")
-    }
-
-}
-
-//get the restaurant associated with the branch
-async function getRestaurantBranches(res_name) {
-    event.preventDefault();
-    console.log(res_name)
-    try {
-        const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
-        method : "GET"
-        });
-
-        console.log(response.ok);
-        if (!response.ok) {
-            console.log("error in retrieving branches");
-        }
-        const responseData = await response.json();
-        console.log("Response Data:", responseData);
-
-        const branches = responseData.data;
-        const options = document.getElementById("restaurant_branches");
-        Object.keys(branches).forEach(key => {
-            var text = key;
-            var value = branches[key];
-            var option = new Option(text, value);
-            options.append(option);
-        });
-
-    } catch(error) {
-        console.log("can't get the branches associated with the restaurant name")
-    }
-
-
-
-}
 //delete used coupons where number of uses = 0
 async function deleteUsedCoupon() {
     try {
@@ -160,6 +80,8 @@ async function deleteUsedCoupon() {
 //check and select coupons specified by the user
 async function checkSelectCoupon() {
     event.preventDefault()
+    const messageElement = document.getElementById('searched_coupon');
+
     const input = document.getElementById('selectionInput').value.trim();
     const validCouponAttributes = ["coupon_id", "dc_percent", "number_of_uses"];
     const validBranchAttributes =  ["street_address", "restaurant_name"];
@@ -189,7 +111,7 @@ async function checkSelectCoupon() {
             else if (i % 2 == 0 && !validOperators.includes(split_query) && !validCouponAttributes.includes(split_query) && !validBranchAttributes.includes(split_query)) {
                 continue;
             } else {
-                console.error(`Invalid operator or attribute: ${split_query}`);
+                messageElement.textContent = `Invalid operator or attribute: ${split_query}`;
                 return;
             }
         };
@@ -209,8 +131,6 @@ async function checkSelectCoupon() {
         });
 
         const responseData = await response.json();
-        const messageElement = document.getElementById('searched_coupon');
-
         if (!responseData.success) {
             messageElement.textContent = responseData.message;
         } else {
@@ -343,22 +263,97 @@ async function getGoodDealRestaurant() {
     }
 }
 
+
+
 window.onload = function() {
-    fetchTableData();
+    fetchCouponTable();
     getUserOptions();
-//    document.getElementById("restaurant_results").addEventListener("change", getUserOptions)
     document.getElementById("numUseUpdate").addEventListener("submit", updateCouponNumUse);
     document.getElementById("selection").addEventListener("submit", checkSelectCoupon);
     document.getElementById("projection").addEventListener("submit", checkProjectCoupon);
-//    document.getElementById("couponBranch").addEventListener("submit", getBranchCoupons);
-//    document.getElementById("restaurantBranches").addEventListener("submit", getRestaurantBranches);
     document.getElementById("viewBestCoupon").addEventListener("click", getGoodDealRestaurant);
     document.getElementById("delete_coupons").addEventListener("click", deleteUsedCoupon);
-    //document.getElementById('restaurant_results').addEventListener('change', getUserOptions);
-    //document.getElementById('restaurantBranches').addEventListener('change', getUserOptions);
-    //document.getElementById('branch_coupons').addEventListener('change', getUserOptions);
 
 };
+
+//FUNCTIONALITY FOR ORDER:
+
+//get all restaurants
+async function getRestaurants() {
+    event.preventDefault();
+    try {
+            const response = await fetch('/coupons/get_restaurants', {
+            method : "GET"
+        });
+        const responseData = await response.json();
+        const restaurants = responseData.data;
+
+        const options = document.getElementById('restaurant_results');
+        restaurants.forEach(res_list => {
+            res = res_list[0]
+            var option = new Option(res, res);
+            options.append(option);
+        });
+
+    } catch(error) {
+        console.log("can't get the coupons associated with the branch id")
+    }
+
+}
+
+//get the restaurant associated with the branch
+async function getRestaurantBranches(res_name) {
+    event.preventDefault();
+    console.log(res_name)
+    try {
+        const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
+        method : "GET"
+        });
+
+        const responseData = await response.json();
+        console.log("Response Data:", responseData);
+
+        const branches = responseData.data;
+        const options = document.getElementById("restaurant_branches");
+        Object.keys(branches).forEach(key => {
+            var text = key;
+            var value = branches[key];
+            var option = new Option(text, value);
+            options.append(option);
+        });
+
+    } catch(error) {
+        console.log("can't get the branches associated with the restaurant name")
+    }
+}
+
+//get the coupons associated with the branch
+async function getBranchCoupons(bid) {
+    event.preventDefault();
+    console.log(bid)
+    try {
+            const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
+            method : "GET"
+        });
+        const responseData = await response.json();
+        const coupons = responseData.data;
+
+        const options = document.getElementById('branch_coupons');
+        Object.keys(coupons).forEach(key => {
+            var text = key;
+            var value = coupons[key];
+            var option = new Option(text, value);
+            console.log(option)
+            options.append(option);
+        });
+
+
+    } catch(error) {
+        console.log("can't get the coupons associated with the branch id")
+    }
+
+
+}
 
 function awaitSelection(selected_id) {
   return new Promise((resolve) => {
@@ -382,9 +377,4 @@ async function getUserOptions() {
     await getBranchCoupons(chosen_branch);
     const chosen_coupon= await awaitSelection('branch_coupons');
     console.log(chosen_branch);
-}
-// General function to refresh the displayed table data. 
-// You can invoke this after any table-modifying operation to keep consistency.
-function fetchTableData() {
-    fetchCouponTable();
 }
