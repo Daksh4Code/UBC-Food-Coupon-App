@@ -68,9 +68,14 @@ router.get('/:bid/get_coupon_branch', async(req,res) => {
 
 // Get the branch associated with the restaurant
 router.get('/:rid/get_res_branch', async(req,res) => {
-   const res_id = req.params.rid;
-   const restaurant_branches = await appService.getRestaurantBranch(res_id);
-   res.json({data: restaurant_branches})
+   try{
+       const res_id = req.params.rid;
+       const restaurant_branches = await appService.getRestaurantBranch(res_id);
+       console.log("controller", restaurant_branches)
+       return res.status(200).json({data: restaurant_branches});
+   }catch(error) {
+       return res.status(500).send("error fetching selected coupons");
+   }
 });
 
 module.exports = router;
