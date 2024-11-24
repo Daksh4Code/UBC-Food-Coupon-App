@@ -164,7 +164,7 @@ async function getRestaurantBranch(res_name) {
         const resultDict = {};
         result.rows.forEach(row => {
             const [address, id] = row;
-            resultDict[id] = address;
+            resultDict[address] = id;
         })
         return resultDict;
     }).catch(() => {
