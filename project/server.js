@@ -18,7 +18,7 @@ const envVariables = loadEnvFile('./.env');
 
 const app = express();
 const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
-app.use(express.static(path.join(__dirname, 'public'), {index: 'index.html'}));
+app.use(express.static(path.join(__dirname, 'public'), {index: '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v.html'}));
 
 // Middleware setup
 app.use(express.static('public'));  // Serve static files from the 'public' directory
