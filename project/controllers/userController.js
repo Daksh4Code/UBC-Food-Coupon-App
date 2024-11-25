@@ -1,5 +1,5 @@
 const express = require('express');
-const appService = require('../userService');
+const userService = require('../userService');
 const router = express.Router();
 
 // --- User Management routes ---
@@ -7,7 +7,7 @@ const router = express.Router();
 // Create User
 router.post('/users/create', async (req, res) => {
     const { accountId, year, major, password, sid, cwl } = req.body;
-    const result = await appService.createUser(accountId, year, major, password, sid, cwl);
+    const result = await userService.createUser(accountId, year, major, password, sid, cwl);
     res.json({data: result});
 });
 
@@ -15,14 +15,14 @@ router.post('/users/create', async (req, res) => {
 router.put('/users/edit/:accountId', async (req, res) => {
     const accountId = req.params.accountId;
     const { newPassword } = req.body;
-    const result = await appService.editUser(accountId, newPassword);
+    const result = await userService.editUser(accountId, newPassword);
     res.json({data: result});
 });
 
 // Login User
 router.post('/users/login', async (req, res) => {
     const { cwl, password } = req.body;
-    const user = await appService.loginUser(cwl, password);
+    const user = await userService.loginUser(cwl, password);
     res.json({data: user});
 });
 

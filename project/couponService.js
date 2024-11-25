@@ -51,6 +51,53 @@ async function updateNumberUses(cid) {
     });
 }
 
+// coupon - Selection:
+// function: get the parsed + validated query and query selection to DB
+async function fetchSelectedCoupons(query){
+    console.log("Executing query:", query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        console.log(result.rows.length)
+        if (!result.rows || result.rows.length === 0) {
+            console.log("here")
+            return {
+                success: false,
+                data: [],
+                message: "There are no results returned from this query"
+            };
+        } else {
+            return {
+                success: true,
+                data: result.rows
+            };
+        }
+    }).catch(() => {
+        return {
+            success: false,
+            data: [],
+            message: "Error in search element. Valid operators are AND, OR, and =. Valid attributes include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use ('') for strings"
+        };
+    });
+}
+
+// coupon - Projection:
+// function: get the parsed + validated query and query projection to DB
+async function projectCoupons(query){
+    console.log("Executing query:", query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return {
+            success: true,
+            data: result.rows
+        }
+    }).catch(() => {
+        return {
+          success: false,
+          data: [],
+          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent . Use spaces between names."
+      };
+    });
+}
 
 // coupon - DELETE:
 // function: delete the coupon with no number of uses left
@@ -77,7 +124,7 @@ async function retrieveGoodDealRestaurants() {
     })
 }
 
-// coupon - SELECT:
+// FUNCTIONALITY FOR ORDER:
 // function: retrieves all restaurants from Restaurant
 async function getRestaurants() {
      return await withOracleDB(async (connection) => {
@@ -120,7 +167,7 @@ async function getRestaurantBranch(res_name) {
         const resultDict = {};
         result.rows.forEach(row => {
             const [address, id] = row;
-            resultDict[id] = address;
+            resultDict[address] = id;
         })
         return resultDict;
     }).catch(() => {
@@ -136,5 +183,7 @@ module.exports = {
     retrieveGoodDealRestaurants,
     getRestaurantBranch,
     getCouponBranch,
-    getRestaurants
+    getRestaurants,
+    fetchSelectedCoupons,
+    projectCoupons
 };

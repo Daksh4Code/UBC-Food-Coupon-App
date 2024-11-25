@@ -131,12 +131,46 @@ async function getBestRatedBranch() {
       });
 }
 
+// feedback - DELETE
+// function: allows user to intentionally delete a feedback if chosen to do so
+async function deleteFeedback(accountId, sid, order_date, branchId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'DELETE FROM Feedback_Rating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
+            [accountId, sid, order_date, branchId],
+            { autoCommit: true }
+        );
+        return result.rowsAffected;
+    }).catch(() => {
+        return [];
+    });
+}
+
+// feedback - PROJECTION
+// function: To select names of restaurants that have a branch located on a street address
+// that matches the user's input
+async function getRestaurantsByAddress(inputAddress) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT R.name
+             FROM Restaurant R JOIN Branch B ON R.name = B.restaurant_name
+             WHERE B.street_address LIKE '%' || :input_address || '%'`,
+            [inputAddress]
+        );
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 // module exports
 module.exports = {
     submitFeedback,
     updateFeedback,
     viewFeedback,
-    getBestRatedBranch
+    getBestRatedBranch,
+    deleteFeedback,
+    getRestaurantsByAddress
 
 };
 

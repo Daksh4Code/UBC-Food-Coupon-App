@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback Management</title>
-    <!-- Uncomment the line below if you have a CSS file to style your page -->
-    <!-- <link rel="stylesheet" href="styles.css"> -->
 </head>
 <body>
-<!-- ===================================================================================== -->
-<!-- Display 'Feedback Table' -->
+
 <h2>Feedback Table</h2>
 <table id="feedbackTable" border="1">
     <thead>
@@ -25,7 +22,7 @@
     </tbody>
 </table>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
 <h2>Add New Feedback</h2>
 <form id="addFeedbackForm">
@@ -43,7 +40,7 @@
 </form>
 <div id="addFeedbackResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
 <h2>Update Feedback Rating</h2>
 <form id="updateFeedbackForm">
@@ -61,16 +58,39 @@
 </form>
 <div id="updateFeedbackResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
+
+<h2>Delete Feedback</h2>
+<form id="deleteFeedbackForm">
+    <label for="deleteAccountId">Account ID:</label>
+    <input type="text" id="deleteAccountId" name="deleteAccountId" required><br><br>
+    <label for="deleteSid">SID:</label>
+    <input type="text" id="deleteSid" name="deleteSid" required><br><br>
+    <label for="deleteOrderDate">Order Date:</label>
+    <input type="date" id="deleteOrderDate" name="deleteOrderDate" required><br><br>
+    <label for="deleteBranchId">Branch ID:</label>
+    <input type="text" id="deleteBranchId" name="deleteBranchId" required><br><br>
+    <button type="submit">Delete Feedback</button>
+</form>
+<div id="deleteFeedbackResult"></div>
+
+<br><hr><br>
 
 <h2>Get Best Rated Branch</h2>
 <button id="getBestRatedBranchBtn">Get Best Rated Branch</button>
 <div id="bestRatedBranchResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
-<!-- ===================================================================================== -->
-<!-- External JavaScript file that contains functionality/logic for the operations above. -->
+<h2>Get Restaurants by Address</h2>
+<form id="getRestaurantsByAddressForm">
+    <label for="inputAddress">Enter Street Address:</label>
+    <input type="text" id="inputAddress" name="inputAddress" required><br><br>
+    <button type="submit">Get Restaurants</button>
+</form>
+<div id="getRestaurantsByAddressResult"></div>
+
+
 <script src="feedback.js"></script>
 </body>
 </html>

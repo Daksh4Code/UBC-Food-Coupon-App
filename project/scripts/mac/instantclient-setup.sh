@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Change to the directory where the script is located
-cd "$(dirname "$0")" || exit
+cd "/Users/daksh/project_m1g3t_q1i7x_w5i1d/project/scripts/mac/" || exit
 
 echo "Please enter the absolute path to the Oracle Instant Client directory:"
-read oraclePath
+read "/Users/daksh/instantclient_19_8"
 
 # Construct the local start script
 (

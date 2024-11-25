@@ -37,7 +37,7 @@ echo "--------------------------------------------------------------------------
 
 echo "Building SSH tunnel using port $chosen_port..."
 
-read -p "Enter your CWL name: " cwl_name
+read -p "Enter your CWL name: " dmathu01
 
 # Build the SSH tunnel
 exec ssh -L $chosen_port:localhost:$destination_port $cwl_name@remote.students.cs.ubc.ca

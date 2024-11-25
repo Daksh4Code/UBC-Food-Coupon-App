@@ -23,3 +23,13 @@ HAVING AVG(rating) >= (
              GROUP BY branch_id
          )
 );
+
+-- Delete feedback
+DELETE FROM Feedback_Rating
+WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId;
+
+-- Projection query to select names of restaurants that have a branch located on a street
+-- address that matches the user's input
+SELECT R.name
+FROM Restaurant R JOIN Branch B ON R.name = B.restaurant_name
+WHERE B.street_address LIKE '%' || :input_address || '%';

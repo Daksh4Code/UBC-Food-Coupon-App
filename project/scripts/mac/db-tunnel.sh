@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the directory where the script is located
-cd "$(dirname "$0")"
+cd "/Users/daksh/project_m1g3t_q1i7x_w5i1d/project/scripts/mac/"
 
 # File path
 ENV_FILE_PATH="../../.env"
@@ -46,7 +46,7 @@ fi
 
 echo "Building SSH tunnel on port $chosen_port to your oracle database..."
 
-read -p "Enter your CWL name: " cwl_name
+read -p "Enter your CWL name: " dmathu01
 
 exec ssh -L $chosen_port:dbhost.students.cs.ubc.ca:1522 $cwl_name@remote.students.cs.ubc.ca
 
