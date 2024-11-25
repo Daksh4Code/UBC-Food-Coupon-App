@@ -142,11 +142,26 @@ async function countDemotable() {
     });
 }
 
+async function getROTDVisitors() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT DISTINCT a.account_id FROM Account a WHERE NOT EXISTS (SELECT 1 FROM RestaurantOTD r WHERE NOT EXISTS (SELECT 1 FROM Delivery d JOIN Branch b ON d.branch_id = b.branch_id WHERE d.account_id = a.account_id AND b.restaurant_name = r.name UNION SELECT 1 FROM Pickup p JOIN Branch b ON p.branch_id = b.branch_id WHERE p.account_id = a.account_id AND b.restaurant_name = r.name)))'
+        );
+        console.log(result);
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error:', err);
+        return [];
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiateDemotable,
     insertDemotable,
     updateNameDemotable,
-    countDemotable
+    countDemotable,
+    getROTDVisitors
 };

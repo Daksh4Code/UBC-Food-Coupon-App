@@ -12,6 +12,7 @@ drop table RESTAURANT cascade constraints;
 drop table FOOD_INFORMATION cascade constraints;
 drop table CONSISTS_DELIVERY cascade constraints;
 drop table CONSISTS_PICKUP cascade constraints;
+drop table RestaurantOTD cascade constraints;
 
 
 CREATE TABLE Restaurant (
@@ -165,6 +166,11 @@ CREATE TABLE Consists_Pickup (
     FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
 );
 
+CREATE TABLE RestaurantOTD (
+    name VARCHAR(1000) NOT NULL,
+    FOREIGN KEY (name) REFERENCES Restaurant (name) ON DELETE CASCADE
+);
+
 -- ASSERTIONS SEEMINGLY NOT SUPPORTED
 -- ----------------------------------------------
 -- CREATE ASSERTION OrderHasFood
@@ -178,6 +184,7 @@ INSERT INTO Restaurant VALUES('Triple_Os', 'restaurant');
 INSERT INTO Restaurant VALUES('Harvest', 'grocery_store');
 INSERT INTO Restaurant VALUES('Subway', 'restaurant');
 INSERT INTO Restaurant VALUES('Pacific_Poke', 'restaurant');
+
 INSERT INTO Branch VALUES('S0002', '6138 Student Union Blvd', 'Starbucks');
 INSERT INTO Branch VALUES('T0001', '2015 Main Mall', 'Triple_Os');
 INSERT INTO Branch VALUES('H0001', '6445 University Blvd', 'Harvest');
@@ -270,6 +277,8 @@ INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 
 INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
                             );
 
+                            
+
 INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','12345678',1, 'Complete'
                           );
 INSERT INTO Pickup VALUES (7, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
@@ -280,6 +289,26 @@ INSERT INTO Pickup VALUES (9, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'C
                           );
 INSERT INTO Pickup VALUES (10, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
                           );
+
+INSERT INTO Pickup VALUES (11, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (12, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'T0001','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (13, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'P0001','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (14, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc007','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (15, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'T0001','acc007','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (16, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'P0001','acc007','12345678',1, 'Complete'
+                          );
+
+
 
 -- Consists: Delivery
 INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (1, 'americano', 1);
@@ -302,3 +331,7 @@ INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (8, 'caesar_s
 INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (9, 'roasted_chicken_sub', 1);
 
 INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (10, 'main_bowl', 2);
+
+INSERT INTO RestaurantOTD VALUES('Starbucks');
+INSERT INTO RestaurantOTD VALUES('Pacific_Poke');
+INSERT INTO RestaurantOTD VALUES('Triple_Os');

@@ -70,6 +70,8 @@ async function retrieveGoodDealRestaurants() {
         return [];
     })
 }
+
+
 // module exports
 module.exports = {
     fetchCoupons,
