@@ -99,7 +99,6 @@ async function projectCoupons(query){
     });
 }
 
-
 // coupon - DELETE:
 // function: delete the coupon with no number of uses left
 async function deleteCoupon() {
