@@ -62,6 +62,32 @@ async function fetchAndDisplayUsers() {
     });
 }
 
+async function fetchAndDisplayROTDVisitors() {
+    const tableElement = document.getElementById('rotd');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('/rotd', {
+        method: 'GET'
+    });
+
+    const responseData = await response.json();
+    console.log(responseData)
+    const divisTable = responseData.result;
+
+    // Always clear old, already fetched data before new fetching process.
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    divisTable.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
 // This function resets or initializes the demotable.
 async function resetDemotable() {
     const response = await fetch("/initiate-demotable", {
@@ -172,4 +198,5 @@ window.onload = function() {
 // You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
     fetchAndDisplayUsers();
+    fetchAndDisplayROTDVisitors();
 }

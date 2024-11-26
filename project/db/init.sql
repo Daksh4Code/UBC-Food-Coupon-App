@@ -12,7 +12,7 @@ drop table RESTAURANT cascade constraints;
 drop table FOOD_INFORMATION cascade constraints;
 drop table CONSISTS_DELIVERY cascade constraints;
 drop table CONSISTS_PICKUP cascade constraints;
-
+drop table RestaurantOTD cascade constraints;
 
 
 CREATE TABLE Restaurant (
@@ -164,6 +164,11 @@ CREATE TABLE Consists_Pickup (
     FOREIGN KEY (food_name) REFERENCES Food (food_name) ON DELETE CASCADE
 );
 
+CREATE TABLE RestaurantOTD (
+    name VARCHAR(1000) NOT NULL,
+    FOREIGN KEY (name) REFERENCES Restaurant (name) ON DELETE CASCADE
+);
+
 -- ASSERTIONS SEEMINGLY NOT SUPPORTED
 -- ----------------------------------------------
 -- CREATE ASSERTION OrderHasFood
@@ -177,6 +182,7 @@ INSERT INTO Restaurant VALUES('Triple_Os', 'restaurant');
 INSERT INTO Restaurant VALUES('Harvest', 'grocery_store');
 INSERT INTO Restaurant VALUES('Subway', 'restaurant');
 INSERT INTO Restaurant VALUES('Pacific_Poke', 'restaurant');
+
 INSERT INTO Branch VALUES('S0002', '6138 Student Union Blvd', 'Starbucks');
 INSERT INTO Branch VALUES('T0001', '2015 Main Mall', 'Triple_Os');
 INSERT INTO Branch VALUES('H0001', '6445 University Blvd', 'Harvest');
@@ -256,50 +262,51 @@ INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (2, 'acc002', '87654321', TO_DATE('2024-11-07', 'YYYY-MM-DD'), 'T0001');
 INSERT INTO Feedback_Link (fid, account_id, sid, order_date, branch_id) VALUES (3, 'acc003', '11223344', TO_DATE('2024-11-06', 'YYYY-MM-DD'), 'H0001');
 
--- INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','FAKECOUPON','2G2303D3', 'S0002','acc001','21402983',2.99, 'Complete', 1.2
---                             );
--- INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','85392374',2.99, 'Complete', 0.2
---                             );
--- INSERT INTO Delivery VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', 'COUPON1','K0E5G001', 'H0001','acc003','24712948',2.99, 'Placed', 2
---                             );
--- INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash', 'FAKECOUPON','2G2303D3', 'S0002','acc004','41238733',4.99, 'Delivering', 1
---                             );
--- INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.99, 'Placed', 777
---                             );
---
--- INSERT INTO Pickup VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','21402983',1, 'Complete'
---                           );
--- INSERT INTO Pickup VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','85392374',0.9, 'Complete'
---                           );
--- INSERT INTO Pickup VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','24712948',0.2, 'Placed'
---                           );
--- INSERT INTO Pickup VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','41238733',1, 'Delivering'
---                           );
--- INSERT INTO Pickup VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','28232237',0.12, 'Placed'
---                           );
 
 
-INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','2G2303D3', 'S0002','acc001','12345678',2.99, 'Complete', 1.2
+INSERT INTO Delivery VALUES (1, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','FAKECOUPON','2G2303D3', 'S0002','acc001','12345678',2.99, 'Complete', 1.2
                             );
-INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','B152R99G', 'T0001','acc002','87654321',2.99, 'Complete', 0.2
+INSERT INTO Delivery VALUES (2, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',2.99, 'Complete', 0.2
                             );
-INSERT INTO Delivery VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','K0E5G001', 'H0001','acc003','11223344',2.99, 'Placed', 2
+INSERT INTO Delivery VALUES (3, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', 'COUPON1','K0E5G001', 'H0001','acc003','11223344',2.99, 'Placed', 2
                             );
-INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','2G2303D3', 'S0002','acc004','44332211',4.99, 'Delivering', 1
+INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash', 'FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',4.99, 'Delivering', 1
                             );
-INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
+INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
                             );
 
-INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', NULL, 'S0002','acc001','12345678',1, 'Complete'
+                            
+
+INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc001','12345678',1, 'Complete'
                           );
-INSERT INTO Pickup VALUES (7, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
+INSERT INTO Pickup VALUES (7, 50.49, TO_DATE('13/10/2024', 'DD/MM/YYYY'), 'Credit','LOL','B152R99G', 'T0001','acc002','87654321',0.9, 'Complete'
                           );
-INSERT INTO Pickup VALUES (8, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','2G2303D3', 'S0002','acc003','11223344',0.2, 'Placed'
+INSERT INTO Pickup VALUES (8, 29.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','Coupon2','2G2303D3', 'S0002','acc003','11223344',0.2, 'Placed'
                           );
-INSERT INTO Pickup VALUES (9, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','2G2303D3', 'S0002','acc004','44332211',1, 'Delivering'
+INSERT INTO Pickup VALUES (9, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 'Cash','FAKECOUPON','2G2303D3', 'S0002','acc004','44332211',1, 'Delivering'
                           );
-INSERT INTO Pickup VALUES (10, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
+INSERT INTO Pickup VALUES (10, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','WEWANTAGOODGRADE100','B0F13D01', 'H0001','acc005','99887766',0.12, 'Placed'
                           );
+
+INSERT INTO Pickup VALUES (11, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (12, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'T0001','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (13, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'P0001','acc006','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (14, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'S0002','acc007','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (15, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'T0001','acc007','12345678',1, 'Complete'
+                          );
+
+INSERT INTO Pickup VALUES (16, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit','', NULL, 'P0001','acc007','12345678',1, 'Complete'
+                          );
+
+
 
 -- Consists: Delivery
 INSERT INTO Consists_Delivery (order_id, food_name, quantity) VALUES (1, 'americano', 1);
