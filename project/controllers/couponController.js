@@ -34,17 +34,6 @@ router.post('/project', async (req, res) => {
         }
 });
 
-//update the number of uses of the select coupon
-router.put('/:cid/update-num-use', async (req, res) => {
-    const coupon_id = req.params.cid;
-    const coupon = await appService.updateNumberUses(coupon_id);
-    res.json({data: coupon});
-});
-
-// delete coupons with number of uses == 0
-router.delete('/del-used-coupon', async (req, res) => {
-    const deleted_coupons = await appService.deleteCoupon();
-});
 
 // retrieve restaurants with good coupon deals
 router.get('/retrieve-good-deal-restaurant', async(req,res) => {
@@ -78,5 +67,16 @@ router.get('/:bid/get_coupon_branch', async(req,res) => {
    res.json({data: branch_coupon})
 });
 
+//update the number of uses of the select coupon
+router.put('/:cid/update-num-use', async (req, res) => {
+    const coupon_id = req.params.cid;
+    const coupon = await appService.updateNumberUses(coupon_id);
+    res.json({data: coupon});
+});
+
+// delete coupons with number of uses == 0
+router.delete('/del-used-coupon', async (req, res) => {
+    const deleted_coupons = await appService.deleteCoupon();
+});
 
 module.exports = router;

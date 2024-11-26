@@ -22,9 +22,6 @@ async function withOracleDB(action) {
     }
 }
 
-
-// Core functions for coupon operations
-
 // coupon - SELECT:
 // function: retrieves all the coupons in COUPON
 // fetch coupons adapted from fetchDemotableFromDb from tutorial
@@ -32,20 +29,6 @@ async function fetchCoupons() {
      return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses FROM Coupon C, Branch B WHERE C.branch_id = B.branch_id');
         return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-// coupon - UPDATE:
-// function: decrease number of uses by one given a specific coupon id
-async function updateNumberUses(cid) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('UPDATE Coupon SET number_of_uses = number_of_uses - 1 WHERE coupon_id = :coupon',
-                                                {coupon: cid},
-                                                { autoCommit: true }
-                                                );
-        return result.rowsAffected;
     }).catch(() => {
         return [];
     });
@@ -75,7 +58,7 @@ async function fetchSelectedCoupons(query){
         return {
             success: false,
             data: [],
-            message: "Error in search element. Valid operators are AND, OR, and =. Valid attributes include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use ('') for strings"
+            message: "Error in search element. Valid operators are AND, OR, and =. Valid attributes include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent. Use ('') for strings"
         };
     });
 }
@@ -99,19 +82,6 @@ async function projectCoupons(query){
     });
 }
 
-// coupon - DELETE:
-// function: delete the coupon with no number of uses left
-async function deleteCoupon() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0',
-                                                [],
-                                                { autoCommit: true }
-                                                );
-        return result.rowsAffected;
-    }).catch(() => {
-        return [];
-    });
-}
 
 //  coupon - GROUP BY with HAVING:
 // function: group the coupons by their branch_id and retrieve branches with max coupon dc >= 15%
@@ -175,6 +145,33 @@ async function getRestaurantBranch(res_name) {
     })
 }
 
+// coupon - UPDATE:
+// function: decrease number of uses by one given a specific coupon id
+async function updateNumberUses(cid) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('UPDATE Coupon SET number_of_uses = number_of_uses - 1 WHERE coupon_id = :coupon',
+                                                {coupon: cid},
+                                                { autoCommit: true }
+                                                );
+        return result.rowsAffected;
+    }).catch(() => {
+        return [];
+    });
+}
+
+// coupon - DELETE:
+// function: delete the coupon with no number of uses left
+async function deleteCoupon() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0',
+                                                [],
+                                                { autoCommit: true }
+                                                );
+        return result.rowsAffected;
+    }).catch(() => {
+        return [];
+    });
+}
 // module exports
 module.exports = {
     fetchCoupons,
