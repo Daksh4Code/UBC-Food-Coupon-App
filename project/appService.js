@@ -145,23 +145,26 @@ async function countDemotable() {
 async function getROTDVisitors() {
     return await withOracleDB(async (connection) => {
         const query = `
-    SELECT DISTINCT a.account_id
-            FROM Account a
-            WHERE NOT EXISTS
-                (SELECT r.name
-                FROM RestaurantOTD r
-                EXCEPT
-                ((SELECT r2.name
-                FROM Delivery d, Restaurant r2
-                WHERE d.account_id = a.account_id)
-                UNION
-                (SELECT r2.name
-                FROM Pickup p, Restaurant r2
-                WHERE p.account_id = a.account_id)));
-            
+    SELECT DISTINCT a.account_id 
+    FROM Account a 
+    WHERE NOT EXISTS (
+        SELECT 1 
+        FROM RestaurantOTD r 
+        WHERE NOT EXISTS (
+            SELECT 1 
+            FROM Delivery d 
+            JOIN Branch b ON d.branch_id = b.branch_id 
+            WHERE d.account_id = a.account_id 
+            AND b.restaurant_name = r.name
+            UNION
+            SELECT 1 
+            FROM Pickup p 
+            JOIN Branch b ON p.branch_id = b.branch_id 
+            WHERE p.account_id = a.account_id 
+            AND b.restaurant_name = r.name
         )
-
-`;
+    )
+    `;
 
         console.log('Executing query:', query);  // Debugging log
 
