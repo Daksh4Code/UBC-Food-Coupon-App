@@ -41,13 +41,61 @@ async function fetchCoupons() {
 // function: decrease number of uses by one given a specific coupon id
 async function updateNumberUses(cid) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('UPDATE Coupon SET number_of_uses =: number_of_uses - 1 WHERE coupon_id := cid',
-                                                [cid],
+        const result = await connection.execute('UPDATE Coupon SET number_of_uses = number_of_uses - 1 WHERE coupon_id = :coupon',
+                                                {coupon: cid},
                                                 { autoCommit: true }
                                                 );
-        return result.rows;
+        return result.rowsAffected;
     }).catch(() => {
         return [];
+    });
+}
+
+// coupon - Selection:
+// function: get the parsed + validated query and query selection to DB
+async function fetchSelectedCoupons(query){
+    console.log("Executing query:", query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        console.log(result.rows.length)
+        if (!result.rows || result.rows.length === 0) {
+            console.log("here")
+            return {
+                success: false,
+                data: [],
+                message: "There are no results returned from this query"
+            };
+        } else {
+            return {
+                success: true,
+                data: result.rows
+            };
+        }
+    }).catch(() => {
+        return {
+            success: false,
+            data: [],
+            message: "Error in search element. Valid operators are AND, OR, and =. Valid attributes include restaurant_name, number_of_uses, coupon_id, street_address and percent_dc. Use ('') for strings"
+        };
+    });
+}
+
+// coupon - Projection:
+// function: get the parsed + validated query and query projection to DB
+async function projectCoupons(query){
+    console.log("Executing query:", query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return {
+            success: true,
+            data: result.rows
+        }
+    }).catch(() => {
+        return {
+          success: false,
+          data: [],
+          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent . Use spaces between names."
+      };
     });
 }
 
@@ -55,28 +103,87 @@ async function updateNumberUses(cid) {
 // function: delete the coupon with no number of uses left
 async function deleteCoupon() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0');
+        const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0',
+                                                [],
+                                                { autoCommit: true }
+                                                );
+        return result.rowsAffected;
     }).catch(() => {
-        return False;
+        return [];
     });
 }
 
 //  coupon - GROUP BY with HAVING:
-// function: group the coupons by their branch_id and retrieve branches with min coupon dc > 15%
+// function: group the coupons by their branch_id and retrieve branches with max coupon dc >= 15%
 async function retrieveGoodDealRestaurants() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT branch_id, MIN(dc_percent) FROM COUPON GROUP BY branch_id HAVING MIN(dc_percent) >= 0.15')
+        const result = await connection.execute('SELECT R.name, B.branch_id, B.street_address, MAX(dc_percent) FROM COUPON C, BRANCH B, RESTAURANT R WHERE R.name = B.restaurant_name AND B.branch_id = C.branch_id GROUP BY B.branch_id, B.street_address, R.name HAVING MAX(C.dc_percent) >= 0.15')
+        return result.rows;
     }).catch(() => {
         return [];
     })
 }
 
+// FUNCTIONALITY FOR ORDER:
+// function: retrieves all restaurants from Restaurant
+async function getRestaurants() {
+     return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT name FROM Restaurant');
+        console.log(result.rows)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+//get the coupons associated with the select branch
+async function getCouponBranch(bid) {
+    console.log(bid)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM COUPON C WHERE C.branch_id = :branch',
+           {branch: bid});
+        // change the resulting list to dict format
+        const resultDict = {};
+                result.rows.forEach(row => {
+                    const [percent, id] = row;
+                    resultDict[id] = percent;
+                })
+
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
+
+// get the branch addresses associated with the select restaurant
+async function getRestaurantBranch(res_name) {
+    console.log(res_name)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT B.street_address, B.branch_id FROM Branch B WHERE B.restaurant_name = :name',
+            {name: res_name});
+        console.log(result);
+        // change the list of rows into dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [address, id] = row;
+            resultDict[address] = id;
+        })
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
 
 // module exports
 module.exports = {
     fetchCoupons,
     updateNumberUses,
     deleteCoupon,
-    retrieveGoodDealRestaurants
-
+    retrieveGoodDealRestaurants,
+    getRestaurantBranch,
+    getCouponBranch,
+    getRestaurants,
+    fetchSelectedCoupons,
+    projectCoupons
 };

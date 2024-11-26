@@ -93,7 +93,6 @@ CREATE TABLE Delivery(
                          total_cost DECIMAL(10,2),
                          order_date DATE,
                          payment_method VARCHAR(111),
-                         promo_code VARCHAR(111),
                          coupon_id CHAR(8) DEFAULT NULL,
                          branch_id CHAR(5) NOT NULL,
                          account_id VARCHAR(111) NOT NULL,
@@ -118,7 +117,6 @@ CREATE TABLE Pickup
     total_cost DECIMAL(10,2),
     order_date DATE,
     payment_method VARCHAR(111),
-    promo_code VARCHAR(111),
     coupon_id CHAR(8) DEFAULT NULL,
     branch_id CHAR(5) NOT NULL,
     account_id VARCHAR(111) NOT NULL,
@@ -331,7 +329,4 @@ INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (8, 'caesar_s
 INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (9, 'roasted_chicken_sub', 1);
 
 INSERT INTO Consists_Pickup (order_id, food_name, quantity) VALUES (10, 'main_bowl', 2);
-
-INSERT INTO RestaurantOTD VALUES('Starbucks');
-INSERT INTO RestaurantOTD VALUES('Pacific_Poke');
-INSERT INTO RestaurantOTD VALUES('Triple_Os');
+COMMIT;
