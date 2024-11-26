@@ -98,12 +98,49 @@ async function getBestRatedBranch() {
     document.getElementById("bestRatedBranchResult").textContent = `Best Rated Branch ID: ${result.data[0].BRANCH_ID}`;
 }
 
+// Deletes feedback
+async function deleteFeedback(event) {
+    event.preventDefault();
+
+    const accountId = document.getElementById("deleteAccountId").value;
+    const sid = document.getElementById("deleteSid").value;
+    const orderDate = document.getElementById("deleteOrderDate").value;
+    const branchId = document.getElementById("deleteBranchId").value;
+
+    const response = await fetch('/feedbacks/delete', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ accountId, sid, orderDate, branchId })
+    });
+
+    const result = await response.json();
+    document.getElementById("deleteFeedbackResult").textContent = result.message;
+
+    fetchTableData();
+}
+
+// Gets restaurants by address
+async function getRestaurantsByAddress(event) {
+    event.preventDefault();
+
+    const inputAddress = document.getElementById("inputAddress").value;
+
+    const response = await fetch(`/restaurants/by-address?address=${inputAddress}`);
+    const result = await response.json();
+
+    document.getElementById("getRestaurantsByAddressResult").textContent = result.data.join(", ");
+}
+
 // Initializes the webpage functionalities.
 window.onload = function() {
     fetchFeedbackTable();
     document.getElementById("addFeedbackForm").addEventListener("submit", addFeedback);
     document.getElementById("updateFeedbackForm").addEventListener("submit", updateFeedback);
     document.getElementById("getBestRatedBranchBtn").addEventListener("click", getBestRatedBranch);
+    document.getElementById("deleteFeedbackForm").addEventListener("submit", deleteFeedback);
+    document.getElementById("getRestaurantsByAddressForm").addEventListener("submit", getRestaurantsByAddress);
 };
 
 // General function to refresh the displayed table data.

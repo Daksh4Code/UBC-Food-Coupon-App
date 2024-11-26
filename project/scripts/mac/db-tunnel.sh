@@ -46,7 +46,7 @@ fi
 
 echo "Building SSH tunnel on port $chosen_port to your oracle database..."
 
-read -p "Enter your CWL name: " dmathu01
+read -p "Enter your CWL name: " cwl_name
 
 exec ssh -L $chosen_port:dbhost.students.cs.ubc.ca:1522 $cwl_name@remote.students.cs.ubc.ca
 

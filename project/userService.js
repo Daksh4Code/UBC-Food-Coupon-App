@@ -73,83 +73,43 @@ async function testOracleConnection() {
     });
 }
 
-// Core functions for feedback operations
+// Core functions for user operations
 
-// feedback - INSERT: Submit feedback
-async function submitFeedback(accountId, sid, order_date, branchId, rating) {
+// user - INSERT: Create a new user
+async function createUser(accountId, year, major, password, sid, cwl) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            'INSERT INTO feedback (account_id, sid, order_date, branch_id, rating) VALUES (:accountId, :sid, :order_date, :branchId, :rating)',
-            [accountId, sid, order_date, branchId, rating],
+            'INSERT INTO users (account_id, year, major, password, sid, cwl) VALUES (:accountId, :year, :major, :password, :sid, :cwl)',
+            [accountId, year, major, password, sid, cwl],
             { autoCommit: true }
         );
         return result.rowsAffected;
-    }).catch(() => {
+    }).catch((err) => {
+        console.error("Error creating user:", err); // Log the error for debugging
         return false;
     });
 }
 
-// feedback - UPDATE: Update feedback rating
-async function updateFeedback(accountId, sid, order_date, branchId, newRating) {
+// user - UPDATE: Update user's password
+async function editUser(accountId, newPassword) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            'UPDATE feedback SET rating = :newRating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
-            [newRating, accountId, sid, order_date, branchId],
+            'UPDATE users SET password = :newPassword WHERE account_id = :accountId',
+            [newPassword, accountId],
             { autoCommit: true }
         );
         return result.rowsAffected;
     }).catch(() => {
-        return [];
+        return false; // Indicate failure
     });
 }
 
-// feedback - SELECT: View feedback for an account
-async function viewFeedback(accountId) {
+// user - SELECT: Log in a user
+async function loginUser(cwl, password) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            'SELECT * FROM feedback WHERE account_id = :accountId',
-            [accountId]
-        );
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-// feedback - GROUP BY with HAVING: Get the best-rated branch
-async function getBestRatedBranch() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'SELECT branch_id FROM feedback GROUP BY branch_id HAVING AVG(rating) = (SELECT MAX(AVG(rating)) FROM feedback GROUP BY branch_id)'
-        );
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-// feedback - DELETE: Delete a feedback
-async function deleteFeedback(accountId, sid, order_date, branchId) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'DELETE FROM Feedback_Rating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
-            [accountId, sid, order_date, branchId],
-            { autoCommit: true }
-        );
-        return result.rowsAffected;
-    }).catch(() => {
-        return [];
-    });
-}
-
-// feedback - PROJECTION: Get restaurants by address
-async function getRestaurantsByAddress(inputAddress) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `SELECT R.name
-             FROM Restaurant R JOIN Branch B ON R.name = B.restaurant_name
-             WHERE B.street_address LIKE '%' || :input_address || '%'`,
-            [inputAddress]
+            'SELECT * FROM users WHERE cwl = :cwl AND password = :password',
+            [cwl, password]
         );
         return result.rows;
     }).catch(() => {
@@ -159,16 +119,7 @@ async function getRestaurantsByAddress(inputAddress) {
 
 // Module exports
 module.exports = {
-    submitFeedback,
-    updateFeedback,
-    viewFeedback,
-    getBestRatedBranch,
-    deleteFeedback,
-    getRestaurantsByAddress
+    createUser,
+    editUser,
+    loginUser
 };
-
-
-
-
-
-
