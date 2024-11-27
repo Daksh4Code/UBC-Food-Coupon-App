@@ -5,7 +5,7 @@ body {
     max-width: 800px;
     margin: auto;
     line-height: 1.6;
-    background-color: #fffef5f9;
+    background-color: #e0e0e0;
     color: #313131;
 }
 
@@ -41,26 +41,84 @@ tr:hover {
     background-color: #f5f5f5;
     cursor: pointer;
 }
+.container {
+    
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.box {
+    background-color: rgba(255, 255, 255, 0.774);
+    width: 650px;
+    height: 430px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center the buttons */
+    align-items: center; /* Horizontally center the buttons */
+}
 
 button {
-    background-color: rgb(32, 107, 227);
+    background-color: rgb(8, 21, 48);
     color: #fff;
     padding: 10px 20px;
     font-size: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 7px;
     cursor: pointer;
     transition: background-color 0.3s;
     outline: none;
+    width: 600px;
+    height: 100px;
+    margin: 5px 0; /* Reduce the vertical margin between buttons */
+}
+
+img {
+    position: fixed;
+    bottom: 0;
+    left: 20px;
+}
+
+#header {
+    background-color: rgba(255, 255, 255, 0.774);
+    color:rgb(8, 21, 48); 
+    font-size: 25pt;
+    width: 500px;
+    height: 60px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 30px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    position: relative;
 }
 
 button:hover {
-    background-color: rgb(22, 87, 207);
+    background-color: rgb(21, 24, 56);
 }
 
 button:active {
-    background-color: rgb(12, 67, 187);
+    background-color: rgb(21, 24, 56);
 }
+
 
 /* INPUT STYLES */
 input, textarea {
