@@ -146,25 +146,26 @@ async function countDemotable() {
 async function getROTDVisitors() {
     return await withOracleDB(async (connection) => {
         const query = `
-    SELECT DISTINCT a.account_id 
-    FROM Account a 
-    WHERE NOT EXISTS (
-        SELECT 1 
-        FROM RestaurantOTD r 
+        SELECT DISTINCT a.account_id 
+        FROM Account a
         WHERE NOT EXISTS (
-            SELECT 1 
-            FROM Delivery d 
-            JOIN Branch b ON d.branch_id = b.branch_id 
-            WHERE d.account_id = a.account_id 
-            AND b.restaurant_name = r.name
-            UNION
-            SELECT 1 
-            FROM Pickup p 
-            JOIN Branch b ON p.branch_id = b.branch_id 
-            WHERE p.account_id = a.account_id 
-            AND b.restaurant_name = r.name
+            SELECT 1
+            FROM RestaurantOTD r
+            WHERE NOT EXISTS (
+                SELECT d.order_id
+                FROM Delivery d, Branch b
+                WHERE d.branch_id = b.branch_id
+                AND d.account_id = a.account_id
+                AND b.restaurant_name = r.name
+                UNION
+                SELECT p.order_id
+                FROM Pickup p, Branch b
+                WHERE p.branch_id = b.branch_id
+                AND p.account_id = a.account_id
+                AND b.restaurant_name = r.name
+            )
         )
-    )
+
     `;
 
         try {
@@ -184,27 +185,25 @@ async function getROTDVisitors() {
 async function getOrderCosts() {
     return await withOracleDB(async (connection) => {
         const query = `
-SELECT d.order_id, 
-       b.restaurant_name, 
-       SUM(f.cost * c.quantity)
-FROM Delivery d, Branch b, Consists_Delivery c, Food f
-WHERE d.branch_id = b.branch_id 
-  AND d.order_id = c.order_id 
-  AND c.food_name = f.food_name
-GROUP BY d.order_id, b.restaurant_name
+        SELECT d.order_id, 
+            b.restaurant_name, 
+            SUM(f.cost * c.quantity)
+        FROM Delivery d, Branch b, Consists_Delivery c, Food f
+        WHERE d.branch_id = b.branch_id 
+        AND d.order_id = c.order_id 
+        AND c.food_name = f.food_name
+        GROUP BY d.order_id, b.restaurant_name
 
-UNION
+        UNION
 
-SELECT p.order_id, 
-       b.restaurant_name, 
-       SUM(f.cost * c.quantity)
-FROM Pickup p, Branch b, Consists_Pickup c, Food f
-WHERE p.branch_id = b.branch_id 
-  AND p.order_id = c.order_id 
-  AND c.food_name = f.food_name
-GROUP BY p.order_id, b.restaurant_name
-
-
+        SELECT p.order_id, 
+            b.restaurant_name, 
+            SUM(f.cost * c.quantity)
+        FROM Pickup p, Branch b, Consists_Pickup c, Food f
+        WHERE p.branch_id = b.branch_id 
+        AND p.order_id = c.order_id 
+        AND c.food_name = f.food_name
+        GROUP BY p.order_id, b.restaurant_name
                         `;
 
         try {
