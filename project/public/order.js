@@ -18,7 +18,7 @@ async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
     const loadingGifElem = document.getElementById('loadingGif');
 
-    const response = await fetch('/check-db-connection', {
+    const response = await fetch('orders/check-db-connection', {
         method: "GET"
     });
 
@@ -36,37 +36,37 @@ async function checkDbConnection() {
     });
 }
 
-// Fetches data from the demotable and displays it.
-async function fetchAndDisplayUsers() {
-    const tableElement = document.getElementById('demotable');
-    const tableBody = tableElement.querySelector('tbody');
+// // Fetches data from the demotable and displays it.
+// async function fetchAndDisplayUsers() {
+//     const tableElement = document.getElementById('demotable');
+//     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/demotable', {
-        method: 'GET'
-    });
+//     const response = await fetch('orders/demotable', {
+//         method: 'GET'
+//     });
 
-    const responseData = await response.json();
-    const demotableContent = responseData.data;
+//     const responseData = await response.json();
+//     const demotableContent = responseData.data;
 
-    // Always clear old, already fetched data before new fetching process.
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+//     // Always clear old, already fetched data before new fetching process.
+//     if (tableBody) {
+//         tableBody.innerHTML = '';
+//     }
 
-    demotableContent.forEach(user => {
-        const row = tableBody.insertRow();
-        user.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field;
-        });
-    });
-}
-
+//     demotableContent.forEach(user => {
+//         const row = tableBody.insertRow();
+//         user.forEach((field, index) => {
+//             const cell = row.insertCell(index);
+//             cell.textContent = field;
+//         });
+//     });
+// }
+// this function was inspired by the sample project fetchAndDisplayUsers function
 async function fetchAndDisplayROTDVisitors() {
     const tableElement = document.getElementById('rotd');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/rotd', {
+    const response = await fetch('orders/rotd', {
         method: 'GET'
     });
 
@@ -74,7 +74,6 @@ async function fetchAndDisplayROTDVisitors() {
     console.log(responseData)
     const divisTable = responseData.result;
 
-    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -90,7 +89,7 @@ async function fetchAndDisplayROTDVisitors() {
 
 // This function resets or initializes the demotable.
 async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+    const response = await fetch("orders/initiate-demotable", {
         method: 'POST'
     });
     const responseData = await response.json();
@@ -111,7 +110,7 @@ async function insertDemotable(event) {
     const idValue = document.getElementById('insertId').value;
     const nameValue = document.getElementById('insertName').value;
 
-    const response = await fetch('/insert-demotable', {
+    const response = await fetch('orders/insert-demotable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -140,7 +139,7 @@ async function updateNameDemotable(event) {
     const oldNameValue = document.getElementById('updateOldName').value;
     const newNameValue = document.getElementById('updateNewName').value;
 
-    const response = await fetch('/update-name-demotable', {
+    const response = await fetch('orders/update-name-demotable', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -165,7 +164,7 @@ async function updateNameDemotable(event) {
 // Counts rows in the demotable.
 // Modify the function accordingly if using different aggregate functions or procedures.
 async function countDemotable() {
-    const response = await fetch("/count-demotable", {
+    const response = await fetch("orders/count-demotable", {
         method: 'GET'
     });
 
@@ -180,6 +179,63 @@ async function countDemotable() {
     }
 }
 
+// this function was inspired by the sample project fetchAndDisplayUsers function
+async function getCosts() {
+    const tableElement = document.getElementById('costs');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('orders/costs', {
+        method: 'GET'
+    });
+
+    console.log(response)
+
+    const responseData = await response.json();
+    console.log(responseData)
+    const aggTable = responseData.result;
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    aggTable.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
+// this function was inspired by the sample project fetchAndDisplayUsers function
+async function fetchROTDData() {
+    const tableElement = document.getElementById('rotdName');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('orders/rotdnames', {
+        method: 'GET'
+    });
+
+    console.log(response)
+
+    const responseData = await response.json();
+    console.log(responseData)
+    const aggTable = responseData.result;
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    aggTable.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
+
 
 
 // ---------------------------------------------------------------
@@ -187,16 +243,13 @@ async function countDemotable() {
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
     checkDbConnection();
-    fetchTableData();
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    document.getElementById("insertDemotable").addEventListener("submit", insertDemotable);
-    document.getElementById("updataNameDemotable").addEventListener("submit", updateNameDemotable);
-    document.getElementById("countDemotable").addEventListener("click", countDemotable);
+    fetchROTDData();
+    document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);
+    document.getElementById("getCosts").addEventListener("click", getCosts);
 };
 
-// General function to refresh the displayed table data.
-// You can invoke this after any table-modifying operation to keep consistency.
-function fetchTableData() {
-    fetchAndDisplayUsers();
-    fetchAndDisplayROTDVisitors();
-}
+// // General function to refresh the displayed table data.
+// // You can invoke this after any table-modifying operation to keep consistency.
+// function fetchTableData() {
+//     fetchAndDisplayUsers();
+// }

@@ -1,3 +1,4 @@
+// THIS FILE WAS EDITED FROM THE ORIGINAL SAMPLE PROJECT server.js FILE
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 
@@ -145,45 +146,101 @@ async function countDemotable() {
 async function getROTDVisitors() {
     return await withOracleDB(async (connection) => {
         const query = `
-    SELECT DISTINCT a.account_id 
-    FROM Account a 
-    WHERE NOT EXISTS (
-        SELECT 1 
-        FROM RestaurantOTD r 
+        SELECT DISTINCT a.account_id 
+        FROM Account a
         WHERE NOT EXISTS (
-            SELECT 1 
-            FROM Delivery d 
-            JOIN Branch b ON d.branch_id = b.branch_id 
-            WHERE d.account_id = a.account_id 
-            AND b.restaurant_name = r.name
-            UNION
-            SELECT 1 
-            FROM Pickup p 
-            JOIN Branch b ON p.branch_id = b.branch_id 
-            WHERE p.account_id = a.account_id 
-            AND b.restaurant_name = r.name
+            SELECT 1
+            FROM RestaurantOTD r
+            WHERE NOT EXISTS (
+                SELECT d.order_id
+                FROM Delivery d, Branch b
+                WHERE d.branch_id = b.branch_id
+                AND d.account_id = a.account_id
+                AND b.restaurant_name = r.name
+                UNION
+                SELECT p.order_id
+                FROM Pickup p, Branch b
+                WHERE p.branch_id = b.branch_id
+                AND p.account_id = a.account_id
+                AND b.restaurant_name = r.name
+            )
         )
-    )
-    `;
 
-        console.log('Executing query:', query);  // Debugging log
+    `;
 
         try {
             const result = await connection.execute(query);
-            console.log('Query result:', result);  // Log the result to check for any issues
-            return result.rows;  // Return the rows if successful
+            console.log('result:', result);
+            return result.rows;
         } catch (err) {
-            console.error('Error executing query:', err);  // Log any errors
-            return [];  // Return an empty array on error
+            console.error('bruh', err);
+            return [];
         }
     }).catch((err) => {
-        console.error('Error with database connection:', err);  // Log any errors related to DB connection
-        return [];  // Return empty array in case of connection errors
+        console.error('Error with connection:', err);
+        return [];
     });
 }
 
-module.exports = { getROTDVisitors };
+async function getOrderCosts() {
+    return await withOracleDB(async (connection) => {
+        const query = `
+        SELECT d.order_id, 
+            b.restaurant_name, 
+            SUM(f.cost * c.quantity)
+        FROM Delivery d, Branch b, Consists_Delivery c, Food f
+        WHERE d.branch_id = b.branch_id 
+        AND d.order_id = c.order_id 
+        AND c.food_name = f.food_name
+        GROUP BY d.order_id, b.restaurant_name
 
+        UNION
+
+        SELECT p.order_id, 
+            b.restaurant_name, 
+            SUM(f.cost * c.quantity)
+        FROM Pickup p, Branch b, Consists_Pickup c, Food f
+        WHERE p.branch_id = b.branch_id 
+        AND p.order_id = c.order_id 
+        AND c.food_name = f.food_name
+        GROUP BY p.order_id, b.restaurant_name
+                        `;
+
+        try {
+            const result = await connection.execute(query);
+            console.log('result:', result);
+            return result.rows;
+        } catch (err) {
+            console.error('bruh', err);
+            return [];
+        }
+    }).catch((err) => {
+        console.error('Error with connection:', err);
+        return [];
+    });
+}
+
+
+async function getROTD() {
+    return await withOracleDB(async (connection) => {
+        const query = `
+        SELECT r.name
+        FROM RestaurantOTD r
+                        `;
+
+        try {
+            const result = await connection.execute(query);
+            console.log('result:', result);
+            return result.rows;
+        } catch (err) {
+            console.error('bruh', err);
+            return [];
+        }
+    }).catch((err) => {
+        console.error('Error with connection:', err);
+        return [];
+    });
+}
 
 
 
@@ -194,5 +251,7 @@ module.exports = {
     insertDemotable,
     updateNameDemotable,
     countDemotable,
-    getROTDVisitors
+    getROTDVisitors,
+    getOrderCosts,
+    getROTD
 };
