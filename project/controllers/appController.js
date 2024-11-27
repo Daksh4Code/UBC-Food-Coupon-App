@@ -64,5 +64,12 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+router.get('/rotd', async (req, res) => {
+    const visitors = await appService.getROTDVisitors()
+    res.json({
+            result: visitors
+        });
+});
+
 
 module.exports = router;
