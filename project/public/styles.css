@@ -71,9 +71,10 @@ tr:hover {
 
 button {
     background-color: rgb(8, 21, 48);
+    transition: all 0.2s ease-in-out;
     color: #fff;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 20px;
     border: none;
     border-radius: 7px;
     cursor: pointer;
@@ -81,8 +82,12 @@ button {
     outline: none;
     width: 600px;
     height: 100px;
-    margin: 5px 0; /* Reduce the vertical margin between buttons */
+    margin: 5px 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Ensure the button is treated as a block-level element */
 }
+
 
 img {
     position: fixed;
@@ -111,12 +116,23 @@ img {
     position: relative;
 }
 
+h1,h2 {
+    text-align: center;
+}
+
 button:hover {
-    background-color: rgb(21, 24, 56);
+    transition: all 0.2s ease-in-out;
+    background-color: rgb(9, 11, 41);
+    transform: scale(1.03);
 }
 
 button:active {
     background-color: rgb(21, 24, 56);
+    
+}
+
+a {
+    text-decoration: none;
 }
 
 
