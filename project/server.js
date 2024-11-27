@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 
-const appController = require('./controllers/appController');
+const orderController = require('./controllers/orderController');
 const couponController = require('./controllers/couponController')
 //const userController = require('./controllers/userController')
 //const feedbackController = require('./controllers/feedbackController')
@@ -30,7 +30,7 @@ app.use(express.json());             // Parse incoming JSON payloads
 //      route to send 'DEFAULT_FILE_NAME.html' as default for root URL
 
 // mount the router
-app.use('/', appController);
+app.use('/orders', orderController);
 app.use('/coupons', couponController);
 //app.use('/delivery', deliveryController);
 //app.use('/pickup', pickupController);
