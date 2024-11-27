@@ -6,6 +6,7 @@ const appController = require('./controllers/appController');
 const couponController = require('./controllers/couponController')
 //const userController = require('./controllers/userController')
 //const feedbackController = require('./controllers/feedbackController')
+//const feedbackController = require('./controllers/feedbackController')
 //const deliveryController = require('./controllers/deliveryController')
 //const pickupController = require('./controllers/pickupController')
 
@@ -36,6 +37,8 @@ app.use('/coupons', couponController);
 //app.use('/users', userController);
 //app.use('/feedbacks', feedbackController);
 //app.use('/coupons', couponController);
+// app.use('/users', userController);
+// app.use('/feedbacks', feedbackController);
 
 // ----------------------------------------------------------
 // Starting the server
