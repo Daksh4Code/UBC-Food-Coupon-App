@@ -207,6 +207,35 @@ async function getCosts() {
     });
 }
 
+// this function was inspired by the sample project fetchAndDisplayUsers function
+async function fetchROTDData() {
+    const tableElement = document.getElementById('rotdName');
+    const tableBody = tableElement.querySelector('tbody');
+
+    const response = await fetch('orders/rotdnames', {
+        method: 'GET'
+    });
+
+    console.log(response)
+
+    const responseData = await response.json();
+    console.log(responseData)
+    const aggTable = responseData.result;
+
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+
+    aggTable.forEach(user => {
+        const row = tableBody.insertRow();
+        user.forEach((field, index) => {
+            const cell = row.insertCell(index);
+            cell.textContent = field;
+        });
+    });
+}
+
+
 
 
 // ---------------------------------------------------------------
@@ -214,7 +243,7 @@ async function getCosts() {
 // Add or remove event listeners based on the desired functionalities.
 window.onload = function() {
     checkDbConnection();
-    // fetchTableData();
+    fetchROTDData();
     document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);
     document.getElementById("getCosts").addEventListener("click", getCosts);
 };

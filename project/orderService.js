@@ -221,6 +221,27 @@ async function getOrderCosts() {
 }
 
 
+async function getROTD() {
+    return await withOracleDB(async (connection) => {
+        const query = `
+        SELECT r.name
+        FROM RestaurantOTD r
+                        `;
+
+        try {
+            const result = await connection.execute(query);
+            console.log('result:', result);
+            return result.rows;
+        } catch (err) {
+            console.error('bruh', err);
+            return [];
+        }
+    }).catch((err) => {
+        console.error('Error with connection:', err);
+        return [];
+    });
+}
+
 
 
 module.exports = {
@@ -231,5 +252,6 @@ module.exports = {
     updateNameDemotable,
     countDemotable,
     getROTDVisitors,
-    getOrderCosts
+    getOrderCosts,
+    getROTD
 };

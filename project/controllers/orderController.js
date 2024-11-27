@@ -78,5 +78,12 @@ router.get('/costs', async (req, res) => {
         });
 });
 
+router.get('/rotdnames', async (req, res) => {
+    const rotd = await orderService.getROTD()
+    res.json({
+            result: rotd
+        });
+});
+
 
 module.exports = router;
