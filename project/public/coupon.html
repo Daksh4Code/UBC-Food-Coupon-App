@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,112 +10,99 @@
 
     <title>UBCoupon</title>
 </head>
+
 <body>
-<!-- ===================================================================================== -->
-<!-- Show 'CouponTable' -->
-<img src="./media/logo.png" alt="logo" width="150px"/>
-<h2>Coupon Table</h2>
-<table id="couponTable" border="1">
-    <thead>
-    <tr>
-        <th>Restaurant</th>
-        <th>Address</th>
-        <th>Coupon ID</th>
-        <th>Discount</th>
-        <th>Number of Uses Left</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <!-- ===================================================================================== -->
+    <!-- Show 'CouponTable' -->
+    <img src="./media/logo.png" alt="logo" width="150px" />
+    <h2>Coupon Table</h2>
+    <table id="couponTable" border="1">
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>Address</th>
+                <th>Coupon ID</th>
+                <th>Discount</th>
+                <th>Number of Uses Left</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 
-<form id="selection">
-    Search for coupons: <input type="text" id="selectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
-    <button type="submit"> search </button> <br>
-</form>
-<div id="searched_coupon"></div>
+    <form id="selection">
+        Search for coupons: <input type="text" id="selectionInput"
+            placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+        <button type="submit"> search </button> <br>
+    </form>
+    <div id="searched_coupon"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+    <br>
+    <hr><br> <!-- ========================================================================= -->
 
-<form id="projection">
-    Projection: <input type="text" id="projectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
-    <button type="submit"> search </button> <br>
-</form>
-<div id="projection_table"></div>
-<table id="projectTable" border="1">
-    <thead></thead>
-    <tbody></tbody>
-</table>
-
-
-<br><hr><br> <!-- ========================================================================= -->
-
-<h2>Best Coupon Deals for This Week</h2>
-<!--//B.branch_id, B.street_address, R.name, MAX(dc_percent)-->
-
-<button id="viewBestCoupon"> Click to see the best deals by branch! </button> <br><br>
-<table id="bestCouponTable" border="1">
-    <thead>
-    <tr>
-        <th>Restaurant</th>
-        <th>Branch ID</th>
-        <th>Address</th>
-        <th>Highest Coupon DC Over 15%:</th>
-
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<br><hr><br> <!-- ========================================================================= -->
-
-<h2>Delete Coupons with Zero Number of Uses </h2>
-<button id="delete_coupons"> Click to delete coupons </button> <br><br>
-<div id=deleted_coupons></div>
-
-<br><hr><br> <!-- ========================================================================= -->
+    <form id="projection">
+        Projection: <input type="text" id="projectionInput"
+            placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+        <button type="submit"> search </button> <br>
+    </form>
+    <div id="projection_table"></div>
+    <table id="projectTable" border="1">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
 
 
-<h2> Decrement Coupon Number of Uses </h2>
-<form id="numUseUpdate">
-    couponID: <input type="text" id="couponID" placeholder="Enter Name" maxlength="8"> <br><br>
+    <br>
+    <hr><br> <!-- ========================================================================= -->
 
-    <button type="submit"> insert </button> <br>
-</form>
-<div id="updated_coupon"></div>
+    <h2>Best Coupon Deals for This Week</h2>
+    <!--//B.branch_id, B.street_address, R.name, MAX(dc_percent)-->
 
-<br><hr><br> <!-----FUNCTIONALITY FOR ORDER:=============================================================== -->
+    <button id="viewBestCoupon"> Click to see the best deals by branch! </button> <br><br>
+    <table id="bestCouponTable" border="1">
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>Branch ID</th>
+                <th>Address</th>
+                <th>Highest Coupon DC Over 15%:</th>
 
-<h2> Create Order </h2>
-<select id="restaurant_results">
-    <option value="" disabled selected>Select an option</option>
-</select>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br>
+    <hr><br> <!-- ========================================================================= -->
 
-<br><br>
+    <h2>Delete Coupons with Zero Number of Uses </h2>
+    <button id="delete_coupons"> Click to delete coupons </button> <br><br>
+    <div id=deleted_coupons></div>
 
-<select id="restaurant_branches">
-    <option value="" disabled selected>Select an option</option>
-</select>
-<br><br>
+    <br>
+    <hr><br> <!-- ========================================================================= -->
 
-<select id="branch_coupons">
-    <option value="" disabled selected>Select an option</option>
-</select>
-<br>
-<button id="clear_order"><b>clear</b></button>
 
-<br>
+    <h2> Decrement Coupon Number of Uses </h2>
+    <form id="numUseUpdate">
+        couponID: <input type="text" id="couponID" placeholder="Enter Name" maxlength="8"> <br><br>
 
-<button id="submit_order"><b>submit</b></button>
+        <button type="submit"> insert </button> <br>
+    </form>
+    <div id="updated_coupon"></div>
 
-<br>
+    <br>
+    <hr><br> <!-----FUNCTIONALITY FOR ORDER:=============================================================== -->
 
-<a href="main.html">
-    <button class="block"><b>back</b></button>
-</a>
 
-<!-- ===================================================================================== -->
-<!-- External JavaScript file that contains the functionality/logic for the operations above. -->
-<script src="coupon.js"></script>
+
+    <!-- <a href="main.html">
+        <button class="block"><b>back</b></button>
+    </a> -->
+
+    <!-- ===================================================================================== -->
+    <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
+    <script src="coupon.js"></script>
 </body>
+
 </html>

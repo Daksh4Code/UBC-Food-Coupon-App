@@ -26,7 +26,7 @@ async function withOracleDB(action) {
 // function: retrieves all the coupons in COUPON
 // fetch coupons adapted from fetchDemotableFromDb from tutorial
 async function fetchCoupons() {
-     return await withOracleDB(async (connection) => {
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses FROM Coupon C, Branch B WHERE C.branch_id = B.branch_id');
         return result.rows;
     }).catch(() => {
@@ -36,7 +36,7 @@ async function fetchCoupons() {
 
 // coupon - Selection:
 // function: get the parsed + validated query and query selection to DB
-async function fetchSelectedCoupons(query){
+async function fetchSelectedCoupons(query) {
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -65,7 +65,7 @@ async function fetchSelectedCoupons(query){
 
 // coupon - Projection:
 // function: get the parsed + validated query and query projection to DB
-async function projectCoupons(query){
+async function projectCoupons(query) {
     console.log("Executing query:", query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -75,12 +75,13 @@ async function projectCoupons(query){
         }
     }).catch(() => {
         return {
-          success: false,
-          data: [],
-          message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent . Use spaces between names."
-      };
+            success: false,
+            data: [],
+            message: "Error in the query, check your query again. Valid columns include restaurant_name, number_of_uses, coupon_id, street_address and dc_percent . Use spaces between names."
+        };
     });
 }
+
 
 
 //  coupon - GROUP BY with HAVING:
@@ -94,65 +95,14 @@ async function retrieveGoodDealRestaurants() {
     })
 }
 
-// FUNCTIONALITY FOR ORDER:
-// function: retrieves all restaurants from Restaurant
-async function getRestaurants() {
-     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT name FROM Restaurant');
-        console.log(result.rows)
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-
-//get the coupons associated with the select branch
-async function getCouponBranch(bid) {
-    console.log(bid)
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM COUPON C WHERE C.branch_id = :branch',
-           {branch: bid});
-        // change the resulting list to dict format
-        const resultDict = {};
-                result.rows.forEach(row => {
-                    const [percent, id] = row;
-                    resultDict[id] = percent;
-                })
-
-        return resultDict;
-    }).catch(() => {
-        return [];
-    })
-}
-
-// get the branch addresses associated with the select restaurant
-async function getRestaurantBranch(res_name) {
-    console.log(res_name)
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT B.street_address, B.branch_id FROM Branch B WHERE B.restaurant_name = :name',
-            {name: res_name});
-        console.log(result);
-        // change the list of rows into dict format
-        const resultDict = {};
-        result.rows.forEach(row => {
-            const [address, id] = row;
-            resultDict[address] = id;
-        })
-        return resultDict;
-    }).catch(() => {
-        return [];
-    })
-}
-
 // coupon - UPDATE:
 // function: decrease number of uses by one given a specific coupon id
 async function updateNumberUses(cid) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('UPDATE Coupon SET number_of_uses = number_of_uses - 1 WHERE coupon_id = :coupon',
-                                                {coupon: cid},
-                                                { autoCommit: true }
-                                                );
+            { coupon: cid },
+            { autoCommit: true }
+        );
         return result.rowsAffected;
     }).catch(() => {
         return [];
@@ -164,9 +114,9 @@ async function updateNumberUses(cid) {
 async function deleteCoupon() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('DELETE FROM COUPON WHERE number_of_uses = 0',
-                                                [],
-                                                { autoCommit: true }
-                                                );
+            [],
+            { autoCommit: true }
+        );
         return result.rowsAffected;
     }).catch(() => {
         return [];
@@ -178,9 +128,6 @@ module.exports = {
     updateNumberUses,
     deleteCoupon,
     retrieveGoodDealRestaurants,
-    getRestaurantBranch,
-    getCouponBranch,
-    getRestaurants,
     fetchSelectedCoupons,
     projectCoupons
 };
