@@ -17,14 +17,13 @@ async function fetchFeedbackTable() {
     const tableElement = document.getElementById('feedbackTable');
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/feedbacks/submit', {
+    const response = await fetch('/feedbacks', {
         method: 'GET'
     });
 
     const responseData = await response.json();
     const feedbacks = responseData.data;
 
-    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -48,7 +47,7 @@ async function addFeedback(event) {
     const branchId = document.getElementById("branchId").value;
     const rating = document.getElementById("rating").value;
 
-    const response = await fetch('/feedbacks/add', {
+    const response = await fetch('/feedbacks/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -59,7 +58,6 @@ async function addFeedback(event) {
     const result = await response.json();
     document.getElementById("addFeedbackResult").textContent = result.message;
 
-    // Refresh the table data
     fetchFeedbackTable();
 }
 
@@ -73,18 +71,17 @@ async function updateFeedback(event) {
     const branchId = document.getElementById("editBranchId").value;
     const newRating = document.getElementById("newRating").value;
 
-    const response = await fetch(`/feedbacks/${accountId}/${sid}/${orderDate}/${branchId}/update-rating`, {
+    const response = await fetch('/feedbacks/update', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ newRating })
+        body: JSON.stringify({ accountId, sid, orderDate, branchId, newRating })
     });
 
     const result = await response.json();
     document.getElementById("updateFeedbackResult").textContent = result.message;
 
-    // Refresh the table data
     fetchFeedbackTable();
 }
 
@@ -95,7 +92,11 @@ async function getBestRatedBranch() {
     });
 
     const result = await response.json();
-    document.getElementById("bestRatedBranchResult").textContent = `Best Rated Branch ID: ${result.data[0].BRANCH_ID}`;
+    if (result.data && result.data.length > 0) {
+        document.getElementById("bestRatedBranchResult").textContent = `Best Rated Branch ID: ${result.data[0].BRANCH_ID}`;
+    } else {
+        document.getElementById("bestRatedBranchResult").textContent = "No best-rated branch found.";
+    }
 }
 
 // Deletes feedback
@@ -143,8 +144,7 @@ window.onload = function() {
     document.getElementById("getRestaurantsByAddressForm").addEventListener("submit", getRestaurantsByAddress);
 };
 
-// General function to refresh the displayed table data.
-// You can invoke this after any table-modifying operation to keep consistency.
+// General function to refresh the displayed table data..
 function fetchTableData() {
     fetchFeedbackTable();
 }

@@ -4,8 +4,18 @@ const router = express.Router();
 
 // --- Feedback Management routes ---
 
+// Get all feedbacks (to display in the table)
+router.get('/', async (req, res) => {
+    try {
+        const feedbacks = await feedbackService.getAllFeedbacks();
+        res.json({ data: feedbacks });
+    } catch (error) {
+        res.status(500).send("Error fetching feedbacks.");
+    }
+});
+
 // Submit Feedback
- router.post('/feedbacks/submit', async (req, res) => {
+router.post('/submit', async (req, res) => {
     const { accountId, sid, order_date, branchId, rating } = req.body;
     try {
         const result = await feedbackService.submitFeedback(accountId, sid, order_date, branchId, rating);
@@ -16,7 +26,7 @@ const router = express.Router();
 });
 
 // Update Feedback
-router.put('/feedbacks/update', async (req, res) => {
+router.put('/update', async (req, res) => {
     const { accountId, sid, order_date, branchId, newRating } = req.body;
     try {
         const result = await feedbackService.updateFeedback(accountId, sid, order_date, branchId, newRating);
@@ -27,7 +37,7 @@ router.put('/feedbacks/update', async (req, res) => {
 });
 
 // View Feedback
-router.get('/feedbacks/view/:accountId', async (req, res) => {
+router.get('/view/:accountId', async (req, res) => {
     const accountId = req.params.accountId;
     try {
         const feedbacks = await feedbackService.viewFeedback(accountId);
@@ -38,7 +48,7 @@ router.get('/feedbacks/view/:accountId', async (req, res) => {
 });
 
 // Get Best-Rated Branch
-router.get('/feedbacks/best-rated-branch', async (req, res) => {
+router.get('/best-rated-branch', async (req, res) => {
     try {
         const branch = await feedbackService.getBestRatedBranch();
         res.json({ data: branch });
@@ -48,24 +58,13 @@ router.get('/feedbacks/best-rated-branch', async (req, res) => {
 });
 
 // Delete Feedback
-router.delete('/feedbacks/delete', async (req, res) => {
+router.delete('/delete', async (req, res) => {
     const { accountId, sid, order_date, branchId } = req.body;
     try {
         const result = await feedbackService.deleteFeedback(accountId, sid, order_date, branchId);
         res.json({ data: result });
     } catch (error) {
         res.send("Error deleting feedback.");
-    }
-});
-
-// Projection Query - Get restaurants by street address
-router.get('/restaurants/by-address', async (req, res) => {
-    const inputAddress = req.query.address;
-    try {
-        const restaurants = await feedbackService.getRestaurantsByAddress(inputAddress);
-        res.json({ data: restaurants });
-    } catch (error) {
-        res.send("Error fetching restaurants by address.");
     }
 });
 

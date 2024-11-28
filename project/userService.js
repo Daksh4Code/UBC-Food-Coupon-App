@@ -78,42 +78,50 @@ async function testOracleConnection() {
 // user - INSERT: Create a new user
 async function createUser(accountId, year, major, password, sid, cwl) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'INSERT INTO users (account_id, year, major, password, sid, cwl) VALUES (:accountId, :year, :major, :password, :sid, :cwl)',
-            [accountId, year, major, password, sid, cwl],
-            { autoCommit: true }
-        );
-        return result.rowsAffected;
-    }).catch((err) => {
-        console.error("Error creating user:", err); // Log the error for debugging
-        return false;
+        try {
+            const result = await connection.execute(
+                'INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES (:accountId, :year, :major, :password, :sid, :cwl)',
+                [accountId, year, major, password, sid, cwl],
+                { autoCommit: true }
+            );
+            return result.rowsAffected > 0;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw error; // Re-throw the error to be caught by the controller
+        }
     });
 }
 
 // user - UPDATE: Update user's password
 async function editUser(accountId, newPassword) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'UPDATE users SET password = :newPassword WHERE account_id = :accountId',
-            [newPassword, accountId],
-            { autoCommit: true }
-        );
-        return result.rowsAffected;
-    }).catch(() => {
-        return false; // Indicate failure
+        try {
+            const result = await connection.execute(
+                'UPDATE Account SET password = :newPassword WHERE account_id = :accountId',
+                [newPassword, accountId],
+                { autoCommit: true }
+            );
+            return result.rowsAffected > 0;
+        } catch (error) {
+            console.error('Error updating password:', error);
+            throw error; // Re-throw the error to be caught by the controller
+        }
     });
 }
 
 // user - SELECT: Log in a user
 async function loginUser(cwl, password) {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'SELECT * FROM users WHERE cwl = :cwl AND password = :password',
-            [cwl, password]
-        );
-        return result.rows;
-    }).catch(() => {
-        return [];
+        try {
+            const result = await connection.execute(
+                'SELECT * FROM Account WHERE cwl = :cwl AND password = :password',
+                [cwl, password]
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error logging in user:', error);
+            throw error; // Re-throw the error to be caught by the controller
+        }
     });
 }
 

@@ -23,18 +23,17 @@ async function createUser(event) {
     const sid = document.getElementById("sid").value;
     const cwl = document.getElementById("cwl").value;
 
-    const response = await fetch('/users/add', {
+    const response = await fetch('/users/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ accountId, year, major, password, sid, cwl })
+        body: JSON.stringify({accountId, year, major, password, sid, cwl})
     });
 
     const result = await response.json();
     document.getElementById("createUserResult").textContent = result.message;
 
-    // Clear form fields after submission
     document.getElementById("createUserForm").reset();
 }
 
@@ -50,13 +49,12 @@ async function loginUser(event) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ cwl, password })
+        body: JSON.stringify({cwl, password})
     });
 
     const result = await response.json();
     document.getElementById("loginUserResult").textContent = result.message;
 
-    // Clear form fields after submission
     document.getElementById("loginUserForm").reset();
 }
 
@@ -67,23 +65,22 @@ async function editUser(event) {
     const accountId = document.getElementById("editAccountId").value;
     const newPassword = document.getElementById("newPassword").value;
 
-    const response = await fetch(`/users/${accountId}/update-password`, {
+    const response = await fetch(`/users/edit/${accountId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ newPassword })
+        body: JSON.stringify({newPassword})
     });
 
     const result = await response.json();
     document.getElementById("updatePasswordResult").textContent = result.message;
 
-    // Clear form fields after submission
     document.getElementById("updateUserPasswordForm").reset();
 }
 
 // Initializes the webpage functionalities.
-window.onload = function() {
+window.onload = function () {
     document.getElementById("createUserForm").addEventListener("submit", createUser);
     document.getElementById("loginUserForm").addEventListener("submit", loginUser);
     document.getElementById("updateUserPasswordForm").addEventListener("submit", editUser);

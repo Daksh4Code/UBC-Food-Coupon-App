@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Management</title>
+    <title>Feedback 1  Management</title>
 </head>
 <body>
 
@@ -30,8 +30,8 @@
     <input type="text" id="accountId" name="accountId" required><br><br>
     <label for="sid">SID:</label>
     <input type="text" id="sid" name="sid" required><br><br>
-    <label for="orderDate">Order Date:</label>
-    <input type="date" id="orderDate" name="orderDate" required><br><br>
+    <label for="orderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="orderDate" name="orderDate" required><br><br>
     <label for="branchId">Branch ID:</label>
     <input type="text" id="branchId" name="branchId" required><br><br>
     <label for="rating">Rating:</label>
@@ -48,8 +48,8 @@
     <input type="text" id="editAccountId" name="editAccountId" required><br><br>
     <label for="editSid">SID:</label>
     <input type="text" id="editSid" name="editSid" required><br><br>
-    <label for="editOrderDate">Order Date:</label>
-    <input type="date" id="editOrderDate" name="editOrderDate" required><br><br>
+    <label for="editOrderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="editOrderDate" name="editOrderDate" required><br><br>
     <label for="editBranchId">Branch ID:</label>
     <input type="text" id="editBranchId" name="editBranchId" required><br><br>
     <label for="newRating">New Rating:</label>
@@ -66,8 +66,8 @@
     <input type="text" id="deleteAccountId" name="deleteAccountId" required><br><br>
     <label for="deleteSid">SID:</label>
     <input type="text" id="deleteSid" name="deleteSid" required><br><br>
-    <label for="deleteOrderDate">Order Date:</label>
-    <input type="date" id="deleteOrderDate" name="deleteOrderDate" required><br><br>
+    <label for="deleteOrderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="deleteOrderDate" name="deleteOrderDate" required><br><br>
     <label for="deleteBranchId">Branch ID:</label>
     <input type="text" id="deleteBranchId" name="deleteBranchId" required><br><br>
     <button type="submit">Delete Feedback</button>
@@ -89,7 +89,6 @@
     <button type="submit">Get Restaurants</button>
 </form>
 <div id="getRestaurantsByAddressResult"></div>
-
 
 <script src="feedback.js"></script>
 </body>
