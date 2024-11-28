@@ -328,19 +328,20 @@ function awaitSelection(selected_id) {
 
 // get the number of uses of the coupon
 async function updateCouponNumUse(cid) {
-    event.preventDefault();
-        try {
-            const response = await fetch(`/coupons/${cid}/update-num-use`, {
-                method: "PUT"
-            });
-            const responseNumUse = await response.json();
-            const responseData = responseNumUse.data;
-            const messageElement = document.getElementById('coupons_results');
-            messageElement.textContent = responseData;
-            fetchCouponTable();
-        } catch(error) {
-            console.log("error in updating the coupon number of uses")
-        }
+    const couponID = document.getElementById("couponID").value; // Get input value
+    console.log(couponID);
+    try {
+        const response = await fetch(`/coupons/${couponID}/update-num-use`, {
+            method: "PUT"
+        });
+        const responseNumUse = await response.json();
+        const responseData = responseNumUse.data;
+        const messageElement = document.getElementById('coupons_results');
+        messageElement.textContent = responseData;
+        fetchCouponTable();
+    } catch(error) {
+        console.log("error in updating the coupon number of uses")
+    }
 }
 
 // reset the choices of a given element id
@@ -363,15 +364,14 @@ async function reset_options(elem_id) {
 
 //delete used coupons where number of uses = 0
 async function deleteUsedCoupon() {
+    console.log("here")
     try {
         const response = await fetch("/coupons/del-used-coupon", {
             method : "DELETE"
         });
         const responseData = await response.json();
         const deleted_coupons = responseData.data;
-        const messageElement = document.getElementById('deleted_coupons');
-        messageElement.textContent = deleted_coupons;
-        fetchCouponTable();
+        await fetchCouponTable();
     } catch(error) {
         console.log("can't delete the coupons")
     }
