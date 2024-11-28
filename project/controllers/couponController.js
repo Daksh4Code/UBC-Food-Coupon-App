@@ -54,6 +54,7 @@ router.put('/:cid/update-num-use', async (req, res) => {
 
 // delete coupons with number of uses == 0
 router.delete('/del-used-coupon', async (req, res) => {
+    console.log("at controllers")
     const deleted_coupons = await appService.deleteCoupon();
 });
 
