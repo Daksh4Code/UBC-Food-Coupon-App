@@ -249,7 +249,9 @@ async function getRestaurants() {
             const response = await fetch('/coupons/get_restaurants', {
             method : "GET"
         });
+
         const responseData = await response.json();
+        console.log(responseData);
         const restaurants = responseData.data;
         const options = document.getElementById('restaurant_results');
         restaurants.forEach(res_list => {

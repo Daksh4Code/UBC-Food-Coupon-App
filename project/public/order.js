@@ -71,7 +71,6 @@ async function fetchAndDisplayROTDVisitors() {
     });
 
     const responseData = await response.json();
-    console.log(responseData)
     const divisTable = responseData.result;
 
     if (tableBody) {
@@ -188,10 +187,10 @@ async function getCosts() {
         method: 'GET'
     });
 
-    console.log(response)
+    
 
     const responseData = await response.json();
-    console.log(responseData)
+   
     const aggTable = responseData.result;
 
     if (tableBody) {
@@ -243,7 +242,7 @@ async function fetchROTDData() {
 //get all restaurants
 async function getRestaurants() {
     try {
-        const response = await fetch('/coupons/get_restaurants', {
+        const response = await fetch('/orders/get_restaurants', {
             method: "GET"
         });
         const responseData = await response.json();
@@ -266,7 +265,7 @@ async function getRestaurantBranches(res_name) {
     event.preventDefault();
     console.log(res_name)
     try {
-        const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
+        const response = await fetch(`/orders/${res_name}/get_res_branch`, {
             method: "GET"
         });
 
@@ -291,7 +290,7 @@ async function getRestaurantBranches(res_name) {
 async function getBranchCoupons(bid) {
     event.preventDefault();
     try {
-        const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
+        const response = await fetch(`/orders/${bid}/get_coupon_branch`, {
             method: "GET"
         });
         const responseData = await response.json();
@@ -327,7 +326,7 @@ function awaitSelection(selected_id) {
 async function updateCouponNumUse(cid) {
     event.preventDefault();
     try {
-        const response = await fetch(`/coupons/${cid}/update-num-use`, {
+        const response = await fetch(`/orders/${cid}/update-num-use`, {
             method: "PUT"
         });
         const responseNumUse = await response.json();
@@ -361,7 +360,7 @@ async function reset_options(elem_id) {
 //delete used coupons where number of uses = 0
 async function deleteUsedCoupon() {
     try {
-        const response = await fetch("/coupons/del-used-coupon", {
+        const response = await fetch("/orders/del-used-coupon", {
             method: "DELETE"
         });
         const responseData = await response.json();
@@ -425,7 +424,28 @@ async function getUserOptions() {
     }
 }
 
+//delete used coupons where number of uses = 0
+async function createOrder() {
+    const restaraunt = document.getElementById("restaurant_results");
+    const branch = document.getElementById("restaurant_branches");
+    const coupon = document.getElementById("branch_coupons");
 
+    if (restaraunt === "") {
+        alert("Please finish selecting order details before submitting!")
+    }
+    try {
+        const response = await fetch("/orders/del-used-coupon", {
+            method: "DELETE"
+        });
+        const responseData = await response.json();
+        const deleted_coupons = responseData.data;
+        const messageElement = document.getElementById('deleted_coupons');
+        messageElement.textContent = deleted_coupons;
+        fetchCouponTable();
+    } catch (error) {
+        console.log("can't delete the coupons")
+    }
+}
 
 
 // ---------------------------------------------------------------
@@ -436,6 +456,8 @@ window.onload = function () {
     fetchROTDData();
     document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);
     document.getElementById("getCosts").addEventListener("click", getCosts);
+    document.getElementById("submit_order").addEventListener("click", createOrder);
+    getUserOptions();
 };
 
 // // General function to refresh the displayed table data.

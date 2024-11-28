@@ -85,5 +85,30 @@ router.get('/rotdnames', async (req, res) => {
         });
 });
 
+// FUNCTIONALITY FOR ORDER:
+//retrieve all restaurants
+router.get('/get_restaurants', async (req, res) => {
+    const restaurants = await orderService.getRestaurants();
+    res.json({ data: restaurants })
+});
+
+// Get the branch associated with the restaurant
+router.get('/:rid/get_res_branch', async (req, res) => {
+    try {
+        const res_id = req.params.rid;
+        const restaurant_branches = await orderService.getRestaurantBranch(res_id);
+        console.log("controller", restaurant_branches)
+        res.json({ data: restaurant_branches });
+    } catch (error) {
+        console.log("error fetching selected coupons");
+    }
+});
+
+// Get the Coupon associated with selected Branch
+router.get('/:bid/get_coupon_branch', async (req, res) => {
+    const branch_id = req.params.bid;
+    const branch_coupon = await orderService.getCouponBranch(branch_id);
+    res.json({ data: branch_coupon })
+});
 
 module.exports = router;
