@@ -25,15 +25,15 @@ async function checkDbConnection() {
     // Hide the loading GIF once the response is received.
     loadingGifElem.style.display = 'none';
     // Display the statusElem's text in the placeholder.
-    statusElem.style.display =  'inline';
+    statusElem.style.display = 'inline';
 
     response.text()
-    .then((text) => {
-        statusElem.textContent = text;
-    })
-    .catch((error) => {
-        statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
-    });
+        .then((text) => {
+            statusElem.textContent = text;
+        })
+        .catch((error) => {
+            statusElem.textContent = 'connection timed out';  // Adjust error handling if required.
+        });
 }
 
 // // Fetches data from the demotable and displays it.
@@ -238,10 +238,200 @@ async function fetchROTDData() {
 
 
 
+//FUNCTIONALITY FOR ORDER:
+
+//get all restaurants
+async function getRestaurants() {
+    try {
+        const response = await fetch('/coupons/get_restaurants', {
+            method: "GET"
+        });
+        const responseData = await response.json();
+        const restaurants = responseData.data;
+        const options = document.getElementById('restaurant_results');
+        restaurants.forEach(res_list => {
+            res = res_list[0]
+            var option = new Option(res, res);
+            options.append(option);
+        });
+
+    } catch (error) {
+        console.log("can't get the coupons associated with the branch id")
+    }
+
+}
+
+//get the restaurant associated with the branch
+async function getRestaurantBranches(res_name) {
+    event.preventDefault();
+    console.log(res_name)
+    try {
+        const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
+            method: "GET"
+        });
+
+        const responseData = await response.json();
+        console.log("Response Data:", responseData);
+        const branches = responseData.data;
+
+        const options = document.getElementById("restaurant_branches");
+        Object.keys(branches).forEach(key => {
+            var text = key;
+            var value = branches[key];
+            var option = new Option(text, value);
+            options.append(option);
+        });
+
+    } catch (error) {
+        console.log("can't get the branches associated with the restaurant name")
+    }
+}
+
+// get the coupons associated with the branch
+async function getBranchCoupons(bid) {
+    event.preventDefault();
+    try {
+        const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
+            method: "GET"
+        });
+        const responseData = await response.json();
+        const coupons = responseData.data;
+        // add the options for the coupons for that branch
+        const options = document.getElementById('branch_coupons');
+        Object.keys(coupons).forEach(key => {
+            var text = key;
+            var value = coupons[key];
+            var option = new Option(text, value);
+            console.log(option)
+            options.append(option);
+        });
+    } catch (error) {
+        console.log("can't get the coupons associated with the branch id")
+    }
+}
+
+// wait on user choice of dropdown item
+function awaitSelection(selected_id) {
+    return new Promise((resolve) => {
+        const selected_response = document.getElementById(selected_id);
+        const listener = () => {
+            selected_response.disabled = true;
+            selected_response.removeEventListener('change', listener);
+            resolve(selected_response.value);
+        };
+        selected_response.addEventListener('change', listener);
+    });
+}
+
+// get the number of uses of the coupon
+async function updateCouponNumUse(cid) {
+    event.preventDefault();
+    try {
+        const response = await fetch(`/coupons/${cid}/update-num-use`, {
+            method: "PUT"
+        });
+        const responseNumUse = await response.json();
+        const responseData = responseNumUse.data;
+        const messageElement = document.getElementById('coupons_results');
+        messageElement.textContent = responseData;
+        fetchCouponTable();
+    } catch (error) {
+        console.log("error in updating the coupon number of uses")
+    }
+}
+
+// reset the choices of a given element id
+async function reset_choices(elem_id) {
+    selected_response = document.getElementById(elem_id);
+    if (selected_response) {
+        selected_response.disabled = false;
+    }
+}
+
+// reset options of given element id
+async function reset_options(elem_id) {
+    options = document.getElementById(elem_id);
+    if (options) {
+        options.innerHTML = '';
+        const defaultOption = new Option("Select an option", "");
+        options.add(defaultOption);
+    }
+}
+
+//delete used coupons where number of uses = 0
+async function deleteUsedCoupon() {
+    try {
+        const response = await fetch("/coupons/del-used-coupon", {
+            method: "DELETE"
+        });
+        const responseData = await response.json();
+        const deleted_coupons = responseData.data;
+        const messageElement = document.getElementById('deleted_coupons');
+        messageElement.textContent = deleted_coupons;
+        fetchCouponTable();
+    } catch (error) {
+        console.log("can't delete the coupons")
+    }
+}
+
+// get the options that the user chooses for placing an order:
+async function getUserOptions() {
+    let clearButtonClicked = false;
+    let submitButtonClicked = false;
+
+    document.getElementById("clear_order").addEventListener("click", () => {
+        console.log("Clear button clicked");
+        clearButtonClicked = true;
+    });
+    document.getElementById("submit_order").addEventListener("click", () => {
+        submitButtonClicked = true;
+    });
+    let retry = true;
+    while (retry) {
+        await getRestaurants();
+        const chosen_restaurant = await awaitSelection('restaurant_results');
+        await getRestaurantBranches(chosen_restaurant);
+        const chosen_branch = await awaitSelection('restaurant_branches');
+        await getBranchCoupons(chosen_branch);
+        const chosen_coupon = await awaitSelection('branch_coupons');
+        console.log(chosen_branch);
+
+        while (!clearButtonClicked && !submitButtonClicked) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            console.log(clearButtonClicked);
+        }
+
+        if (clearButtonClicked) {
+            reset_options('restaurant_results');
+            reset_options('restaurant_branches');
+            reset_options('branch_coupons');
+
+            reset_choices('restaurant_results');
+            reset_choices('restaurant_branches');
+            reset_choices('branch_coupons');
+
+            clearButtonClicked = false;
+            retry = true;
+            continue;
+        } else if (submitButtonClicked) {
+            // updates the select coupon number of uses - 1
+            //updateCouponNumUse(chosen_coupon);
+            // deletes coupons with number of uses = 0
+            //deleteUsedCoupon();
+            retry = false;
+            submitButtonClicked = false;
+        }
+
+    }
+}
+
+
+
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
-window.onload = function() {
+window.onload = function () {
     checkDbConnection();
     fetchROTDData();
     document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);

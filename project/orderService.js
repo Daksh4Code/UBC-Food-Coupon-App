@@ -90,7 +90,7 @@ async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
             await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
+        } catch (err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
@@ -243,6 +243,59 @@ async function getROTD() {
 }
 
 
+// FUNCTIONALITY FOR ORDER:
+// function: retrieves all restaurants from Restaurant
+async function getRestaurants() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT name FROM Restaurant');
+        console.log(result.rows)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+//get the coupons associated with the select branch
+async function getCouponBranch(bid) {
+    console.log(bid)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM COUPON C WHERE C.branch_id = :branch',
+            { branch: bid });
+        // change the resulting list to dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [percent, id] = row;
+            resultDict[id] = percent;
+        })
+
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
+
+// get the branch addresses associated with the select restaurant
+async function getRestaurantBranch(res_name) {
+    console.log(res_name)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT B.street_address, B.branch_id FROM Branch B WHERE B.restaurant_name = :name',
+            { name: res_name });
+        console.log(result);
+        // change the list of rows into dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [address, id] = row;
+            resultDict[address] = id;
+        })
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
+
+
+
 
 module.exports = {
     testOracleConnection,
@@ -253,5 +306,8 @@ module.exports = {
     countDemotable,
     getROTDVisitors,
     getOrderCosts,
-    getROTD
+    getROTD,
+    getRestaurantBranch,
+    getRestaurants,
+    getCouponBranch
 };

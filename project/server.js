@@ -36,9 +36,6 @@ app.use('/coupons', couponController);
 //app.use('/pickup', pickupController);
 //app.use('/users', userController);
 //app.use('/feedbacks', feedbackController);
-//app.use('/coupons', couponController);
-// app.use('/users', userController);
-// app.use('/feedbacks', feedbackController);
 
 // ----------------------------------------------------------
 // Starting the server
