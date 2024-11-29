@@ -79,28 +79,61 @@
 
     <h2> Create Order </h2>
     <p>Restaurant</p>
-    <select id="restaurant_results">
-        <option value="" disabled selected>Select an option</option>
-    </select>
+<select id="restaurant_results">
+    <option value="" disabled selected>Select an option</option>
+</select>
 
-    <br><br>
+<br><br>
 
-    <p>Branch</p>
-    <select id="restaurant_branches">
-        <option value="" disabled selected>Select an option</option>
-    </select>
-    <br><br>
+<p>Branch</p>
+<select id="restaurant_branches">
+    <option value="" disabled selected>Select an option</option>
+</select>
 
-    <p>Available Coupons (Discount Proportion)</p>
-    <select id="branch_coupons">
-        <option value="" disabled selected>Select an option</option>
-    </select>
+<br><br>
+
+<p>Available Coupons (Discount Proportion)</p>
+<select id="branch_coupons">
+    <option value="" disabled selected>Select an option</option>
+</select>
+
+<br><br>
+
+<p>Food</p>
+<select id="food">
+    <option value="" disabled selected>Select an option</option>
+</select>
+
+<br><br>
+
+<p>Quantity</p>
+<input type="number" id="quantity" min="1" value="1">
+
+<br><br>
+
+<p>Username</p>
+<input type="text" id="username" placeholder="Enter your username">
+
+<br><br>
+
+<p>Student Number</p>
+<input type="text" id="student_number" placeholder="Enter your student number">
+
+<br><br>
+
+<p>Payment Method</p>
+<select id="payment_method">
+    <option value="" disabled selected>Select a payment method</option>
+    <option value="Credit">Credit</option>
+    <option value="Debit">Debit</option>
+    <option value="Cash">Cash</option>
+</select>
     <br>
-    <button id="clear_order"><b>clear</b></button>
+    <button id="clear_order"><b>Clear</b></button>
 
     <br>
 
-    <button id="submit_order"><b>submit</b></button>
+    <button id="submit_order" disabled><b>Submit</b></button>
 
     <br>
 

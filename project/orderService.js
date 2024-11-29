@@ -294,6 +294,72 @@ async function getRestaurantBranch(res_name) {
     })
 }
 
+async function getRestaurantFood(bid) {
+    console.log("ANOTHER" + bid);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT f.food_name FROM Food f WHERE f.branch_id = :name',
+            { name: bid }
+        );
+        console.log("XTRA" + result);
+
+
+        const foodList = result.rows.map(row => row[0]);
+        return [foodList];
+    }).catch((error) => {
+        console.error("Error fetching food data:", error);
+        return [];
+    });
+}
+
+
+async function createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity) {
+    console.log('oid:', oid, 'paymethod:', paymethod, 'cid:', cid, 'bid:', bid, 'aid:', aid, 'sid:', sid);
+    
+    return await withOracleDB(async (connection) => {
+        const pickupResult = await connection.execute(
+            `INSERT INTO Pickup (
+                order_id, total_cost, order_date, payment_method, coupon_id, branch_id, account_id, sid, pickup_time, pickup_status
+            ) VALUES (
+                :oid, 0, TO_DATE('2024-12-01', 'YYYY-MM-DD'), :paymethod, :cid, :bid, :aid, :sid, 10.30, 'Scheduled'
+            )`,
+            {
+                oid: oid,
+                paymethod: paymethod,
+                cid: cid,
+                bid: bid,
+                aid: aid,
+                sid: sid
+            },
+            { autoCommit: false }
+        );
+        
+
+        const consistsPickupResult = await connection.execute(
+            `INSERT INTO Consists_Pickup (
+                order_id, food_name, quantity
+            ) VALUES (
+                :oid, :fid, :quantity
+            )`,
+            {
+                oid: oid,
+                fid: fid,
+                quantity: quantity
+            },
+            { autoCommit: true }
+        );
+
+        console.log('Pickup Insert Result:', pickupResult);
+        console.log('Consists_Pickup Insert Result:', consistsPickupResult);
+
+        await connection.commit();
+        return { pickupResult, consistsPickupResult };
+    }).catch((error) => {
+        console.error('Error:', error);
+        return [];
+    });
+}
+
 
 
 
@@ -308,6 +374,8 @@ module.exports = {
     getOrderCosts,
     getROTD,
     getRestaurantBranch,
+    getRestaurantFood,
     getRestaurants,
-    getCouponBranch
+    getCouponBranch,
+    createOrder
 };

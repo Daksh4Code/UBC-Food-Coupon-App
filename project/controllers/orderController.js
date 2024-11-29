@@ -111,4 +111,22 @@ router.get('/:bid/get_coupon_branch', async (req, res) => {
     res.json({ data: branch_coupon })
 });
 
+// Get the Coupon associated with selected Branch
+router.get('/:bid/get-foods', async (req, res) => {
+    const branch_id = req.params.bid;
+    const foods = await orderService.getRestaurantFood(branch_id);
+    res.json({ data: foods })
+});
+
+router.post("/create-order", async (req, res) => {
+    const { oid, paymethod, cid, bid, aid, sid, fid, quantity } = req.body;
+    const postResult = await orderService.createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity);
+    if (postResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+
 module.exports = router;

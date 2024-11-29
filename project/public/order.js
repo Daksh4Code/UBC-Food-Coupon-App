@@ -263,7 +263,7 @@ async function getRestaurants() {
 //get the restaurant associated with the branch
 async function getRestaurantBranches(res_name) {
     event.preventDefault();
-    console.log(res_name)
+    console.log("LOL" + res_name)
     try {
         const response = await fetch(`/orders/${res_name}/get_res_branch`, {
             method: "GET"
@@ -306,6 +306,35 @@ async function getBranchCoupons(bid) {
         });
     } catch (error) {
         console.log("can't get the coupons associated with the branch id")
+    }
+}
+
+async function getBranchFoods(branch_id) {
+    
+    console.log("test" + branch_id);
+    try {
+        const response = await fetch(`/orders/${branch_id}/get-foods`, {
+            method: "GET"
+        });
+
+        const responseData = await response.json();
+        console.log("Response Data for FOOD: ", responseData);
+        const foods = responseData.data;
+
+        const foodDropdown = document.getElementById("food");
+        foodDropdown.innerHTML = '<option value="" disabled selected>Select an option</option>'; // Clear previous options
+
+        foods.forEach(food => {
+            console.log("PLEASE " + food)
+            const text = food;
+            const value = food;
+            if (value) {
+                const option = new Option(text, value);
+                foodDropdown.append(option);
+            }
+        });
+    } catch (error) {
+        console.log("Unable to fetch the foods associated with the branch ID");
     }
 }
 
@@ -373,6 +402,9 @@ async function deleteUsedCoupon() {
     }
 }
 
+function generateOrderId() {
+    return Math.floor(Math.random() * 10000); // Random number between 0 and 9999
+}
 // get the options that the user chooses for placing an order:
 async function getUserOptions() {
     let clearButtonClicked = false;
@@ -381,9 +413,15 @@ async function getUserOptions() {
     document.getElementById("clear_order").addEventListener("click", () => {
         console.log("Clear button clicked");
         clearButtonClicked = true;
+        retry=false;
+        
     });
     document.getElementById("submit_order").addEventListener("click", () => {
         submitButtonClicked = true;
+        retry=false;
+        
+        alert("Order placed!")
+
     });
     let retry = true;
     while (retry) {
@@ -392,37 +430,90 @@ async function getUserOptions() {
         await getRestaurantBranches(chosen_restaurant);
         const chosen_branch = await awaitSelection('restaurant_branches');
         await getBranchCoupons(chosen_branch);
+        await getBranchFoods(chosen_branch);
         const chosen_coupon = await awaitSelection('branch_coupons');
-        console.log(chosen_branch);
+        const chosen_food = await awaitSelection('food')
+        const user= await awaitSelection('username')
+        const stu_num = await awaitSelection('student_number')
+        const pay_met = await awaitSelection('payment_method')
+        const quant = document.getElementById("quantity").value;
+        console.log("SEE" + chosen_branch);
+        document.getElementById("submit_order").disabled = false;
 
         while (!clearButtonClicked && !submitButtonClicked) {
             await new Promise(resolve => setTimeout(resolve, 100));
             console.log(clearButtonClicked);
         }
 
-        if (clearButtonClicked) {
-            reset_options('restaurant_results');
-            reset_options('restaurant_branches');
-            reset_options('branch_coupons');
-
-            reset_choices('restaurant_results');
-            reset_choices('restaurant_branches');
-            reset_choices('branch_coupons');
-
-            clearButtonClicked = false;
-            retry = true;
-            continue;
-        } else if (submitButtonClicked) {
+        
+        if (submitButtonClicked) {
+            let order_id = generateOrderId();
             // updates the select coupon number of uses - 1
             //updateCouponNumUse(chosen_coupon);
             // deletes coupons with number of uses = 0
             //deleteUsedCoupon();
+
+            const orderData = {
+                oid: order_id,
+                paymethod: pay_met,
+                cid: chosen_coupon,
+                bid: chosen_branch,
+                aid: user,
+                sid: stu_num,
+                fid: chosen_food,
+                quantity: quant
+            };
+            console.log(orderData);
+            const response = await fetch('/orders/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                console.log('Order successfully created!');
+            } else {
+                console.log('Error creating order');
+            }
+
+
             retry = false;
             submitButtonClicked = false;
+            clearButtonClicked = true;
+            document.getElementById("submit_order").disabled = true;
+            handleButtonClick();
         }
-
-    }
 }
+}
+
+
+function handleButtonClick(clearClicked) {
+        alert("Order cleared.");
+        
+            reset_options('restaurant_results');
+            reset_options('restaurant_branches');
+            reset_options('branch_coupons');
+            reset_options('food');
+            reset_options('quantity');
+            document.getElementById('username').value = ''
+            document.getElementById('student_number').value = ''
+            document.getElementById('payment_method').value = ''
+            document.getElementById('quantity').value = 1
+            document.getElementById('username').disabled = false;
+            document.getElementById('student_number').disabled = false;
+            document.getElementById('payment_method').disabled = false;
+            document.getElementById('quantity').disabled = false;
+
+            reset_choices('restaurant_results');
+            reset_choices('restaurant_branches');
+            reset_choices('branch_coupons');
+            reset_choices('food');
+            reset_choices('quantity');
+}
+
 
 //delete used coupons where number of uses = 0
 async function createOrder() {
@@ -457,7 +548,10 @@ window.onload = function () {
     document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);
     document.getElementById("getCosts").addEventListener("click", getCosts);
     document.getElementById("submit_order").addEventListener("click", createOrder);
-    getUserOptions();
+    document.getElementById("clear_order").addEventListener("click", handleButtonClick);
+    document.getElementById("clear_order").addEventListener("click", handleButtonClick);
+    document.getElementById("restaurant_results").addEventListener("click", getUserOptions);
+    
 };
 
 // // General function to refresh the displayed table data.

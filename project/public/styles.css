@@ -206,4 +206,14 @@ select::after {
     border-right: 5px solid transparent;
     border-top: 5px solid #333;
 }
+button[disabled] {
+    background-color: #12141d;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
+button[disabled]:hover {
+    transition: none;
+    
+    transform: scale(1);
+}
