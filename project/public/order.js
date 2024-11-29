@@ -431,12 +431,13 @@ async function getUserOptions() {
         const chosen_branch = await awaitSelection('restaurant_branches');
         await getBranchCoupons(chosen_branch);
         await getBranchFoods(chosen_branch);
-        const chosen_coupon = await awaitSelection('branch_coupons');
+        
         const chosen_food = await awaitSelection('food')
         const user= await awaitSelection('username')
         const stu_num = await awaitSelection('student_number')
         const pay_met = await awaitSelection('payment_method')
         const quant = document.getElementById("quantity").value;
+        const chosen_coupon = document.getElementById('branch_coupons').value;
         console.log("SEE" + chosen_branch);
         document.getElementById("submit_order").disabled = false;
 
