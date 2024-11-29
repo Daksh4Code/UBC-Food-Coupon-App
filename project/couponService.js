@@ -167,6 +167,7 @@ async function deleteCoupon() {
                                                 [],
                                                 { autoCommit: true }
                                                 );
+        console.log(result);
         return result.rowsAffected;
     }).catch(() => {
         return [];

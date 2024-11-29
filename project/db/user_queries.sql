@@ -1,3 +1,5 @@
+-- UNUSED
+
 -- User Creation (allowing multiple accounts with the same CWL)
 -- The primary key is on account_id, so multiple accounts with the same CWL are allowed.
 INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES (:account_id, :year, :major, :password, :sid, :cwl);

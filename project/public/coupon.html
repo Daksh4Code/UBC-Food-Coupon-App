@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,11 @@
 
     <title>UBCoupon</title>
 </head>
+
 <body>
 <!-- ===================================================================================== -->
 <!-- Show 'CouponTable' -->
-<img src="./media/logo.png" alt="logo" width="150px"/>
+<img src="./media/logo.png" alt="logo" width="150px" />
 <h2>Coupon Table</h2>
 <table id="couponTable" border="1">
     <thead>
@@ -29,15 +31,18 @@
 </table>
 
 <form id="selection">
-    Search for coupons: <input type="text" id="selectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+    Search for coupons: <input type="text" id="selectionInput"
+                               placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
     <button type="submit"> search </button> <br>
 </form>
 <div id="searched_coupon"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br>
+<hr><br> <!-- ========================================================================= -->
 
 <form id="projection">
-    Projection: <input type="text" id="projectionInput" placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
+    Projection: <input type="text" id="projectionInput"
+                       placeholder="Enter the attributes of the coupon you wish to search" maxlength="100"> <br><br>
     <button type="submit"> search </button> <br>
 </form>
 <div id="projection_table"></div>
@@ -47,7 +52,8 @@
 </table>
 
 
-<br><hr><br> <!-- ========================================================================= -->
+<br>
+<hr><br> <!-- ========================================================================= -->
 
 <h2>Best Coupon Deals for This Week</h2>
 <!--//B.branch_id, B.street_address, R.name, MAX(dc_percent)-->
@@ -66,13 +72,15 @@
     <tbody>
     </tbody>
 </table>
-<br><hr><br> <!-- ========================================================================= -->
+<br>
+<hr><br> <!-- ========================================================================= -->
 
 <h2>Delete Coupons with Zero Number of Uses </h2>
 <button id="delete_coupons"> Click to delete coupons </button> <br><br>
 <div id=deleted_coupons></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br>
+<hr><br> <!-- ========================================================================= -->
 
 
 <h2> Decrement Coupon Number of Uses </h2>
@@ -83,38 +91,19 @@
 </form>
 <div id="updated_coupon"></div>
 
-<br><hr><br> <!-----FUNCTIONALITY FOR ORDER:=============================================================== -->
 
-<h2> Create Order </h2>
-<select id="restaurant_results">
-    <option value="" disabled selected>Select an option</option>
-</select>
+<!-----FUNCTIONALITY FOR ORDER:=============================================================== -->
 
-<br><br>
 
-<select id="restaurant_branches">
-    <option value="" disabled selected>Select an option</option>
-</select>
-<br><br>
 
-<select id="branch_coupons">
-    <option value="" disabled selected>Select an option</option>
-</select>
-<br>
-<button id="clear_order"><b>clear</b></button>
 
-<br>
-
-<button id="submit_order"><b>submit</b></button>
-
-<br>
-
-<a href="main.html">
+<!-- <a href="main.html">
     <button class="block"><b>back</b></button>
-</a>
+</a> -->
 
 <!-- ===================================================================================== -->
 <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
 <script src="coupon.js"></script>
 </body>
+
 </html>

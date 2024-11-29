@@ -24,6 +24,7 @@ async function fetchFeedbackTable() {
     const responseData = await response.json();
     const feedbacks = responseData.data;
 
+    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -58,6 +59,7 @@ async function addFeedback(event) {
     const result = await response.json();
     document.getElementById("addFeedbackResult").textContent = result.message;
 
+    // Refresh the table data
     fetchFeedbackTable();
 }
 
@@ -82,20 +84,80 @@ async function updateFeedback(event) {
     const result = await response.json();
     document.getElementById("updateFeedbackResult").textContent = result.message;
 
+    // Refresh the table data
     fetchFeedbackTable();
 }
 
-// Gets best-rated branch
-async function getBestRatedBranch() {
-    const response = await fetch('/feedbacks/best-rated-branch', {
-        method: 'GET'
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    const getBestRatedBranchBtn = document.getElementById('getBestRatedBranchBtn');
+    getBestRatedBranchBtn.addEventListener('click', getBestRatedBranch);
+});
 
-    const result = await response.json();
-    if (result.data && result.data.length > 0) {
-        document.getElementById("bestRatedBranchResult").textContent = `Best Rated Branch ID: ${result.data[0].BRANCH_ID}`;
-    } else {
-        document.getElementById("bestRatedBranchResult").textContent = "No best-rated branch found.";
+
+async function getBestRatedBranch() {
+    try {
+        const response = await fetch('/feedbacks/best-rated-branch');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        const bestRatedBranchTable = document.getElementById('bestRatedBranchTable').getElementsByTagName('tbody')[0];
+        bestRatedBranchTable.innerHTML = '';
+
+        if (data.data && data.data.length > 0) {
+            data.data.forEach(branch => {
+                const row = bestRatedBranchTable.insertRow();
+                const branchIdCell = row.insertCell();
+                // Ensure branch.BRANCH_ID is correctly extracted (might be nested)
+                branchIdCell.textContent = branch.BRANCH_ID || branch.branch_id || branch[0];
+            });
+        } else {
+            const row = bestRatedBranchTable.insertRow();
+            const noBranchCell = row.insertCell();
+            noBranchCell.textContent = "No best-rated branch found.";
+        }
+    } catch (error) {
+        console.error('Error fetching best-rated branch:', error);
+        document.getElementById("bestRatedBranchResult").textContent = "Error fetching best-rated branch.";
+    }
+}
+
+// Displays feedback for a specific account
+async function viewFeedback(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    const accountId = document.getElementById("viewAccountId").value;
+
+    try {
+        const response = await fetch(`/feedbacks/view/${accountId}`);
+        const result = await response.json();
+
+        const feedbacks = result.data;
+        const tableElement = document.getElementById('viewFeedbackTable'); // Use a separate table with id="viewFeedbackTable"
+        const tableBody = tableElement.querySelector('tbody');
+
+        // Clear existing table data
+        if (tableBody) {
+            tableBody.innerHTML = '';
+        }
+
+        if (feedbacks.length === 0) {
+            const row = tableBody.insertRow();
+            const cell = row.insertCell();
+            cell.textContent = "No feedback found for this account.";
+            return;
+        }
+
+        feedbacks.forEach(feedback => {
+            const row = tableBody.insertRow();
+            Object.values(feedback).forEach((field, index) => {
+                const cell = row.insertCell(index);
+                cell.textContent = field;
+            });
+        });
+    } catch (error) {
+        console.error('Error viewing feedback:', error);
     }
 }
 
@@ -122,18 +184,6 @@ async function deleteFeedback(event) {
     fetchTableData();
 }
 
-// Gets restaurants by address
-async function getRestaurantsByAddress(event) {
-    event.preventDefault();
-
-    const inputAddress = document.getElementById("inputAddress").value;
-
-    const response = await fetch(`/restaurants/by-address?address=${inputAddress}`);
-    const result = await response.json();
-
-    document.getElementById("getRestaurantsByAddressResult").textContent = result.data.join(", ");
-}
-
 // Initializes the webpage functionalities.
 window.onload = function() {
     fetchFeedbackTable();
@@ -141,10 +191,11 @@ window.onload = function() {
     document.getElementById("updateFeedbackForm").addEventListener("submit", updateFeedback);
     document.getElementById("getBestRatedBranchBtn").addEventListener("click", getBestRatedBranch);
     document.getElementById("deleteFeedbackForm").addEventListener("submit", deleteFeedback);
-    document.getElementById("getRestaurantsByAddressForm").addEventListener("submit", getRestaurantsByAddress);
+    document.getElementById("viewFeedbackForm").addEventListener("submit", viewFeedback); // Assuming you have a form with id="viewFeedbackForm"
 };
 
-// General function to refresh the displayed table data..
+// General function to refresh the displayed table data.
+// You can invoke this after any table-modifying operation to keep consistency.
 function fetchTableData() {
     fetchFeedbackTable();
 }

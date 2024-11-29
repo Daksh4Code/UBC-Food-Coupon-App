@@ -1,3 +1,5 @@
+// UNUSED
+
 /*
  * These functions below are for various user-management related functionalities.
  * Each function serves to process data on the frontend:
@@ -11,7 +13,7 @@
  *   HTML structure.
  *
  */
-
+/*
 // Adds a new user
 async function createUser(event) {
     event.preventDefault();
@@ -37,51 +39,36 @@ async function createUser(event) {
     document.getElementById("createUserForm").reset();
 }
 
-// Logs in a user
-async function loginUser(event) {
-    event.preventDefault();
-
-    const cwl = document.getElementById("loginCwl").value;
-    const password = document.getElementById("loginPassword").value;
-
-    const response = await fetch('/users/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({cwl, password})
-    });
-
-    const result = await response.json();
-    document.getElementById("loginUserResult").textContent = result.message;
-
-    document.getElementById("loginUserForm").reset();
+// Fetches and displays all users
+async function fetchAndDisplayUsers() {
+    try {
+        const response = await fetch('/users/view');
+        const data = await response.json();
+        // Code to display the users data in the UI
+        console.log(data); // Placeholder for UI update
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
 }
 
-// Updates user's password
-async function editUser(event) {
-    event.preventDefault();
-
-    const accountId = document.getElementById("editAccountId").value;
-    const newPassword = document.getElementById("newPassword").value;
-
-    const response = await fetch(`/users/edit/${accountId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({newPassword})
-    });
-
-    const result = await response.json();
-    document.getElementById("updatePasswordResult").textContent = result.message;
-
-    document.getElementById("updateUserPasswordForm").reset();
+// Fetches and displays all account IDs
+async function fetchAndDisplayAccountIds() {
+    try {
+        const response = await fetch('/users/accountIds');
+        const data = await response.json();
+        // Code to display the account IDs data in the UI
+        console.log(data); // Placeholder for UI update
+    } catch (error) {
+        console.error('Error fetching account IDs:', error);
+    }
 }
 
 // Initializes the webpage functionalities.
 window.onload = function () {
     document.getElementById("createUserForm").addEventListener("submit", createUser);
-    document.getElementById("loginUserForm").addEventListener("submit", loginUser);
-    document.getElementById("updateUserPasswordForm").addEventListener("submit", editUser);
+    fetchAndDisplayUsers();
+    fetchAndDisplayAccountIds();
 };
+
+*/
+

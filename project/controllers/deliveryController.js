@@ -6,8 +6,8 @@ const router = express.Router();
 
 // Create Delivery Order
 router.post('/create', async (req, res) => {
-    const { total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,delivery_cost,delivery_status,delivery_time } = req.body;
-    const result = await deliveryService.generateDelivery(total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,delivery_cost,delivery_status,delivery_time);
+    const { total_cost, order_date, payment_method, promo_code, coupon_id, branch_id, account_id, sid, delivery_cost, delivery_status, delivery_time } = req.body;
+    const result = await deliveryService.generateDelivery(total_cost, order_date, payment_method, promo_code, coupon_id, branch_id, account_id, sid, delivery_cost, delivery_status, delivery_time);
     res.json({ result });
 });
 
@@ -25,5 +25,7 @@ router.get('/update/:orderID', async (req, res) => {
     const result = await deliveryService.getOrderDetails(orderID);
     res.json({ result });
 });
+
+
 
 module.exports = router;

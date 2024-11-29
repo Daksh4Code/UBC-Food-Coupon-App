@@ -1,3 +1,6 @@
+// UNUSED
+
+/*
 const express = require('express');
 const userService = require('../userService');
 const router = express.Router();
@@ -20,37 +23,28 @@ router.post('/create', async (req, res) => {
     }
 });
 
-// Edit User
-router.put('/edit/:accountId', async (req, res) => {
-    const accountId = req.params.accountId;
-    const { newPassword } = req.body;
+// View all users
+router.get('/view', async (req, res) => {
     try {
-        const result = await userService.editUser(accountId, newPassword);
-        if (result) {
-            res.json({ success: true, message: 'Password updated successfully.' });
-        } else {
-            res.status(500).json({ success: false, message: 'Failed to update password.' });
-        }
+        const users = await userService.viewUsers();
+        res.json({ data: users });
     } catch (error) {
-        console.error('Error updating password:', error);
-        res.status(500).json({ success: false, message: 'Failed to update password.' });
+        console.error('Error fetching users:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch users.' });
     }
 });
 
-// Login User
-router.post('/login', async (req, res) => {
-    const { cwl, password } = req.body;
+// View all account IDs
+router.get('/accountIds', async (req, res) => {
     try {
-        const user = await userService.loginUser(cwl, password);
-        if (user.length > 0) {
-            res.json({ success: true, message: 'Login successful.', data: user });
-        } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials.' });
-        }
+        const accountIds = await userService.getAccountIds();
+        res.json({ data: accountIds });
     } catch (error) {
-        console.error('Error logging in user:', error);
-        res.status(500).json({ success: false, message: 'Failed to log in.' });
+        console.error('Error fetching account IDs:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch account IDs.' });
     }
 });
 
 module.exports = router;
+
+*/

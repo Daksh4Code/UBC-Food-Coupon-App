@@ -4,7 +4,6 @@ const path = require('path');
 
 const orderController = require('./controllers/orderController');
 const couponController = require('./controllers/couponController')
-const userController = require('./controllers/userController')
 const feedbackController = require('./controllers/feedbackController')
 const deliveryController = require('./controllers/deliveryController')
 const pickupController = require('./controllers/pickupController')
@@ -33,11 +32,7 @@ app.use('/orders', orderController);
 app.use('/coupons', couponController);
 app.use('/delivery', deliveryController);
 app.use('/pickup', pickupController);
-app.use('/users', userController);
 app.use('/feedbacks', feedbackController);
-//app.use('/coupons', couponController);
-// app.use('/users', userController);
-// app.use('/feedbacks', feedbackController);
 
 // ----------------------------------------------------------
 // Starting the server

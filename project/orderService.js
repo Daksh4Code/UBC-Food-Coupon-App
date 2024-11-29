@@ -90,7 +90,7 @@ async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
             await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
+        } catch (err) {
             console.log('Table might not exist, proceeding to create...');
         }
 
@@ -146,7 +146,7 @@ async function countDemotable() {
 async function getROTDVisitors() {
     return await withOracleDB(async (connection) => {
         const query = `
-        SELECT DISTINCT a.account_id 
+        SELECT DISTINCT a.account_id
         FROM Account a
         WHERE NOT EXISTS (
             SELECT 1
@@ -185,23 +185,23 @@ async function getROTDVisitors() {
 async function getOrderCosts() {
     return await withOracleDB(async (connection) => {
         const query = `
-        SELECT d.order_id, 
-            b.restaurant_name, 
+        SELECT d.order_id,
+            b.restaurant_name,
             SUM(f.cost * c.quantity)
         FROM Delivery d, Branch b, Consists_Delivery c, Food f
-        WHERE d.branch_id = b.branch_id 
-        AND d.order_id = c.order_id 
+        WHERE d.branch_id = b.branch_id
+        AND d.order_id = c.order_id
         AND c.food_name = f.food_name
         GROUP BY d.order_id, b.restaurant_name
 
         UNION
 
-        SELECT p.order_id, 
-            b.restaurant_name, 
+        SELECT p.order_id,
+            b.restaurant_name,
             SUM(f.cost * c.quantity)
         FROM Pickup p, Branch b, Consists_Pickup c, Food f
-        WHERE p.branch_id = b.branch_id 
-        AND p.order_id = c.order_id 
+        WHERE p.branch_id = b.branch_id
+        AND p.order_id = c.order_id
         AND c.food_name = f.food_name
         GROUP BY p.order_id, b.restaurant_name
                         `;
@@ -243,6 +243,125 @@ async function getROTD() {
 }
 
 
+// FUNCTIONALITY FOR ORDER:
+// function: retrieves all restaurants from Restaurant
+async function getRestaurants() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT name FROM Restaurant');
+        console.log(result.rows)
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+
+//get the coupons associated with the select branch
+async function getCouponBranch(bid) {
+    console.log(bid)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT C.coupon_id, C.dc_percent FROM COUPON C WHERE C.branch_id = :branch',
+            { branch: bid });
+        // change the resulting list to dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [percent, id] = row;
+            resultDict[id] = percent;
+        })
+
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
+
+// get the branch addresses associated with the select restaurant
+async function getRestaurantBranch(res_name) {
+    console.log(res_name)
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT B.street_address, B.branch_id FROM Branch B WHERE B.restaurant_name = :name',
+            { name: res_name });
+        console.log(result);
+        // change the list of rows into dict format
+        const resultDict = {};
+        result.rows.forEach(row => {
+            const [address, id] = row;
+            resultDict[address] = id;
+        })
+        return resultDict;
+    }).catch(() => {
+        return [];
+    })
+}
+
+async function getRestaurantFood(bid) {
+    console.log("ANOTHER" + bid);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT f.food_name FROM Food f WHERE f.branch_id = :name',
+            { name: bid }
+        );
+        console.log("XTRA" + result);
+
+
+        const foodList = result.rows.map(row => row[0]);
+        return [foodList];
+    }).catch((error) => {
+        console.error("Error fetching food data:", error);
+        return [];
+    });
+}
+
+
+async function createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity) {
+    console.log('oid:', oid, 'paymethod:', paymethod, 'cid:', cid, 'bid:', bid, 'aid:', aid, 'sid:', sid);
+
+    return await withOracleDB(async (connection) => {
+        const pickupResult = await connection.execute(
+            `INSERT INTO Pickup (
+                order_id, total_cost, order_date, payment_method, coupon_id, branch_id, account_id, sid, pickup_time, pickup_status
+            ) VALUES (
+                :oid, 0, TO_DATE('2024-12-01', 'YYYY-MM-DD'), :paymethod, :cid, :bid, :aid, :sid, 10.30, 'Scheduled'
+            )`,
+            {
+                oid: oid,
+                paymethod: paymethod,
+                cid: cid,
+                bid: bid,
+                aid: aid,
+                sid: sid
+            },
+            { autoCommit: false }
+        );
+
+
+        const consistsPickupResult = await connection.execute(
+            `INSERT INTO Consists_Pickup (
+                order_id, food_name, quantity
+            ) VALUES (
+                :oid, :fid, :quantity
+            )`,
+            {
+                oid: oid,
+                fid: fid,
+                quantity: quantity
+            },
+            { autoCommit: true }
+        );
+
+        console.log('Pickup Insert Result:', pickupResult);
+        console.log('Consists_Pickup Insert Result:', consistsPickupResult);
+
+        await connection.commit();
+        return { pickupResult, consistsPickupResult };
+    }).catch((error) => {
+        console.error('Error:', error);
+        return [];
+    });
+}
+
+
+
 
 module.exports = {
     testOracleConnection,
@@ -253,5 +372,10 @@ module.exports = {
     countDemotable,
     getROTDVisitors,
     getOrderCosts,
-    getROTD
+    getROTD,
+    getRestaurantBranch,
+    getRestaurantFood,
+    getRestaurants,
+    getCouponBranch,
+    createOrder
 };

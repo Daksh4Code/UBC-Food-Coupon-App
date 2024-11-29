@@ -12,8 +12,8 @@
 <table id="feedbackTable" border="1">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>User ID</th>
+        <th>Account ID</th>
+        <th>Student ID</th>
         <th>Order Date</th>
         <th>Branch ID</th>
         <th>Rating</th>
@@ -61,6 +61,27 @@
 
 <br><hr><br>
 
+
+<h2>View Feedback</h2>
+<form id="viewFeedbackForm">
+    <label for="viewAccountId">Account ID:</label>
+    <input type="text" id="viewAccountId" name="viewAccountId" required><br><br>
+    <button type="submit">View Feedback</button>
+</form>
+<table id="viewFeedbackTable" border="1">
+    <thead>
+    <tr>
+        <th>Account ID</th>
+        <th>Student ID</th>
+        <th>Order Date</th>
+        <th>Branch ID</th>
+        <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
 <h2>Delete Feedback</h2>
 <form id="deleteFeedbackForm">
     <label for="deleteAccountId">Account ID:</label>
@@ -79,17 +100,19 @@
 
 <h2>Get Best Rated Branch</h2>
 <button id="getBestRatedBranchBtn">Get Best Rated Branch</button>
+<br><br>
+<table id="bestRatedBranchTable" border="1">
+    <thead>
+    <tr>
+        <th>Branch ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 <div id="bestRatedBranchResult"></div>
 
 <br><hr><br>
-
-<h2>Get Restaurants by Address</h2>
-<form id="getRestaurantsByAddressForm">
-    <label for="inputAddress">Enter Street Address:</label>
-    <input type="text" id="inputAddress" name="inputAddress" required><br><br>
-    <button type="submit">Get Restaurants</button>
-</form>
-<div id="getRestaurantsByAddressResult"></div>
 
 <script src="feedback.js"></script>
 </body>

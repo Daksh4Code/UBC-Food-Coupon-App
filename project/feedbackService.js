@@ -3,48 +3,6 @@ const loadEnvFile = require('./utils/envUtil');
 const fs = require('fs');
 const envVariables = loadEnvFile('./.env');
 
-
-// Database configuration setup. Ensure your .env file has the required database credentials.
-const dbConfig = {
-    user: envVariables.ORACLE_USER,
-    password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
-    poolMin: 1,
-    poolMax: 3,
-    poolIncrement: 1,
-    poolTimeout: 60
-};
-
-// initialize connection pool
-async function initializeConnectionPool() {
-    try {
-        await oracledb.createPool(dbConfig);
-        console.log('Connection pool started');
-    } catch (err) {
-        console.error('Initialization error: ' + err.message);
-    }
-}
-
-async function closePoolAndExit() {
-    console.log('\nTerminating');
-    try {
-        await oracledb.getPool().close(10); // 10 seconds grace period for connections to finish
-        console.log('Pool closed');
-        process.exit(0);
-    } catch (err) {
-        console.error(err.message);
-        process.exit(1);
-    }
-}
-
-initializeConnectionPool();
-
-process
-    .once('SIGTERM', closePoolAndExit)
-    .once('SIGINT', closePoolAndExit);
-
-
-// ----------------------------------------------------------
 // Wrapper to manage OracleDB actions, simplifying connection handling.
 async function withOracleDB(action) {
     let connection;
@@ -65,44 +23,22 @@ async function withOracleDB(action) {
     }
 }
 
-
-async function testOracleConnection() {
-    return await withOracleDB(async (connection) => {
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-
 // Core functions for feedback operations
-
-// feedback - SELECT: Get all feedbacks
-async function getAllFeedbacks() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'SELECT * FROM Feedback_Rating'
-        );
-        return result.rows;
-    }).catch((error) => {
-        console.error('Error fetching all feedbacks:', error);
-        return [];
-    });
-}
 
 // feedback - INSERT: Submit feedback
 async function submitFeedback(accountId, sid, order_date, branchId, rating) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES (:accountId, :sid, :order_date, :branchId, :rating)',
+                `INSERT INTO FEEDBACK_RATING (ACCOUNT_ID, SID, ORDER_DATE, BRANCH_ID, RATING)
+                 VALUES (:accountId, :sid, TO_DATE(:order_date, 'YYYY-MM-DD'), :branchId, :rating)`,
                 [accountId, sid, order_date, branchId, rating],
-                { autoCommit: true }
+                {autoCommit: true}
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error submitting feedback:', error);
-            return 0;
+            return 0; // Indicate failure
         }
     });
 }
@@ -112,14 +48,19 @@ async function updateFeedback(accountId, sid, order_date, branchId, newRating) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'UPDATE Feedback_Rating SET rating = :newRating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
+                `UPDATE FEEDBACK_RATING
+                 SET RATING = :newRating
+                 WHERE ACCOUNT_ID = :accountId
+                   AND SID = :sid
+                   AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
+                   AND BRANCH_ID = :branchId`,
                 [newRating, accountId, sid, order_date, branchId],
-                { autoCommit: true }
+                {autoCommit: true}
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error updating feedback:', error);
-            return 0;
+            return 0; // Indicate failure
         }
     });
 }
@@ -129,13 +70,13 @@ async function viewFeedback(accountId) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'SELECT * FROM Feedback_Rating WHERE account_id = :accountId',
+                'SELECT * FROM FEEDBACK_RATING WHERE ACCOUNT_ID = :accountId',
                 [accountId]
             );
             return result.rows;
         } catch (error) {
             console.error('Error viewing feedback:', error);
-            return [];
+            return []; // Return an empty array in case of error
         }
     });
 }
@@ -145,12 +86,15 @@ async function getBestRatedBranch() {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'SELECT branch_id FROM Feedback_Rating GROUP BY branch_id HAVING AVG(rating) = (SELECT MAX(AVG(rating)) FROM Feedback_Rating GROUP BY branch_id)'
+                `SELECT BRANCH_ID
+                FROM FEEDBACK_RATING
+                GROUP BY BRANCH_ID
+                HAVING AVG(RATING) = (SELECT MAX(AVG(RATING)) FROM FEEDBACK_RATING GROUP BY BRANCH_ID)`
             );
             return result.rows;
         } catch (error) {
             console.error('Error fetching best-rated branch:', error);
-            return [];
+            return []; // Return an empty array in case of error
         }
     });
 }
@@ -160,32 +104,33 @@ async function deleteFeedback(accountId, sid, order_date, branchId) {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'DELETE FROM Feedback_Rating WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId',
+                `DELETE FROM FEEDBACK_RATING
+                 WHERE ACCOUNT_ID = :accountId
+                   AND SID = :sid
+                   AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
+                   AND BRANCH_ID = :branchId`,
                 [accountId, sid, order_date, branchId],
-                { autoCommit: true }
+                {autoCommit: true}
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error deleting feedback:', error);
-            return 0;
+            return 0; // Indicate failure
         }
     });
 }
 
-// feedback - PROJECTION: Get restaurants by address
-async function getRestaurantsByAddress(inputAddress) {
+// feedback - SELECT: Get all feedbacks
+async function getAllFeedbacks() {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                `SELECT R.name
-                 FROM Restaurant R JOIN Branch B ON R.name = B.restaurant_name
-                 WHERE B.street_address LIKE '%' || :input_address || '%'`,
-                [inputAddress]
+                'SELECT * FROM FEEDBACK_RATING'
             );
             return result.rows;
         } catch (error) {
-            console.error('Error fetching restaurants by address:', error);
-            return [];
+            console.error('Error fetching all feedbacks:', error);
+            return []; // Return an empty array in case of error
         }
     });
 }
@@ -197,6 +142,5 @@ module.exports = {
     viewFeedback,
     getBestRatedBranch,
     deleteFeedback,
-    getRestaurantsByAddress,
     getAllFeedbacks
 };

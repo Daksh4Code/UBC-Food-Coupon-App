@@ -1,3 +1,6 @@
+// UNUSED
+
+/*
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const fs = require('fs');
@@ -87,40 +90,37 @@ async function createUser(accountId, year, major, password, sid, cwl) {
             return result.rowsAffected > 0;
         } catch (error) {
             console.error('Error creating user:', error);
-            throw error; // Re-throw the error to be caught by the controller
+            throw error;
         }
     });
 }
 
-// user - UPDATE: Update user's password
-async function editUser(accountId, newPassword) {
+// user - SELECT: View all users
+async function viewUsers() {
     return await withOracleDB(async (connection) => {
         try {
             const result = await connection.execute(
-                'UPDATE Account SET password = :newPassword WHERE account_id = :accountId',
-                [newPassword, accountId],
-                { autoCommit: true }
-            );
-            return result.rowsAffected > 0;
-        } catch (error) {
-            console.error('Error updating password:', error);
-            throw error; // Re-throw the error to be caught by the controller
-        }
-    });
-}
-
-// user - SELECT: Log in a user
-async function loginUser(cwl, password) {
-    return await withOracleDB(async (connection) => {
-        try {
-            const result = await connection.execute(
-                'SELECT * FROM Account WHERE cwl = :cwl AND password = :password',
-                [cwl, password]
+                'SELECT * FROM Account'
             );
             return result.rows;
         } catch (error) {
-            console.error('Error logging in user:', error);
-            throw error; // Re-throw the error to be caught by the controller
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
+}
+
+// user - SELECT: View all account IDs
+async function getAccountIds() {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                'SELECT account_id FROM Account'
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error fetching account IDs:', error);
+            throw error;
         }
     });
 }
@@ -128,6 +128,8 @@ async function loginUser(cwl, password) {
 // Module exports
 module.exports = {
     createUser,
-    editUser,
-    loginUser
+    viewUsers,
+    getAccountIds
 };
+
+*/
