@@ -105,6 +105,7 @@ async function getBestRatedBranch() {
         const bestRatedBranchTable = document.getElementById('bestRatedBranchTable').getElementsByTagName('tbody')[0];
         bestRatedBranchTable.innerHTML = '';
 
+
         if (data.data && data.data.length > 0) {
             data.data.forEach(branch => {
                 const row = bestRatedBranchTable.insertRow();
