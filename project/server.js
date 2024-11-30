@@ -34,7 +34,11 @@ app.use('/delivery', deliveryController);
 app.use('/pickup', pickupController);
 app.use('/feedbacks', feedbackController);
 
-// ----------------------------------------------------------
+//app.use('/delivery', deliveryController);
+//app.use('/pickup', pickupController);
+//app.use('/users', userController);
+//app.use('/feedbacks', feedbackController);
+
 // Starting the server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);

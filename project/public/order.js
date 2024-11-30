@@ -1,3 +1,4 @@
+
 /*
  * These functions below are for various webpage functionalities.
  * Each function serves to process data on the frontend:
@@ -413,7 +414,8 @@ async function getUserOptions() {
     document.getElementById("clear_order").addEventListener("click", () => {
         console.log("Clear button clicked");
         clearButtonClicked = true;
-        retry=false;
+
+        retry = false;
 
     });
     document.getElementById("submit_order").addEventListener("click", () => {
@@ -434,6 +436,7 @@ async function getUserOptions() {
 
         const chosen_food = await awaitSelection('food')
         const user= await awaitSelection('username')
+
         const stu_num = await awaitSelection('student_number')
         const pay_met = await awaitSelection('payment_method')
         const quant = document.getElementById("quantity").value;
@@ -513,6 +516,57 @@ function handleButtonClick(clearClicked) {
             reset_choices('branch_coupons');
             reset_choices('food');
             reset_choices('quantity');
+            handleClearSubmit();
+        }
+    }
+}
+
+
+function handleClearSubmit() {
+
+    reset_options('restaurant_results');
+    reset_options('restaurant_branches');
+    reset_options('branch_coupons');
+    reset_options('food');
+    reset_options('quantity');
+    document.getElementById('username').value = ''
+    document.getElementById('student_number').value = ''
+    document.getElementById('payment_method').value = ''
+    document.getElementById('quantity').value = 1
+    document.getElementById('username').disabled = false;
+    document.getElementById('student_number').disabled = false;
+    document.getElementById('payment_method').disabled = false;
+    document.getElementById('quantity').disabled = false;
+
+    reset_choices('restaurant_results');
+    reset_choices('restaurant_branches');
+    reset_choices('branch_coupons');
+    reset_choices('food');
+    reset_choices('quantity');
+}
+
+function handleButtonClick(clearClicked) {
+    alert("Order cleared.");
+
+    reset_options('restaurant_results');
+    reset_options('restaurant_branches');
+    reset_options('branch_coupons');
+    reset_options('food');
+    reset_options('quantity');
+    document.getElementById('username').value = ''
+    document.getElementById('student_number').value = ''
+    document.getElementById('payment_method').value = ''
+    document.getElementById('quantity').value = 1
+    document.getElementById('username').disabled = false;
+    document.getElementById('student_number').disabled = false;
+    document.getElementById('payment_method').disabled = false;
+    document.getElementById('quantity').disabled = false;
+
+    reset_choices('restaurant_results');
+    reset_choices('restaurant_branches');
+    reset_choices('branch_coupons');
+    reset_choices('food');
+    reset_choices('quantity');
 }
 
 
@@ -549,7 +603,6 @@ window.onload = function () {
     document.getElementById("findUsersROTD").addEventListener("click", fetchAndDisplayROTDVisitors);
     document.getElementById("getCosts").addEventListener("click", getCosts);
     document.getElementById("submit_order").addEventListener("click", createOrder);
-    document.getElementById("clear_order").addEventListener("click", handleButtonClick);
     document.getElementById("clear_order").addEventListener("click", handleButtonClick);
     document.getElementById("restaurant_results").addEventListener("click", getUserOptions);
 

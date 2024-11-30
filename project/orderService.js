@@ -334,7 +334,6 @@ async function createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity) {
             { autoCommit: false }
         );
 
-
         const consistsPickupResult = await connection.execute(
             `INSERT INTO Consists_Pickup (
                 order_id, food_name, quantity
