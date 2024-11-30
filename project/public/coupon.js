@@ -87,7 +87,7 @@ async function checkSelectCoupon() {
 
 
     try {
-        const response = await fetch("http://localhost:65535/coupons/fetch-selected", {
+        const response = await fetch("/coupons/fetch-selected", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
