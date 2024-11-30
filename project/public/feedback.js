@@ -24,7 +24,6 @@ async function fetchFeedbackTable() {
     const responseData = await response.json();
     const feedbacks = responseData.data;
 
-    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -59,7 +58,6 @@ async function addFeedback(event) {
     const result = await response.json();
     document.getElementById("addFeedbackResult").textContent = result.message;
 
-    // Refresh the table data
     fetchFeedbackTable();
 }
 
@@ -84,7 +82,6 @@ async function updateFeedback(event) {
     const result = await response.json();
     document.getElementById("updateFeedbackResult").textContent = result.message;
 
-    // Refresh the table data
     fetchFeedbackTable();
 }
 
@@ -109,7 +106,6 @@ async function getBestRatedBranch() {
             data.data.forEach(branch => {
                 const row = bestRatedBranchTable.insertRow();
                 const branchIdCell = row.insertCell();
-                // Ensure branch.BRANCH_ID is correctly extracted (might be nested)
                 branchIdCell.textContent = branch.BRANCH_ID || branch.branch_id || branch[0];
             });
         } else {
@@ -125,7 +121,7 @@ async function getBestRatedBranch() {
 
 // Displays feedback for a specific account
 async function viewFeedback(event) {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
 
     const accountId = document.getElementById("viewAccountId").value;
 
@@ -134,10 +130,9 @@ async function viewFeedback(event) {
         const result = await response.json();
 
         const feedbacks = result.data;
-        const tableElement = document.getElementById('viewFeedbackTable'); // Use a separate table with id="viewFeedbackTable"
+        const tableElement = document.getElementById('viewFeedbackTable');
         const tableBody = tableElement.querySelector('tbody');
 
-        // Clear existing table data
         if (tableBody) {
             tableBody.innerHTML = '';
         }
@@ -185,13 +180,13 @@ async function deleteFeedback(event) {
 }
 
 // Initializes the webpage functionalities.
-window.onload = function() {
+window.onload = function () {
     fetchFeedbackTable();
     document.getElementById("addFeedbackForm").addEventListener("submit", addFeedback);
     document.getElementById("updateFeedbackForm").addEventListener("submit", updateFeedback);
     document.getElementById("getBestRatedBranchBtn").addEventListener("click", getBestRatedBranch);
     document.getElementById("deleteFeedbackForm").addEventListener("submit", deleteFeedback);
-    document.getElementById("viewFeedbackForm").addEventListener("submit", viewFeedback); // Assuming you have a form with id="viewFeedbackForm"
+    document.getElementById("viewFeedbackForm").addEventListener("submit", viewFeedback);
 };
 
 // General function to refresh the displayed table data.

@@ -33,12 +33,12 @@ async function submitFeedback(accountId, sid, order_date, branchId, rating) {
                 `INSERT INTO FEEDBACK_RATING (ACCOUNT_ID, SID, ORDER_DATE, BRANCH_ID, RATING)
                  VALUES (:accountId, :sid, TO_DATE(:order_date, 'YYYY-MM-DD'), :branchId, :rating)`,
                 [accountId, sid, order_date, branchId, rating],
-                {autoCommit: true}
+                { autoCommit: true }
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error submitting feedback:', error);
-            return 0; // Indicate failure
+            return 0;
         }
     });
 }
@@ -55,12 +55,12 @@ async function updateFeedback(accountId, sid, order_date, branchId, newRating) {
                    AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
                    AND BRANCH_ID = :branchId`,
                 [newRating, accountId, sid, order_date, branchId],
-                {autoCommit: true}
+                { autoCommit: true }
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error updating feedback:', error);
-            return 0; // Indicate failure
+            return 0;
         }
     });
 }
@@ -76,7 +76,7 @@ async function viewFeedback(accountId) {
             return result.rows;
         } catch (error) {
             console.error('Error viewing feedback:', error);
-            return []; // Return an empty array in case of error
+            return [];
         }
     });
 }
@@ -94,7 +94,7 @@ async function getBestRatedBranch() {
             return result.rows;
         } catch (error) {
             console.error('Error fetching best-rated branch:', error);
-            return []; // Return an empty array in case of error
+            return [];
         }
     });
 }
@@ -110,12 +110,12 @@ async function deleteFeedback(accountId, sid, order_date, branchId) {
                    AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
                    AND BRANCH_ID = :branchId`,
                 [accountId, sid, order_date, branchId],
-                {autoCommit: true}
+                { autoCommit: true }
             );
             return result.rowsAffected;
         } catch (error) {
             console.error('Error deleting feedback:', error);
-            return 0; // Indicate failure
+            return 0;
         }
     });
 }
@@ -130,7 +130,7 @@ async function getAllFeedbacks() {
             return result.rows;
         } catch (error) {
             console.error('Error fetching all feedbacks:', error);
-            return []; // Return an empty array in case of error
+            return [];
         }
     });
 }
