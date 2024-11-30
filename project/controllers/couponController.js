@@ -1,6 +1,6 @@
 const express = require('express');
 const appService = require('../couponService');
-const router = express.Router();
+const router  = express.Router();
 
 // ----------------------------------------------------------
 // API endpoints for coupon:
