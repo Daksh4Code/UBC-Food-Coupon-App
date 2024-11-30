@@ -527,8 +527,6 @@ function handleButtonClick(clearClicked) {
             reset_choices('food');
             reset_choices('quantity');
             handleClearSubmit();
-        }
-    }
 }
 
 
