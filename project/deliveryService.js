@@ -103,7 +103,7 @@ async function generateDelivery(total_cost,order_date,payment_method,promo_code,
     });
 }
 const currentDate = new Date();
-const formattedDate = currentDate.toISOString().split('T')[0];  // Extracts the date part (YYYY-MM-DD),  // Example ISO 8601 date
+const formattedDate = currentDate.toISOString().split('T')[0];
 
 
 

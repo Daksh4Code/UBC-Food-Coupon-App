@@ -296,7 +296,6 @@ async function getBranchCoupons(bid) {
         });
         const responseData = await response.json();
         const coupons = responseData.data;
-        // add the options for the coupons for that branch
         const options = document.getElementById('branch_coupons');
         Object.keys(coupons).forEach(key => {
             var text = key;
