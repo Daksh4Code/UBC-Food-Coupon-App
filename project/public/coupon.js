@@ -244,27 +244,27 @@ window.onload = function () {
 //FUNCTIONALITY FOR ORDER:
 
 //get all restaurants
-async function getRestaurants() {
-    try {
-        const response = await fetch('/coupons/get_restaurants', {
-            method: "GET"
-        });
+// async function getRestaurants() {
+//     try {
+//         const response = await fetch('/coupons/get_restaurants', {
+//             method: "GET"
+//         });
 
-        const responseData = await response.json();
-        console.log(responseData);
-        const restaurants = responseData.data;
-        const options = document.getElementById('restaurant_results');
-        restaurants.forEach(res_list => {
-            res = res_list[0]
-            var option = new Option(res, res);
-            options.append(option);
-        });
+//         const responseData = await response.json();
+//         console.log(responseData);
+//         const restaurants = responseData.data;
+//         const options = document.getElementById('restaurant_results');
+//         restaurants.forEach(res_list => {
+//             res = res_list[0]
+//             var option = new Option(res, res);
+//             options.append(option);
+//         });
 
-    } catch (error) {
-        console.log("can't get the coupons associated with the branch id")
-    }
+//     } catch (error) {
+//         console.log("can't get the coupons associated with the branch id")
+//     }
 
-}
+// }
 
 //get the restaurant associated with the branch
 async function getRestaurantBranches(res_name) {

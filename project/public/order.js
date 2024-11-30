@@ -372,6 +372,16 @@ async function reset_options(elem_id) {
     }
 }
 
+function addClickListener() {
+    const dropdown = document.getElementById("restaurant_results");
+    dropdown.addEventListener("click", getUserOptions, { once: true });
+}
+
+function resetClickListener() {
+    const dropdown = document.getElementById("restaurant_results");
+    dropdown.removeEventListener("click", getUserOptions);
+    addClickListener();
+}
 
 function generateOrderId() {
     return Math.floor(Math.random() * 10000); // Random number between 0 and 9999
@@ -396,7 +406,6 @@ async function getUserOptions() {
     });
     let retry = true;
     while (retry) {
-        await getRestaurants();
         const chosen_restaurant = await awaitSelection('restaurant_results');
         await getRestaurantBranches(chosen_restaurant);
         const chosen_branch = await awaitSelection('restaurant_branches');
@@ -464,7 +473,7 @@ async function getUserOptions() {
 
 function handleClearSubmit() {
 
-    reset_options('restaurant_results');
+    //reset_options('restaurant_results');
     reset_options('restaurant_branches');
     reset_options('branch_coupons');
     reset_options('food');
@@ -478,7 +487,12 @@ function handleClearSubmit() {
     document.getElementById('payment_method').disabled = false;
     document.getElementById('quantity').disabled = false;
 
-    reset_choices('restaurant_results');
+    //reset_choices('restaurant_results');
+    document.getElementById("restaurant_results").selectedIndex = -1;
+    document.getElementById("restaurant_results").value = "";
+    document.getElementById('restaurant_results').disabled = false;
+    resetClickListener();
+    addClickListener();
     reset_choices('restaurant_branches');
     reset_choices('branch_coupons');
     reset_choices('food');
@@ -488,7 +502,7 @@ function handleClearSubmit() {
 function handleButtonClick(clearClicked) {
     alert("Order cleared.");
 
-    reset_options('restaurant_results');
+    //reset_options('restaurant_results');
     reset_options('restaurant_branches');
     reset_options('branch_coupons');
     reset_options('food');
@@ -502,7 +516,12 @@ function handleButtonClick(clearClicked) {
     document.getElementById('payment_method').disabled = false;
     document.getElementById('quantity').disabled = false;
 
-    reset_choices('restaurant_results');
+    //reset_choices('restaurant_results');
+    document.getElementById("restaurant_results").selectedIndex = -1;
+    document.getElementById("restaurant_results").value = "";
+    document.getElementById('restaurant_results').disabled = false;
+    resetClickListener();
+    addClickListener();
     reset_choices('restaurant_branches');
     reset_choices('branch_coupons');
     reset_choices('food');
@@ -534,6 +553,7 @@ async function createOrder() {
 }
 
 
+
 // ---------------------------------------------------------------
 // Initializes the webpage functionalities.
 // Add or remove event listeners based on the desired functionalities.
@@ -544,7 +564,13 @@ window.onload = function () {
     document.getElementById("getCosts").addEventListener("click", getCosts);
     document.getElementById("submit_order").addEventListener("click", createOrder);
     document.getElementById("clear_order").addEventListener("click", handleButtonClick);
-    document.getElementById("restaurant_results").addEventListener("click", getUserOptions);
+    // document.getElementById('restaurant_results').addEventListener('click', function () {
+    //     addClickListener();
+
+    // }, { once: true });
+    getRestaurants();
+    getUserOptions();
+
 
 };
 
