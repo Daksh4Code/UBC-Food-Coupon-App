@@ -187,10 +187,10 @@ async function getCosts() {
         method: 'GET'
     });
 
-    
+
 
     const responseData = await response.json();
-   
+
     const aggTable = responseData.result;
 
     if (tableBody) {
@@ -310,7 +310,7 @@ async function getBranchCoupons(bid) {
 }
 
 async function getBranchFoods(branch_id) {
-    
+
     console.log("test" + branch_id);
     try {
         const response = await fetch(`/orders/${branch_id}/get-foods`, {
@@ -413,13 +413,13 @@ async function getUserOptions() {
     document.getElementById("clear_order").addEventListener("click", () => {
         console.log("Clear button clicked");
         clearButtonClicked = true;
-        retry=false;
-        
+        retry = false;
+
     });
     document.getElementById("submit_order").addEventListener("click", () => {
         submitButtonClicked = true;
-        retry=false;
-        
+        retry = false;
+
         alert("Order placed!")
 
     });
@@ -431,9 +431,9 @@ async function getUserOptions() {
         const chosen_branch = await awaitSelection('restaurant_branches');
         await getBranchCoupons(chosen_branch);
         await getBranchFoods(chosen_branch);
-        
+
         const chosen_food = await awaitSelection('food')
-        const user= await awaitSelection('username')
+        const user = await awaitSelection('username')
         const stu_num = await awaitSelection('student_number')
         const pay_met = await awaitSelection('payment_method')
         const quant = document.getElementById("quantity").value;
@@ -446,7 +446,7 @@ async function getUserOptions() {
             console.log(clearButtonClicked);
         }
 
-        
+
         if (submitButtonClicked) {
             let order_id = generateOrderId();
             // updates the select coupon number of uses - 1
@@ -472,7 +472,7 @@ async function getUserOptions() {
                 },
                 body: JSON.stringify(orderData),
             });
-            
+
             const result = await response.json();
             if (result.success) {
                 console.log('Order successfully created!');
@@ -485,34 +485,57 @@ async function getUserOptions() {
             submitButtonClicked = false;
             clearButtonClicked = true;
             document.getElementById("submit_order").disabled = true;
-            handleButtonClick();
+            handleClearSubmit();
         }
-}
+    }
 }
 
+
+function handleClearSubmit() {
+
+    reset_options('restaurant_results');
+    reset_options('restaurant_branches');
+    reset_options('branch_coupons');
+    reset_options('food');
+    reset_options('quantity');
+    document.getElementById('username').value = ''
+    document.getElementById('student_number').value = ''
+    document.getElementById('payment_method').value = ''
+    document.getElementById('quantity').value = 1
+    document.getElementById('username').disabled = false;
+    document.getElementById('student_number').disabled = false;
+    document.getElementById('payment_method').disabled = false;
+    document.getElementById('quantity').disabled = false;
+
+    reset_choices('restaurant_results');
+    reset_choices('restaurant_branches');
+    reset_choices('branch_coupons');
+    reset_choices('food');
+    reset_choices('quantity');
+}
 
 function handleButtonClick(clearClicked) {
-        alert("Order cleared.");
-        
-            reset_options('restaurant_results');
-            reset_options('restaurant_branches');
-            reset_options('branch_coupons');
-            reset_options('food');
-            reset_options('quantity');
-            document.getElementById('username').value = ''
-            document.getElementById('student_number').value = ''
-            document.getElementById('payment_method').value = ''
-            document.getElementById('quantity').value = 1
-            document.getElementById('username').disabled = false;
-            document.getElementById('student_number').disabled = false;
-            document.getElementById('payment_method').disabled = false;
-            document.getElementById('quantity').disabled = false;
+    alert("Order cleared.");
 
-            reset_choices('restaurant_results');
-            reset_choices('restaurant_branches');
-            reset_choices('branch_coupons');
-            reset_choices('food');
-            reset_choices('quantity');
+    reset_options('restaurant_results');
+    reset_options('restaurant_branches');
+    reset_options('branch_coupons');
+    reset_options('food');
+    reset_options('quantity');
+    document.getElementById('username').value = ''
+    document.getElementById('student_number').value = ''
+    document.getElementById('payment_method').value = ''
+    document.getElementById('quantity').value = 1
+    document.getElementById('username').disabled = false;
+    document.getElementById('student_number').disabled = false;
+    document.getElementById('payment_method').disabled = false;
+    document.getElementById('quantity').disabled = false;
+
+    reset_choices('restaurant_results');
+    reset_choices('restaurant_branches');
+    reset_choices('branch_coupons');
+    reset_choices('food');
+    reset_choices('quantity');
 }
 
 
@@ -550,9 +573,8 @@ window.onload = function () {
     document.getElementById("getCosts").addEventListener("click", getCosts);
     document.getElementById("submit_order").addEventListener("click", createOrder);
     document.getElementById("clear_order").addEventListener("click", handleButtonClick);
-    document.getElementById("clear_order").addEventListener("click", handleButtonClick);
     document.getElementById("restaurant_results").addEventListener("click", getUserOptions);
-    
+
 };
 
 // // General function to refresh the displayed table data.
