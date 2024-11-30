@@ -146,7 +146,7 @@ async function countDemotable() {
 async function getROTDVisitors() {
     return await withOracleDB(async (connection) => {
         const query = `
-        SELECT DISTINCT a.account_id 
+        SELECT DISTINCT a.account_id
         FROM Account a
         WHERE NOT EXISTS (
             SELECT 1
@@ -185,23 +185,23 @@ async function getROTDVisitors() {
 async function getOrderCosts() {
     return await withOracleDB(async (connection) => {
         const query = `
-        SELECT d.order_id, 
-            b.restaurant_name, 
+        SELECT d.order_id,
+            b.restaurant_name,
             SUM(f.cost * c.quantity)
         FROM Delivery d, Branch b, Consists_Delivery c, Food f
-        WHERE d.branch_id = b.branch_id 
-        AND d.order_id = c.order_id 
+        WHERE d.branch_id = b.branch_id
+        AND d.order_id = c.order_id
         AND c.food_name = f.food_name
         GROUP BY d.order_id, b.restaurant_name
 
         UNION
 
-        SELECT p.order_id, 
-            b.restaurant_name, 
+        SELECT p.order_id,
+            b.restaurant_name,
             SUM(f.cost * c.quantity)
         FROM Pickup p, Branch b, Consists_Pickup c, Food f
-        WHERE p.branch_id = b.branch_id 
-        AND p.order_id = c.order_id 
+        WHERE p.branch_id = b.branch_id
+        AND p.order_id = c.order_id
         AND c.food_name = f.food_name
         GROUP BY p.order_id, b.restaurant_name
                         `;
@@ -315,7 +315,7 @@ async function getRestaurantFood(bid) {
 
 async function createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity) {
     console.log('oid:', oid, 'paymethod:', paymethod, 'cid:', cid, 'bid:', bid, 'aid:', aid, 'sid:', sid);
-    
+
     return await withOracleDB(async (connection) => {
         const pickupResult = await connection.execute(
             `INSERT INTO Pickup (
@@ -333,7 +333,6 @@ async function createOrder(oid, paymethod, cid, bid, aid, sid, fid, quantity) {
             },
             { autoCommit: false }
         );
-        
 
         const consistsPickupResult = await connection.execute(
             `INSERT INTO Consists_Pickup (

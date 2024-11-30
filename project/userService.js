@@ -1,3 +1,6 @@
+// UNUSED
+
+/*
 const oracledb = require('oracledb');
 const loadEnvFile = require('./utils/envUtil');
 const fs = require('fs');
@@ -73,19 +76,60 @@ async function testOracleConnection() {
     });
 }
 
-// Core functions for delivery operations
+// Core functions for user operations
 
-async function generatePickup(order_id,total_cost,order_date,payment_method,promo_code,coupon_id,branch_id,account_id,sid,pickup_status,pickup_time) {
+// user - INSERT: Create a new user
+async function createUser(accountId, year, major, password, sid, cwl) {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                'INSERT INTO Account (account_id, year, major, password, sid, cwl) VALUES (:accountId, :year, :major, :password, :sid, :cwl)',
+                [accountId, year, major, password, sid, cwl],
+                { autoCommit: true }
+            );
+            return result.rowsAffected > 0;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw error;
+        }
+    });
 }
 
-async function updateStatus(orderID, newStatus) {
+// user - SELECT: View all users
+async function viewUsers() {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                'SELECT * FROM Account'
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            throw error;
+        }
+    });
 }
 
-async function getOrderDetails(orderID) {
+// user - SELECT: View all account IDs
+async function getAccountIds() {
+    return await withOracleDB(async (connection) => {
+        try {
+            const result = await connection.execute(
+                'SELECT account_id FROM Account'
+            );
+            return result.rows;
+        } catch (error) {
+            console.error('Error fetching account IDs:', error);
+            throw error;
+        }
+    });
 }
 
-
-// module exports
+// Module exports
 module.exports = {
-
+    createUser,
+    viewUsers,
+    getAccountIds
 };
+
+*/

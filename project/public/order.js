@@ -352,7 +352,22 @@ function awaitSelection(selected_id) {
     });
 }
 
-
+// get the number of uses of the coupon
+async function updateCouponNumUse(cid) {
+    event.preventDefault();
+    try {
+        const response = await fetch(`/orders/${cid}/update-num-use`, {
+            method: "PUT"
+        });
+        const responseNumUse = await response.json();
+        const responseData = responseNumUse.data;
+        const messageElement = document.getElementById('coupons_results');
+        messageElement.textContent = responseData;
+        fetchCouponTable();
+    } catch (error) {
+        console.log("error in updating the coupon number of uses")
+    }
+}
 
 // reset the choices of a given element id
 async function reset_choices(elem_id) {
@@ -372,6 +387,7 @@ async function reset_options(elem_id) {
     }
 }
 
+
 function addClickListener() {
     const dropdown = document.getElementById("restaurant_results");
     dropdown.addEventListener("click", getUserOptions, { once: true });
@@ -381,6 +397,21 @@ function resetClickListener() {
     const dropdown = document.getElementById("restaurant_results");
     dropdown.removeEventListener("click", getUserOptions);
     addClickListener();
+
+//delete used coupons where number of uses = 0
+async function deleteUsedCoupon() {
+    try {
+        const response = await fetch("/orders/del-used-coupon", {
+            method: "DELETE"
+        });
+        const responseData = await response.json();
+        const deleted_coupons = responseData.data;
+        const messageElement = document.getElementById('deleted_coupons');
+        messageElement.textContent = deleted_coupons;
+        fetchCouponTable();
+    } catch (error) {
+        console.log("can't delete the coupons")
+    }
 }
 
 function generateOrderId() {
@@ -394,12 +425,13 @@ async function getUserOptions() {
     document.getElementById("clear_order").addEventListener("click", () => {
         console.log("Clear button clicked");
         clearButtonClicked = true;
+
         retry = false;
 
     });
     document.getElementById("submit_order").addEventListener("click", () => {
         submitButtonClicked = true;
-        retry = false;
+        retry=false;
 
         alert("Order placed!")
 
@@ -413,7 +445,8 @@ async function getUserOptions() {
         await getBranchFoods(chosen_branch);
 
         const chosen_food = await awaitSelection('food')
-        const user = await awaitSelection('username')
+        const user= await awaitSelection('username')
+
         const stu_num = await awaitSelection('student_number')
         const pay_met = await awaitSelection('payment_method')
         const quant = document.getElementById("quantity").value;
@@ -465,6 +498,34 @@ async function getUserOptions() {
             submitButtonClicked = false;
             clearButtonClicked = true;
             document.getElementById("submit_order").disabled = true;
+            handleButtonClick();
+        }
+}
+}
+
+
+function handleButtonClick(clearClicked) {
+        alert("Order cleared.");
+
+            reset_options('restaurant_results');
+            reset_options('restaurant_branches');
+            reset_options('branch_coupons');
+            reset_options('food');
+            reset_options('quantity');
+            document.getElementById('username').value = ''
+            document.getElementById('student_number').value = ''
+            document.getElementById('payment_method').value = ''
+            document.getElementById('quantity').value = 1
+            document.getElementById('username').disabled = false;
+            document.getElementById('student_number').disabled = false;
+            document.getElementById('payment_method').disabled = false;
+            document.getElementById('quantity').disabled = false;
+
+            reset_choices('restaurant_results');
+            reset_choices('restaurant_branches');
+            reset_choices('branch_coupons');
+            reset_choices('food');
+            reset_choices('quantity');
             handleClearSubmit();
         }
     }

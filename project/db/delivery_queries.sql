@@ -11,4 +11,3 @@ WHERE order_id = :order_id;
 SELECT *
 FROM Delivery
 WHERE order_id = :order_id;
-

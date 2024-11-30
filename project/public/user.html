@@ -1,14 +1,16 @@
+<!-- UNUSED -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>User Management</title>
-    <!-- Uncomment the line below if you have a CSS file to style your page -->
-    <!-- <link rel="stylesheet" href="styles.css"> -->
 </head>
 <body>
-<!-- ===================================================================================== -->
+
+<div class="container"> </div>
 
 <h2>Create New User</h2>
 <form id="createUserForm">
@@ -28,34 +30,18 @@
 </form>
 <div id="createUserResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
-<h2>Login User</h2>
-<form id="loginUserForm">
-    <label for="loginCwl">CWL:</label>
-    <input type="text" id="loginCwl" name="loginCwl" required><br><br>
-    <label for="loginPassword">Password:</label>
-    <input type="password" id="loginPassword" name="loginPassword" required><br><br>
-    <button type="submit">Login</button>
-</form>
-<div id="loginUserResult"></div>
+<h2>View Users</h2>
+</div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
-<h2>Update User Password</h2>
-<form id="updateUserPasswordForm">
-    <label for="editAccountId">Account ID:</label>
-    <input type="text" id="editAccountId" name="editAccountId" required><br><br>
-    <label for="newPassword">New Password:</label>
-    <input type="password" id="newPassword" name="newPassword" required><br><br>
-    <button type="submit">Update Password</button>
-</form>
-<div id="updatePasswordResult"></div>
+<h2>View Account IDs</h2>
+</div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
-<!-- ===================================================================================== -->
-<!-- External JavaScript file that contains functionality/logic for the operations above. -->
 <script src="user.js"></script>
 </body>
 </html>

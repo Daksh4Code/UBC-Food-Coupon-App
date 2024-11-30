@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Management</title>
-    <!-- Uncomment the line below if you have a CSS file to style your page -->
     <link rel="stylesheet" href="styles.css">
+    <title>Feedback 1  Management</title>
 </head>
 <body>
-<!-- ===================================================================================== -->
-<!-- Display 'Feedback Table' -->
-<img src="./media/logo.png" alt="logo" width="150px"/>
+
 <h2>Feedback Table</h2>
 <table id="feedbackTable" border="1">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>User ID</th>
+        <th>Account ID</th>
+        <th>Student ID</th>
         <th>Order Date</th>
         <th>Branch ID</th>
         <th>Rating</th>
@@ -26,7 +23,7 @@
     </tbody>
 </table>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
 <h2>Add New Feedback</h2>
 <form id="addFeedbackForm">
@@ -34,8 +31,8 @@
     <input type="text" id="accountId" name="accountId" required><br><br>
     <label for="sid">SID:</label>
     <input type="text" id="sid" name="sid" required><br><br>
-    <label for="orderDate">Order Date:</label>
-    <input type="date" id="orderDate" name="orderDate" required><br><br>
+    <label for="orderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="orderDate" name="orderDate" required><br><br>
     <label for="branchId">Branch ID:</label>
     <input type="text" id="branchId" name="branchId" required><br><br>
     <label for="rating">Rating:</label>
@@ -44,7 +41,7 @@
 </form>
 <div id="addFeedbackResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
 <h2>Update Feedback Rating</h2>
 <form id="updateFeedbackForm">
@@ -52,8 +49,8 @@
     <input type="text" id="editAccountId" name="editAccountId" required><br><br>
     <label for="editSid">SID:</label>
     <input type="text" id="editSid" name="editSid" required><br><br>
-    <label for="editOrderDate">Order Date:</label>
-    <input type="date" id="editOrderDate" name="editOrderDate" required><br><br>
+    <label for="editOrderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="editOrderDate" name="editOrderDate" required><br><br>
     <label for="editBranchId">Branch ID:</label>
     <input type="text" id="editBranchId" name="editBranchId" required><br><br>
     <label for="newRating">New Rating:</label>
@@ -62,16 +59,61 @@
 </form>
 <div id="updateFeedbackResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
+
+
+<h2>View Feedback</h2>
+<form id="viewFeedbackForm">
+    <label for="viewAccountId">Account ID:</label>
+    <input type="text" id="viewAccountId" name="viewAccountId" required><br><br>
+    <button type="submit">View Feedback</button>
+</form>
+<table id="viewFeedbackTable" border="1">
+    <thead>
+    <tr>
+        <th>Account ID</th>
+        <th>Student ID</th>
+        <th>Order Date</th>
+        <th>Branch ID</th>
+        <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<h2>Delete Feedback</h2>
+<form id="deleteFeedbackForm">
+    <label for="deleteAccountId">Account ID:</label>
+    <input type="text" id="deleteAccountId" name="deleteAccountId" required><br><br>
+    <label for="deleteSid">SID:</label>
+    <input type="text" id="deleteSid" name="deleteSid" required><br><br>
+    <label for="deleteOrderDate">Order Date (YYYY-MM-DD):</label>
+    <input type="text" id="deleteOrderDate" name="deleteOrderDate" required><br><br>
+    <label for="deleteBranchId">Branch ID:</label>
+    <input type="text" id="deleteBranchId" name="deleteBranchId" required><br><br>
+    <button type="submit">Delete Feedback</button>
+</form>
+<div id="deleteFeedbackResult"></div>
+
+<br><hr><br>
 
 <h2>Get Best Rated Branch</h2>
 <button id="getBestRatedBranchBtn">Get Best Rated Branch</button>
+<br><br>
+<table id="bestRatedBranchTable" border="1">
+    <thead>
+    <tr>
+        <th>Branch ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 <div id="bestRatedBranchResult"></div>
 
-<br><hr><br> <!-- ========================================================================= -->
+<br><hr><br>
 
-<!-- ===================================================================================== -->
-<!-- External JavaScript file that contains functionality/logic for the operations above. -->
 <script src="feedback.js"></script>
 </body>
 </html>
