@@ -1,3 +1,4 @@
+
 /*
  * These functions below are for various webpage functionalities.
  * Each function serves to process data on the frontend:
@@ -351,22 +352,7 @@ function awaitSelection(selected_id) {
     });
 }
 
-// get the number of uses of the coupon
-async function updateCouponNumUse(cid) {
-    event.preventDefault();
-    try {
-        const response = await fetch(`/orders/${cid}/update-num-use`, {
-            method: "PUT"
-        });
-        const responseNumUse = await response.json();
-        const responseData = responseNumUse.data;
-        const messageElement = document.getElementById('coupons_results');
-        messageElement.textContent = responseData;
-        fetchCouponTable();
-    } catch (error) {
-        console.log("error in updating the coupon number of uses")
-    }
-}
+
 
 // reset the choices of a given element id
 async function reset_choices(elem_id) {
@@ -386,21 +372,6 @@ async function reset_options(elem_id) {
     }
 }
 
-//delete used coupons where number of uses = 0
-async function deleteUsedCoupon() {
-    try {
-        const response = await fetch("/orders/del-used-coupon", {
-            method: "DELETE"
-        });
-        const responseData = await response.json();
-        const deleted_coupons = responseData.data;
-        const messageElement = document.getElementById('deleted_coupons');
-        messageElement.textContent = deleted_coupons;
-        fetchCouponTable();
-    } catch (error) {
-        console.log("can't delete the coupons")
-    }
-}
 
 function generateOrderId() {
     return Math.floor(Math.random() * 10000); // Random number between 0 and 9999

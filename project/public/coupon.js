@@ -49,7 +49,7 @@ async function checkSelectCoupon() {
 
     const input = document.getElementById('selectionInput').value.trim();
     const validCouponAttributes = ["coupon_id", "dc_percent", "number_of_uses"];
-    const validBranchAttributes =  ["street_address", "restaurant_name"];
+    const validBranchAttributes = ["street_address", "restaurant_name"];
     const validOperators = ["=", "AND", "OR"];
 
     let sql_query = "SELECT B.restaurant_name, B.street_address, C.coupon_id, C.dc_percent, C.number_of_uses";
@@ -128,7 +128,7 @@ async function checkProjectCoupon() {
     const messageElement = document.getElementById('projection_table');
 
     const validCouponAttributes = ["coupon_id", "dc_percent", "number_of_uses"];
-    const validBranchAttributes =  ["street_address", "restaurant_name"];
+    const validBranchAttributes = ["street_address", "restaurant_name"];
     const validOperators = ["=", "AND", "OR"];
 
     let sql_query = "SELECT ";
@@ -144,8 +144,8 @@ async function checkProjectCoupon() {
             const branch_sql = "B." + split_query + ",";
             sql_query += branch_sql;
         } else {
-             messageElement.textContent = `Invalid operator or attribute: ${split_query}`;
-             return;
+            messageElement.textContent = `Invalid operator or attribute: ${split_query}`;
+            return;
         };
     };
 
@@ -206,7 +206,7 @@ async function getGoodDealRestaurant() {
     const tableBody = tableElement.querySelector('tbody');
     try {
         const response = await fetch("/coupons/retrieve-good-deal-restaurant", {
-            method : "GET"
+            method: "GET"
         });
 
         const responseData = await response.json();
@@ -222,14 +222,14 @@ async function getGoodDealRestaurant() {
             });
         });
 
-    } catch(error) {
+    } catch (error) {
         console.log("error in retrieving the best deals!")
     }
 }
 
 
 
-window.onload = function() {
+window.onload = function () {
     fetchCouponTable();
     getUserOptions();
     document.getElementById("numUseUpdate").addEventListener("submit", updateCouponNumUse);
@@ -246,8 +246,8 @@ window.onload = function() {
 //get all restaurants
 async function getRestaurants() {
     try {
-            const response = await fetch('/coupons/get_restaurants', {
-            method : "GET"
+        const response = await fetch('/coupons/get_restaurants', {
+            method: "GET"
         });
 
         const responseData = await response.json();
@@ -260,7 +260,7 @@ async function getRestaurants() {
             options.append(option);
         });
 
-    } catch(error) {
+    } catch (error) {
         console.log("can't get the coupons associated with the branch id")
     }
 
@@ -272,7 +272,7 @@ async function getRestaurantBranches(res_name) {
     console.log(res_name)
     try {
         const response = await fetch(`/coupons/${res_name}/get_res_branch`, {
-        method : "GET"
+            method: "GET"
         });
 
         const responseData = await response.json();
@@ -287,7 +287,7 @@ async function getRestaurantBranches(res_name) {
             options.append(option);
         });
 
-    } catch(error) {
+    } catch (error) {
         console.log("can't get the branches associated with the restaurant name")
     }
 }
@@ -296,36 +296,36 @@ async function getRestaurantBranches(res_name) {
 async function getBranchCoupons(bid) {
     event.preventDefault();
     try {
-            const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
-            method : "GET"
+        const response = await fetch(`/coupons/${bid}/get_coupon_branch`, {
+            method: "GET"
         });
         const responseData = await response.json();
         const coupons = responseData.data;
         // add the options for the coupons for that branch
         const options = document.getElementById('branch_coupons');
         Object.keys(coupons).forEach(key => {
-                var text = key;
-                var value = coupons[key];
-                var option = new Option(text, value);
-                console.log(option)
-                options.append(option);
-            });
-    } catch(error) {
+            var text = key;
+            var value = coupons[key];
+            var option = new Option(text, value);
+            console.log(option)
+            options.append(option);
+        });
+    } catch (error) {
         console.log("can't get the coupons associated with the branch id")
     }
 }
 
 // wait on user choice of dropdown item
 function awaitSelection(selected_id) {
-  return new Promise((resolve) => {
-    const selected_response = document.getElementById(selected_id);
-    const listener = () => {
-        selected_response.disabled = true;
-        selected_response.removeEventListener('change', listener);
-        resolve(selected_response.value);
-    };
-    selected_response.addEventListener('change', listener);
-  });
+    return new Promise((resolve) => {
+        const selected_response = document.getElementById(selected_id);
+        const listener = () => {
+            selected_response.disabled = true;
+            selected_response.removeEventListener('change', listener);
+            resolve(selected_response.value);
+        };
+        selected_response.addEventListener('change', listener);
+    });
 }
 
 // get the number of uses of the coupon
@@ -341,7 +341,7 @@ async function updateCouponNumUse(cid) {
         const messageElement = document.getElementById('coupons_results');
         messageElement.textContent = responseData;
         fetchCouponTable();
-    } catch(error) {
+    } catch (error) {
         console.log("error in updating the coupon number of uses")
     }
 }
@@ -358,9 +358,9 @@ async function reset_choices(elem_id) {
 async function reset_options(elem_id) {
     options = document.getElementById(elem_id);
     if (options) {
-       options.innerHTML = '';
-       const defaultOption = new Option("Select an option", "");
-       options.add(defaultOption);
+        options.innerHTML = '';
+        const defaultOption = new Option("Select an option", "");
+        options.add(defaultOption);
     }
 }
 
@@ -369,12 +369,12 @@ async function deleteUsedCoupon() {
     console.log("here")
     try {
         const response = await fetch("/coupons/del-used-coupon", {
-            method : "DELETE"
+            method: "DELETE"
         });
         const responseData = await response.json();
         const deleted_coupons = responseData.data;
         await fetchCouponTable();
-    } catch(error) {
+    } catch (error) {
         console.log("can't delete the coupons")
     }
 }
@@ -393,39 +393,41 @@ async function getUserOptions() {
     });
     let retry = true;
     while (retry) {
-            await getRestaurants();
-            const chosen_restaurant = await awaitSelection('restaurant_results');
-            await getRestaurantBranches(chosen_restaurant);
-            const chosen_branch = await awaitSelection('restaurant_branches');
-            await getBranchCoupons(chosen_branch);
-            const chosen_coupon = await awaitSelection('branch_coupons');
-            console.log(chosen_branch);
+        await getRestaurants();
+        const chosen_restaurant = await awaitSelection('restaurant_results');
+        await getRestaurantBranches(chosen_restaurant);
+        const chosen_branch = await awaitSelection('restaurant_branches');
+        await getBranchCoupons(chosen_branch);
+        const chosen_coupon = await awaitSelection('branch_coupons');
+        console.log(chosen_branch);
 
-            while (!clearButtonClicked && !submitButtonClicked) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-                console.log(clearButtonClicked);
-            }
+        while (!clearButtonClicked && !submitButtonClicked) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            console.log(clearButtonClicked);
+        }
 
-            if (clearButtonClicked) {
-                reset_options('restaurant_results');
-                reset_options('restaurant_branches');
-                reset_options('branch_coupons');
+        if (clearButtonClicked) {
+            reset_options('restaurant_results');
+            reset_options('restaurant_branches');
+            reset_options('branch_coupons');
 
-                reset_choices('restaurant_results');
-                reset_choices('restaurant_branches');
-                reset_choices('branch_coupons');
+            reset_choices('restaurant_results');
+            reset_choices('restaurant_branches');
+            reset_choices('branch_coupons');
 
-                clearButtonClicked = false;
-                retry = true;
-                continue;
-            } else if (submitButtonClicked) {
-                // updates the select coupon number of uses - 1
-                //updateCouponNumUse(chosen_coupon);
-                // deletes coupons with number of uses = 0
-                //deleteUsedCoupon();
-                retry = false;
-                submitButtonClicked = false;
-            }
+            clearButtonClicked = false;
+            retry = true;
+            continue;
+        } else if (submitButtonClicked) {
+            // updates the select coupon number of uses - 1
+            //updateCouponNumUse(chosen_coupon);
+            // deletes coupons with number of uses = 0
+            //deleteUsedCoupon();
+            retry = false;
+            submitButtonClicked = false;
+        }
 
     }
 }
+
+
