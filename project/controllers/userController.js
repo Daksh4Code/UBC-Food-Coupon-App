@@ -1,29 +1,50 @@
+// UNUSED
+
+/*
 const express = require('express');
-const appService = require('../userService');
+const userService = require('../userService');
 const router = express.Router();
 
 // --- User Management routes ---
 
 // Create User
-router.post('/users/create', async (req, res) => {
+router.post('/create', async (req, res) => {
     const { accountId, year, major, password, sid, cwl } = req.body;
-    const result = await appService.createUser(accountId, year, major, password, sid, cwl);
-    res.json({data: result});
+    try {
+        const result = await userService.createUser(accountId, year, major, password, sid, cwl);
+        if (result) {
+            res.json({ success: true, message: 'User created successfully.' });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to create user.' });
+        }
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ success: false, message: 'Failed to create user.' });
+    }
 });
 
-// Edit User
-router.put('/users/edit/:accountId', async (req, res) => {
-    const accountId = req.params.accountId;
-    const { newPassword } = req.body;
-    const result = await appService.editUser(accountId, newPassword);
-    res.json({data: result});
+// View all users
+router.get('/view', async (req, res) => {
+    try {
+        const users = await userService.viewUsers();
+        res.json({ data: users });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch users.' });
+    }
 });
 
-// Login User
-router.post('/users/login', async (req, res) => {
-    const { cwl, password } = req.body;
-    const user = await appService.loginUser(cwl, password);
-    res.json({data: user});
+// View all account IDs
+router.get('/accountIds', async (req, res) => {
+    try {
+        const accountIds = await userService.getAccountIds();
+        res.json({ data: accountIds });
+    } catch (error) {
+        console.error('Error fetching account IDs:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch account IDs.' });
+    }
 });
 
 module.exports = router;
+
+*/

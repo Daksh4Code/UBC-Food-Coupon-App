@@ -275,7 +275,7 @@ INSERT INTO Delivery VALUES (4, 100000.99, TO_DATE('15/10/2024', 'DD/MM/YYYY'), 
 INSERT INTO Delivery VALUES (5, 3.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Credit','B0F13D01', 'H0001','acc005','99887766',0.99, 'Placed', 777
                             );
 
-                            
+
 
 INSERT INTO Pickup VALUES (6, 10.99, TO_DATE('17/12/2015', 'DD/MM/YYYY'), 'Debit', NULL, 'S0002','acc001','12345678',1, 'Complete'
                           );

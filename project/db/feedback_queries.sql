@@ -1,25 +1,27 @@
 -- Insert feedback
-INSERT INTO Feedback_Rating (account_id, sid, order_date, branch_id, rating) VALUES (:accountId, :sid, :order_date, :branchId, :rating);
+INSERT INTO FEEDBACK_RATING (ACCOUNT_ID, SID, ORDER_DATE, BRANCH_ID, RATING)
+                 VALUES (:accountId, :sid, TO_DATE(:order_date, 'YYYY-MM-DD'), :branchId, :rating);
 
 -- Update feedback
-UPDATE Feedback_Rating
-SET rating = :newRating
-WHERE account_id = :accountId AND sid = :sid AND order_date = :order_date AND branch_id = :branchId;
+UPDATE FEEDBACK_RATING
+                 SET RATING = :newRating
+                 WHERE ACCOUNT_ID = :accountId
+                   AND SID = :sid
+                   AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
+                   AND BRANCH_ID = :branchId;
 
 -- View feedback (for a specific user)
-SELECT *
-FROM Feedback_Rating
-WHERE account_id = :accountId;
+SELECT * FROM FEEDBACK_RATING WHERE ACCOUNT_ID = :accountId;
 
--- Nested aggregation with GROUP BY (to find the best average rating)
-SELECT branch_id
-FROM Feedback_Rating
-GROUP BY branch_id
-HAVING AVG(rating) >= (
-    SELECT MAX(avg_rating)
-    FROM (
-             SELECT AVG(rating) AS avg_rating
-             FROM Feedback_Rating
-             GROUP BY branch_id
-         )
-);
+-- Nested aggregation with GROUP BY (to get the best branch by finding the best average rating)
+SELECT BRANCH_ID
+                FROM FEEDBACK_RATING
+                GROUP BY BRANCH_ID
+                HAVING AVG(RATING) = (SELECT MAX(AVG(RATING)) FROM FEEDBACK_RATING GROUP BY BRANCH_ID);
+
+-- Delete feedback
+DELETE FROM FEEDBACK_RATING
+                 WHERE ACCOUNT_ID = :accountId
+                   AND SID = :sid
+                   AND ORDER_DATE = TO_DATE(:order_date, 'YYYY-MM-DD')
+                   AND BRANCH_ID = :branchId;

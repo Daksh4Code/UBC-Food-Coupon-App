@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the directory where the script is located
-cd "$(dirname "$0")"
+cd "/Users/daksh/project_m1g3t_q1i7x_w5i1d/project/scripts/mac/"
 
 # File path
 ENV_FILE_PATH="../../.env"
