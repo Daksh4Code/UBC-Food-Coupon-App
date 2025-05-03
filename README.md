@@ -21,3 +21,5 @@ Coupons are available on a first-come, first-served basis, as their availability
 ## Feedback Management
 
 Students can provide feedback on their dining experiences at relevant restaurants. They can submit new feedback, which includes their account ID, student ID, order date, branch ID, and a rating. Students can also update their existing feedback if needed. Additionally, students can view all feedback associated with their account ID. To help students identify the best restaurants, the application allows them to view the best-rated branch based on average feedback ratings.
+
+### Further details can be found in the folder titled 'milestones'. 
